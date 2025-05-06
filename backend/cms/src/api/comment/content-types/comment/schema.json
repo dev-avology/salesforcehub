@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "comments",
+  "info": {
+    "singularName": "comment",
+    "pluralName": "comments",
+    "displayName": "Comment",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "User": {
+      "type": "string"
+    },
+    "Text": {
+      "type": "text"
+    },
+    "Date": {
+      "type": "date"
+    },
+    "blog": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::blog.blog",
+      "inversedBy": "comments"
+    },
+    "reaction": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::reaction.reaction",
+      "mappedBy": "comment"
+    }
+  }
+}
