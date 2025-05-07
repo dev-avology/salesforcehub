@@ -176,7 +176,7 @@ const teamData = [
     description: `"SalesforceHub helped me land my dream job through networking and knowledge sharing."`,
   },
 ];
-
+ 
 
 export default function Home() {
   return (
@@ -187,6 +187,7 @@ export default function Home() {
         para="Join the first AI-powered community for Salesforce professionals. Get instant answers, expert insights, and career growth opportunities."
         btn="Join SalesforceHub Now – It's Free"
         heroLayer="/images/hero-layer.png"
+        heroLayerphone="/images/hero-layer2.png"
         heroImg="/images/bnr-img.png"
       />
       {/* bootom-bnr */}

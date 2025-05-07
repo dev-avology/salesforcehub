@@ -6,6 +6,7 @@ function Banner(props) {
       <section className="site-banner">
         <div class="layers">
          <img src={props.heroLayer} alt="hero-layer" />
+         <img src={props.heroLayerphone} alt="hero-layer" />
         </div>
         <div className="container">
           <div className="grid grid-cols-2 gap">

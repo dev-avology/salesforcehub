@@ -1092,7 +1092,9 @@ p.quote {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 64px;
 }
-
+.layers img:last-child {
+  display: none;
+}
 
 
 /* responsive */
@@ -1396,6 +1398,12 @@ p.quote {
   .fun-bnr {
     margin-top: 40px;
   }
+  .layers img:last-child {
+    display: block;
+}
+.layers img:first-child {
+  display: none;
+}
 }
 
 
