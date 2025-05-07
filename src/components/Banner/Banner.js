@@ -16,7 +16,7 @@ function Banner(props) {
               </h1>
               <p>
               {props.para}
-              </p>
+               </p>
                <a href="" className="primary-btn">{props.btn}</a>
             </div>
             <div className="item">
