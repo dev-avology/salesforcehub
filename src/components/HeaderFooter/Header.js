@@ -19,7 +19,7 @@ function Header() {
            <Link href="/index"></Link>
           </li>
           <li>
-          <Link href="/blog">Blog</Link> 
+          <Link href="/blog">Our Blog</Link> 
           </li>
           <li>
             <Link className="header-btn" href="/">Join the Community</Link> 
