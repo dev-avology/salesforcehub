@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link';
-import './nav.css';
+//import './nav.css';
 
 function Header() {
   return (
