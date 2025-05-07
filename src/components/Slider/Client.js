@@ -56,10 +56,11 @@ function Client() {
     <>
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={20}
+        spaceBetween={10}
         slidesPerView={3}
         breakpoints={{
-          1024: { slidesPerView: 3 },
+          1200: { slidesPerView: 3, spaceBetween: 0 },
+          1024: { slidesPerView: 3,  spaceBetween: 0},
           768: { slidesPerView: 2 },
           0: { slidesPerView: 1 },
         }}

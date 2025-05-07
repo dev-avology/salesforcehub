@@ -152,6 +152,32 @@ const cardData = [
   },
 ];
 
+
+const teamData = [
+  {
+    name: "Alex Martinez",
+    role: "Senior Salesforce Admin",
+    channel: "Active in #admin-tips",
+    image: "/images/alxe1.svg",
+    description: `“SalesforceHub's AI insights helped me optimize our sales process in ways I never thought possible.”`,
+  },
+  {
+    name: "Priya Sharma",
+    role: "Salesforce Developer",
+    channel: "Active in #development",
+    image: "/images/alxe2.svg",
+    description: `"The code snippets and real-time support from the community are invaluable for complex implementations."`,
+  },
+  {
+    name: "James Wilson",
+    role: "Solution Architect",
+    channel: "Active in #architecture",
+    image: "/images/alxe3.svg",
+    description: `"SalesforceHub helped me land my dream job through networking and knowledge sharing."`,
+  },
+];
+
+
 export default function Home() {
   return (
     <>
@@ -426,7 +452,24 @@ export default function Home() {
             </div>
           </div>
           <div className="slider-build">
-            <Client />
+           
+          {teamData.map((member, index) => (
+          <div className="build-box">
+              <div className="build-flex">
+                <figure>
+                  <img src={member.image} alt={member.name} />
+                </figure>
+                <div className="build-box-content">
+                  <h3>{member.name}</h3>
+                  <p>{member.role}</p>
+                  <span>{member.channel}</span>
+                </div>
+              </div>
+              <p className="quote">{member.description}</p>
+            </div>
+                ))}
+
+
           </div>
           <a href="#" class="primary-btn">
             Register Now

@@ -14,7 +14,10 @@ function Header() {
       <div className="link-bar">
          <ul>
           <li>
-            <Link href="/">Home</Link> 
+            <Link href="/"></Link> 
+          </li>
+          <li>
+            <Link href="/">Blog</Link> 
           </li>
           <li>
             <Link className="header-btn" href="/">Join the Community</Link> 
