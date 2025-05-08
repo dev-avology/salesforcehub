@@ -337,6 +337,7 @@ function blog() {
       headingImage="/images/message.svg"
       teamMembers={someTeamData}
     />
+    
     <CommonBnr {...joinData}/>
     </>
   );
