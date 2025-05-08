@@ -251,8 +251,8 @@ const someTeamData = [
 
 const joinData = {
   heading: "A Community Built for Learning & Fun",
-  description: `Yes, we talk Salesforce, but we also have a #banter channel for fun conversations, Salesforce memes, and casual networking. Because learning is better when it doesn't feel like work.`,
-  buttonText: "Join the SalesforceHub Slack Now!",
+  description: `Stay connected and informed! Join our newsletter to receive the latest updates, exclusive offers, and exciting news straight to your inbox`,
+  buttonText: "Sign up now",
   buttonLink: "#", // You can change this to the actual link
   imageSrclayer2:"/images/most1.png",
   imageSrclayer:"/images/most2.png",
