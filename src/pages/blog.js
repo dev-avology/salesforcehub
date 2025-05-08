@@ -1,6 +1,7 @@
 import Bnrblogs from "@/components/Banner/Bnrblogs";
 import CommonCard from "@/components/Cards/CommonCard";
 import CommonDrop from "@/components/Dropdown/CommonDrop";
+import FeaturedSec from "@/components/Featured/FeaturedSec";
 import Tabs from "@/components/Tabs/Tabs";
 import React from "react";
 
@@ -228,6 +229,26 @@ const tabData = [
   },
 ];
 
+const someTeamData = [
+  {
+    name: "Aisha Rahman",
+    role: "Product Manager",
+    image: "/images/tony1.svg",
+  },
+  {
+    name: "Daniel Lee",
+    role: "UX Designer",
+    image: "/images/tony2.svg",
+  },
+  {
+    name: "Carlos Mendes",
+    role: "Frontend Developer",
+    image: "/images/tony3.svg",
+  },
+];
+
+
+
 function blog() {
   const handleCategoryChange = (val) => {
     console.log("Selected:", val);
@@ -260,7 +281,9 @@ function blog() {
 
               </div>
               <div class="pagination">
-                <span class="arrow disabled"> Previous</span>
+              <span class="arrow disabled">
+             <img src="images/icon-arrow.svg fill.png" alt="Guide" class="card-img"></img> Previous
+            </span>
               <div className="pagination-center">
                 <span class="current">1</span>
                 <a href="#">2</a>
@@ -270,7 +293,7 @@ function blog() {
                 <a href="#">57</a>
                 </div>
                 <a class="arrow" href="#">
-                  Next →
+                  Next   <img src="images/icon-arrow.svg fill.svg" alt="Guide" class="card-img"></img>
                 </a>
               </div>
             </div>
@@ -296,6 +319,13 @@ function blog() {
           </div>
         </div>
       </section>
+      {/* common-tabs end */}
+
+      <FeaturedSec
+      heading="Featured Voices"
+      headingImage="/images/message.svg"
+      teamMembers={someTeamData}
+    />
     </>
   );
 }
