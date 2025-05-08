@@ -1602,6 +1602,11 @@ z-index: 0;
   top: -49px;
   right: 20%;
 }
+
+.join-card {
+  position: sticky;
+  top: 0;
+}
 .join-bottom-bnr .primary-btn:hover {
   background: #fff;
   color: #032d60;
