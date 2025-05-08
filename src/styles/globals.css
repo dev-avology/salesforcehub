@@ -1605,7 +1605,7 @@ z-index: 0;
 
 .join-card {
   position: sticky;
-  top: 0;
+  top: 10px;
 }
 .join-bottom-bnr .primary-btn:hover {
   background: #fff;
