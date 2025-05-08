@@ -7,7 +7,7 @@ function Bnrblogs(props) {
     <>
    <section className="second-bnr">
       <div className="blogs-bnr-layer">
-        <img src={props.layer} alt="bnr-img" />
+        <img src={props.layer} alt="bnr-img" className="blogs-bnr-layer-desktop" />
       </div>
 
       <div className="container">
@@ -21,6 +21,7 @@ function Bnrblogs(props) {
           <div className="item">
             <div className="blogs-bnr-img">
               <img src={props.image} alt="Featured"/>
+              <img src={props.layermobile} alt="bnr-img" className="blogs-bnr-layer-mobile" />
             </div>
           </div>
 

@@ -261,9 +261,6 @@ const joinData = {
 
 
 function blog() {
-  const handleCategoryChange = (val) => {
-    console.log("Selected:", val);
-  };
 
   return (
     <>
@@ -274,6 +271,7 @@ function blog() {
         description="This is the second blog in a series of 8 blogs focusing on gathering Salesforce integration requirements. The blog will focus on enterprise-wide integration where Salesforce is the primary system but interacts with other core systems."
         image="/images/agent.png"
         layer="/images/blogs-bnr-layer.png"
+        layermobile="/images/blogs-bnr-layer.png"
       />
       <CommonCard blogPosts={blogPosts} />
       {/* blogs-animation-img */}
@@ -337,8 +335,8 @@ function blog() {
       headingImage="/images/message.svg"
       teamMembers={someTeamData}
     />
-    
     <CommonBnr {...joinData}/>
+    <CommonDrop/>
     </>
   );
 }
