@@ -1577,10 +1577,23 @@ margin-top: 73px;
 }
 
 .feature-card p {
-  color: #032d60;
+color: #032d60;
+}
+
+.join-bottom-bnr {
+background: #032d60;
+position: relative;
+padding: 146px 0;
 }
 
 
+.join-bottom-bnr-layer img:first-child {
+width: 838px;
+height: 384px;
+position: absolute;
+left: 0;
+bottom: 0;
+}
 
 
 

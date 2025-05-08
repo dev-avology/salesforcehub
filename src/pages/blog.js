@@ -1,4 +1,5 @@
 import Bnrblogs from "@/components/Banner/Bnrblogs";
+import CommonBnr from "@/components/Banner/CommonBnr";
 import CommonCard from "@/components/Cards/CommonCard";
 import CommonDrop from "@/components/Dropdown/CommonDrop";
 import FeaturedSec from "@/components/Featured/FeaturedSec";
@@ -248,6 +249,16 @@ const someTeamData = [
 ];
 
 
+const joinData = {
+  heading: "A Community Built for Learning & Fun",
+  description: `Yes, we talk Salesforce, but we also have a #banter channel for fun conversations, Salesforce memes, and casual networking. Because learning is better when it doesn't feel like work.`,
+  buttonText: "Join the SalesforceHub Slack Now!",
+  buttonLink: "#", // You can change this to the actual link
+  imageSrclayer2:"/images/most1.png",
+  imageSrclayer:"/images/most2.png",
+};
+
+
 
 function blog() {
   const handleCategoryChange = (val) => {
@@ -326,6 +337,7 @@ function blog() {
       headingImage="/images/message.svg"
       teamMembers={someTeamData}
     />
+    <CommonBnr {...joinData}/>
     </>
   );
 }
