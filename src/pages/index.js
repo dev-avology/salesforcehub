@@ -111,7 +111,7 @@ const trendingData = [
     status: " 2h ago",
   },
   {
-    title: "Top strategies for managing leads in Salesforce?",
+    title: "What's the best way to prepare for the CTA exam?",
     responses: 45,
     status: "4h ago",
   },
@@ -589,7 +589,7 @@ export default function Home() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            Register Now
+           Join Our Community
           </motion.a>
         </div>
         <div className="build-layer">

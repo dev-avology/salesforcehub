@@ -298,7 +298,7 @@ transform: translateY(-5px);
 .bootom-bnr {
   padding-top: 20px;
   position: relative;
-  padding-bottom: 233px;
+  padding-bottom: 174px;
 }
 
 .bottom-layer {
@@ -1688,7 +1688,7 @@ bottom: 0;
   }
 
   .bootom-bnr {
-    padding-bottom: 151px;
+    padding-bottom: 112px;
   }
 
   .join {
@@ -1924,7 +1924,7 @@ bottom: 0;
     grid-template-columns: 135px 1fr;
   }
   .bootom-bnr {
-    padding-bottom: 115px;
+    padding-bottom: 96px;
   }
 
   .upcoming-flex {
