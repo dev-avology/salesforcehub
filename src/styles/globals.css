@@ -286,6 +286,7 @@ transform: translateY(-5px);
   -moz-transition: all .3s ease;
   -ms-transition: all .3s ease;
   -o-transition: all .3s ease;
+  transform: none !important;
 }
 
 .primary-btn:hover {
@@ -1015,7 +1016,7 @@ p.quote {
   font-size: 12px;
   line-height: 24px;
   font-weight: 400;
-  padding: 6px 20px;
+  padding: 2px 20px;
 }
 
 .exclusive .card-content .title {
@@ -1095,6 +1096,413 @@ p.quote {
 .layers img:last-child {
   display: none;
 }
+
+
+/* blogs page */
+
+.second-bnr {
+  border: 0 solid #e5e5e5;
+  border-top-width: 1px;
+  padding-top: 79px;
+  position: relative;
+  padding-bottom: 17px;
+}
+  
+  
+  
+  .blogs-heding h1 {
+  color: var(--blue);
+  text-align: center;
+  font-size: 56px;
+  line-height: 64px;
+  font-weight: 600;
+  padding-bottom: 60px;
+  }
+  
+  .blogs-bnr-img {
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 24px 4px #0000001f;
+    border-radius: 16px;
+}
+  
+  .blogs-bnr-img img {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  }
+  
+  .second-bnr .gap {
+  gap: 55px;
+  }
+  
+  .custom-badge {
+  background: #eaf5fe;
+  border-radius: 4px;
+  padding: 5px 11px 5px 11px;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 0.8px;
+  font-weight: 400;
+  color: #181818;
+  }
+  
+  .blogs-bnr-text h2 {
+    color: var(--blue);
+    font-size: 38px;
+    font-weight: 600;
+    line-height: 48px;
+    padding-top: 16px;
+}
+  .blogs-bnr-text p {
+  color: #58575b;
+  text-align: left;
+  font-family: "SfPro-Regular", sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  }
+  
+.second-bnr .custom-flex {
+padding: 16px 0;
+}
+
+.custom-flex li img {
+width: 32px;
+height: 32px;
+border-radius: 50%;
+object-fit: cover;
+}
+
+.custom-flex li {
+font-size: 14px;
+line-height: 20px;
+font-weight: 400;
+align-items: center;
+display: flex;
+color: #080707;
+gap: 20px;
+flex-wrap: wrap;
+}
+
+.custom-flex li a {
+display: flex;
+align-items: center;
+gap: 8px;
+color: var(--blue);
+}
+
+.custom-flex li span {
+  color: #080707;
+  position: relative;
+  padding-left: 9px;
+}
+
+.custom-flex li span:before {
+content: "";
+position: absolute;
+top: 50%;
+left: -8px;
+background: #080707;
+width: 5px;
+height: 5px;
+border-radius: 50%;
+transform: translateY(-50%);
+}
+.custom-flex li a span {
+  text-decoration: underline;
+  color: var(--blue);
+}
+
+.custom-flex li a span:before {
+  display: none;
+}
+.blogs-bnr-layer {
+  position: absolute;
+bottom: 0;
+left: 0;
+}
+
+.blogs-bnr-layer img {
+width: 354px;
+height: 284px;
+}
+
+
+.common-card .card:hover figure img {
+  transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -o-transform: scale(1.1);
+}
+  
+  .common-card .card figure {
+  object-fit: cover;
+  width: 100%;
+  height: 216px;
+  margin-bottom: 27px;
+  overflow: hidden;
+  border-radius: 16px;
+  }
+  .common-card .card figure img {
+  border-radius: 16px;
+  width: 100%;
+  height: 100%;
+  transition: all .3s ease;
+  }
+
+.common-card {
+margin: 128px 0 100px;
+}
+
+.title-custom {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  color: #032d60;
+  max-width: 300px;
+  margin: 16px 0;
+  }
+  
+  .common-card .card-content p {
+    color: #58575b;
+    max-width: 361px;
+    line-height: 24px;
+}
+  
+  .common-card .custom-flex li {
+  margin-bottom: 16px;
+  }
+  .common-card .gap {
+    gap: 54px;
+}
+
+.blogs-animation-img img{
+  animation: moveUpDown 2s infinite ease-in-out;
+}
+@keyframes moveUpDown {
+  0% {
+    transform: translateY(0); /* Start at the top */
+  }
+  50% {
+    transform: translateY(13px);
+    -webkit-transform: translateY(13px);
+    -moz-transform: translateY(13px);
+    -ms-transform: translateY(13px);
+    -o-transform: translateY(13px);
+}
+  100% {
+    transform: translateY(0); /* Move back to the top */
+  }
+}
+
+
+.common-tabs {
+  margin-top: 122px;
+}
+
+
+
+.tabs-bar .css-1usuzwp-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: #fff;
+  background: #032d60;
+}
+.tabs-bar  .css-1usuzwp-MuiButtonBase-root-MuiTab-root {
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 8px 16px 8px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #181818;
+}
+
+.tabs-bar  .css-hzcega-MuiTabs-list {
+  gap: 12px;
+}
+
+
+.tabs-bar  .MuiBox-root {
+border: 0;
+}
+.tabs-bar {
+
+gap: 10px;
+}
+.common-tabs .grid-cols-2 {
+grid-template-columns: 2.4fr 1fr;
+}
+
+
+.common-tabs .css-13xfq8m-MuiTabPanel-root {padding-top: 49px;}
+
+.common-tabs .flex-tbs {
+  grid-template-columns: auto 1fr;
+  gap: 42px;
+  display: grid;
+  border-style: solid;
+  border-color: #dddbda;
+  border-width: 1px 0px 0px 0px;
+  padding-bottom: 48px;
+  padding-top: 48px;
+}
+
+.common-tabs  .css-13xfq8m-MuiTabPanel-root {
+padding: 49px 0 0;
+}
+
+.common-tabs  .flex-tbs-img img {
+width: 203.06px;
+height: 114.22px;
+object-fit: cover;
+border-radius: 16px;
+}
+
+.common-tabs  .flex-tbs-content .custom-badge {
+background: #5867e8;
+border-radius: 4px;
+padding: 5px 11px 5px 11px;
+font-size: 12px;
+line-height: 12px;
+letter-spacing: 0.8px;
+font-weight: 400;
+color: #fff;
+}
+
+.common-tabs  .title-custom {
+font-size: 36px;
+line-height: 42.12px;
+letter-spacing: -0.4px;
+font-weight: 600;
+max-width: 100%;
+}
+
+.common-tabs  .custom-flex {
+margin-bottom: 16px;
+}
+
+.common-tabs  .flex-tbs-content p {
+font-size: 16px;
+line-height: 24px;
+font-weight: 400;
+color: #58575b;
+margin-bottom: 20px;
+}
+
+.common-tabs  .flex-tbs-content p:last-child {
+margin-bottom: 0;
+}
+.common-tabs .flex-tbs-content  .lorem-color {
+  color: #032d60;
+  font-size: 12px;
+  line-height: 15.96px;
+  letter-spacing: 0.7px;
+  font-weight: 400;
+}
+
+.common-tabs .flex-tbs-content .lorem-color span {
+  display: inline-block;
+  background: #080707;
+  border-radius: 50%;
+  width: 5px;
+  height: 5px;
+  position: relative;
+  top: -1px;
+  margin: 0 10px;
+}
+.common-tabs .flex-tbs-content .custom-badge.blue {
+  background: #0176d3;
+}
+.common-tabs .flex-tbs-content .custom-badge.green {
+background: #024d4c;
+}
+
+.join-card {
+position: relative;
+}
+
+.join-card article {
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+width: 100%;
+padding: 18px;
+}
+.join-card img {
+border-radius: 25px;
+}
+
+.join-card .primary-btn {
+  width: 100%;
+  max-width: 282px;
+  margin-top: 23px;
+}
+.join-card h3 {
+  color: #ffffff;
+  text-align: center;
+  font-size: 32px;
+  line-height: 37.44px;
+  font-weight: 600;
+}
+
+.join-card .primary-btn {
+  width: 100%;
+  max-width: 282px;
+  margin: 23px auto 0;
+  display: block;
+  text-align: center;
+}
+.join-card .primary-btn:hover {
+  background: #fff;
+  color: #032d60;
+}
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination-center {display: flex;justify-content: space-between;gap: 28px;}
+
+span.current {
+  border-style: solid;
+  border-color: #032d60;
+  border-width: 0px 0px 3px 0px;
+  padding: 0px 10px;
+}
+
+.pagination-center a {
+  padding: 0 10px;
+  font-size: 16px;
+  line-height: 18.4px;
+  font-weight: 400;
+  color: #032d60;
+}
+
+.pagination-center span {
+  font-size: 16px;
+line-height: 18.4px;
+font-weight: 400;
+color: #032d60;
+}
+
+.pagination .arrow.disabled {
+color: #032d6096;
+font-size: 16px;
+line-height: 18.4px;
+font-weight: 400;
+}
+.pagination .arrow {
+color: #032d60;
+text-align: left;
+font-size: 16px;
+line-height: 18.4px;
+font-weight: 400;
+}
+
+
+
 
 
 /* responsive */
@@ -1479,12 +1887,12 @@ p.quote {
   }
 
   .link-bar ul li .header-btn {
-    padding: 6px 6px;
-    font-size: 13px;
-  }
+    padding: 6px;
+    font-size: 11px;
+}
 
   .link-bar ul li a {
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .link-bar ul li {
@@ -1499,7 +1907,7 @@ p.quote {
 
   .header .container,
   .site-footer .container {
-    padding: 0 18px;
+    padding: 0 15px;
   }
 
   .questions {

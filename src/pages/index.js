@@ -5,7 +5,10 @@ import styles from "@/styles/Home.module.css";
 import Banner from "@/components/Banner/Banner";
 import Client from "@/components/Slider/Client";
 import Footer from "@/components/HeaderFooter/Footer";
+import { motion } from "framer-motion"; // Import Framer Motion
+import CountUp from "react-countup"; // Import CountUp for counter animation
 
+// Data definitions remain unchanged
 const boxbar = [
   {
     number: "12",
@@ -61,6 +64,7 @@ const joinData = [
     ],
   },
 ];
+
 const upcoming = [
   {
     heading: "Data Cloud Mastery",
@@ -73,10 +77,12 @@ const upcoming = [
     btn: "Save Seat",
   },
 ];
+
 const whyJoinData = {
   heading: "Why Join SalesforceHub?",
   paragraph: `Salesforce is evolving fast—with AI, automation, and data-driven workflows reshaping how we work. Keeping up can be overwhelming, but that’s where SalesforceHub comes in. We break down every Salesforce release, so you always know what’s new, what matters, and how to stay ahead.`,
 };
+
 const liveSectionData = {
   heading: "Live Office Hours with Experts",
   paragraphs: [
@@ -117,6 +123,7 @@ const build = {
     `Meet <span>Salesforce consultants, AI innovators, hiring managers, and industry leaders </span>in Slack. Whether you're looking for <span> mentorship, job opportunities, or collaboration on projects,</span> SalesforceHub is where professionals connect.`,
   ],
 };
+
 const exclusiveData = {
   heading: "Exclusive AI & Salesforce Resources",
   paragraphs: [`Get access to member-only resources that help you stay ahead`],
@@ -152,7 +159,6 @@ const cardData = [
   },
 ];
 
-
 const teamData = [
   {
     name: "Alex Martinez",
@@ -176,7 +182,28 @@ const teamData = [
     description: `"SalesforceHub helped me land my dream job through networking and knowledge sharing."`,
   },
 ];
- 
+
+// Animation variants for reusability
+const fadeInUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const hoverEffect = {
+  scale: 1.05,
+  boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+  transition: { duration: 0.3 },
+};
 
 export default function Home() {
   return (
@@ -188,16 +215,22 @@ export default function Home() {
         btn="Join SalesforceHub Now – It's Free"
         heroLayer="/images/hero-layer.png"
         heroLayerphone="/images/hero-layer2.png"
-        heroImg="/images/bnr-img.png"
+        heroImg="/images/gif-bnr.gif"
       />
-      {/* bootom-bnr */}
-      <section className="bootom-bnr">
+      {/* Bottom Banner Section */}
+      <motion.section
+        className="bootom-bnr"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
         <div className="bottom-layer">
           <img src="images/bottom-layer.png" alt="bnr-img" />
         </div>
         <div className="container">
           <div className="grid grid-cols-2 gap">
-            <div className="item">
+            <motion.div className="item" variants={fadeInUp}>
               <div className="slider-type">
                 <div className="slider-flex">
                   <div className="slidr-img">
@@ -217,36 +250,68 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="item">
+            </motion.div>
+            <motion.div className="item" variants={fadeInUp}>
               <div className="questions">
-                {boxbar.map((boxes, index) => (
-                  <div className="box" key="{index}">
-                    <h3>{boxes.number}</h3>
-                    <p>{boxes.para}</p>
-                  </div>
-                ))}
+                {boxbar.map((boxes, index) => {
+                  // Parse the number for counting (remove non-numeric characters like "+" or "/")
+                  const numericValue = parseInt(boxes.number.replace(/[^0-9]/g, ""));
+                  const displayText = boxes.number; // Keep the original text for display (e.g., "100+", "24/7")
+
+                  return (
+                    <motion.div
+                      className="box"
+                      key={index}
+                      variants={fadeInUp}
+                      // Removed whileHover to disable hover effect on counters
+                    >
+                      <h3>
+                        {numericValue ? (
+                          <CountUp
+                            start={0}
+                            end={numericValue}
+                            duration={2.5}
+                            suffix={displayText.replace(numericValue.toString(), "")} // Add back "+", "/" etc.
+                          />
+                        ) : (
+                          displayText // For "24/7", display as is
+                        )}
+                      </h3>
+                      <p>{boxes.para}</p>
+                    </motion.div>
+                  );
+                })}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* bootom-bnr  end*/}
-      {/* join */}
-      <section class="join">
-        <div class="container">
-          <div className="grid">
+      {/* Join Section */}
+      <motion.section
+        className="join"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <div className="container">
+          <motion.div className="grid" variants={fadeInUp}>
             <div className="item">
               <div className="heading-item">
                 <h2 className="site-heading">{whyJoinData.heading}</h2>
                 <p>{whyJoinData.paragraph}</p>
               </div>
             </div>
-          </div>
-          <div className="grid grid-cols-3 gap">
+          </motion.div>
+          <motion.div className="grid grid-cols-3 gap" variants={staggerContainer}>
             {joinData.map((item, index) => (
-              <div className="item" key={index}>
+              <motion.div
+                className="item"
+                key={index}
+                variants={fadeInUp}
+                whileHover={hoverEffect}
+              >
                 <div className="join-box">
                   <div className="join-img">
                     <img src={item.img} alt="professional" />
@@ -273,26 +338,36 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
-          <div className="join-botton">
-            <a href="#" className="primary-btn">
+          </motion.div>
+          <motion.div className="join-botton" variants={fadeInUp}>
+            <motion.a
+              href="#"
+              className="primary-btn"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
               Join SalesforceHub Today
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       <section className="join-layer">
         <img src="images/join-layer.png" alt="bnr-img" />
       </section>
 
-      {/* join end*/}
-      {/* live */}
-      <section class="live">
-        <div class="container">
-          <div className="grid">
+      {/* Live Section */}
+      <motion.section
+        className="live"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <div className="container">
+          <motion.div className="grid" variants={fadeInUp}>
             <div className="item">
               <div className="heading-item">
                 <h2 className="site-heading">{liveSectionData.heading}</h2>
@@ -301,9 +376,9 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap">
-            <div className="item">
+          </motion.div>
+          <motion.div className="grid grid-cols-2 gap" variants={staggerContainer}>
+            <motion.div className="item" variants={fadeInUp}>
               <div className="nex-live">
                 <div className="next-flex">
                   <p>Next Live Event</p>
@@ -320,45 +395,64 @@ export default function Home() {
                     <span>Salesforce Architect @ Microsoft</span>
                   </p>
                 </div>
-                <a href="#" className="primary-btn">
+                <motion.a
+                  href="#"
+                  className="primary-btn"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   Register Now
-                </a>
+                </motion.a>
               </div>
               <div className="grid">
                 <div className="item">
                   <div className="upcoming">
                     <h3>Upcoming Sessions</h3>
-
                     {upcoming.map((session, index) => (
-                      <div className="upcoming-flex" key={index}>
+                      <motion.div
+                        className="upcoming-flex"
+                        key={index}
+                        variants={fadeInUp}
+                      >
                         <div className="upcoming-box">
                           <h4>{session.heading}</h4>
                           <p>{session.para}</p>
                         </div>
                         <div className="upcoming-btn">
-                          <a href="#" className="primary-btn">
+                          <motion.a
+                            href="#"
+                            className="primary-btn"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
                             {session.btn}
-                          </a>
+                          </motion.a>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="item">
+            </motion.div>
+            <motion.div className="item" variants={fadeInUp}>
               <div className="live-picture">
                 <img src="images/picture.png" alt="picture" />
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
-      {/* live end*/}
-      {/* community */}
-      <section className="community">
+      </motion.section>
+
+      {/* Community Section */}
+      <motion.section
+        className="community"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
         <div className="container">
-          <div className="grid">
+          <motion.div className="grid" variants={fadeInUp}>
             <div className="item">
               <div className="heading-item">
                 <h2 className="site-heading">{communityData.heading}</h2>
@@ -367,9 +461,9 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap">
-            <div className="item">
+          </motion.div>
+          <motion.div className="grid grid-cols-2 gap" variants={staggerContainer}>
+            <motion.div className="item" variants={fadeInUp}>
               <div className="communityleft">
                 <div className="certification-flex">
                   <div className="certification-left">
@@ -417,32 +511,47 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div classname="item">
+            </motion.div>
+            <motion.div className="item" variants={fadeInUp}>
               <div className="community-right">
                 <h3>Trending Topics</h3>
                 {trendingData.map((item, index) => (
-                  <div className="trending-box" key={index}>
+                  <motion.div
+                    className="trending-box"
+                    key={index}
+                    variants={fadeInUp}
+                    whileHover={hoverEffect}
+                  >
                     <h4>{item.title}</h4>
                     <p>
                       {item.responses} responses • {item.status}
                     </p>
-                  </div>
+                  </motion.div>
                 ))}
-                <a href="#" class="primary-btn">
+                <motion.a
+                  href="#"
+                  className="primary-btn"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   Join the Conversation
-                </a>
+                </motion.a>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
-      {/* community end*/}
+      </motion.section>
 
-      {/* build */}
-      <section className="build">
+      {/* Build Section */}
+      <motion.section
+        className="build"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
         <div className="container">
-          <div className="grid">
+          <motion.div className="grid" variants={fadeInUp}>
             <div className="item">
               <div className="heading-item">
                 <h2 className="site-heading">{build.heading}</h2>
@@ -451,40 +560,53 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          </div>
-          <div className="slider-build">
-           
-          {teamData.map((member, index) => (
-          <div className="build-box">
-              <div className="build-flex">
-                <figure>
-                  <img src={member.image} alt={member.name} />
-                </figure>
-                <div className="build-box-content">
-                  <h3>{member.name}</h3>
-                  <p>{member.role}</p>
-                  <span>{member.channel}</span>
+          </motion.div>
+          <motion.div className="slider-build" variants={staggerContainer}>
+            {teamData.map((member, index) => (
+              <motion.div
+                className="build-box"
+                key={index}
+                variants={fadeInUp}
+                whileHover={hoverEffect}
+              >
+                <div className="build-flex">
+                  <figure>
+                    <img src={member.image} alt={member.name} />
+                  </figure>
+                  <div className="build-box-content">
+                    <h3>{member.name}</h3>
+                    <p>{member.role}</p>
+                    <span>{member.channel}</span>
+                  </div>
                 </div>
-              </div>
-              <p className="quote">{member.description}</p>
-            </div>
-                ))}
-
-
-          </div>
-          <a href="#" class="primary-btn">
+                <p className="quote">{member.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+          <motion.a
+            href="#"
+            className="primary-btn"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
             Register Now
-          </a>
+          </motion.a>
         </div>
         <div className="build-layer">
           <img src="images/build-layer.png" alt="build-layer.png" />
         </div>
-      </section>
-      {/* build end */}
-      {/* exclusive */}
-      <section className="exclusive">
+      </motion.section>
+
+      {/* Exclusive Section */}
+      <motion.section
+        className="exclusive"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
         <div className="container">
-          <div className="grid">
+          <motion.div className="grid" variants={fadeInUp}>
             <div className="item">
               <div className="heading-item">
                 <h2 className="site-heading">{exclusiveData.heading}</h2>
@@ -493,10 +615,15 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          </div>
-          <div className="grid grid-cols-4 gap">
+          </motion.div>
+          <motion.div className="grid grid-cols-4 gap" variants={staggerContainer}>
             {cardData.map((item, index) => (
-              <div className="item" key={index}>
+              <motion.div
+                className="item"
+                key={index}
+                variants={fadeInUp}
+                whileHover={hoverEffect}
+              >
                 <div className="card">
                   <figure>
                     <img
@@ -511,32 +638,42 @@ export default function Home() {
                     <p className="description">{item.description}</p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </section>
-      {/* exclusive end */}
-      {/* fun-bnr */}
-      <section className="fun-bnr">
+      </motion.section>
+
+      {/* Fun Banner Section */}
+      <motion.section
+        className="fun-bnr"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeInUp}
+      >
         <div className="container">
           <div className="grid">
-            <div className="item">
-              <h3>A Community Built for Learning &amp; Fun</h3>
+            <motion.div className="item" variants={fadeInUp}>
+              <h3>A Community Built for Learning & Fun</h3>
               <p>
                 Yes, we talk Salesforce, but we also have a #banter channel for
                 fun conversations, Salesforce memes, and casual networking.
                 Because learning is better when it doesn't feel like work.
               </p>
-              <a href="#" className="primary-btn">
+              <motion.a
+                href="#"
+                className="primary-btn"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <img src="/images/joinvector.svg" alt="joinvector" /> Join the
                 SalesforceHub Slack Now!
-              </a>
-            </div>
+              </motion.a>
+            </motion.div>
           </div>
         </div>
-      </section>
-        {/* fun-bnr end */}
+      </motion.section>
     </>
   );
 }
