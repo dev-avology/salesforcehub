@@ -6,7 +6,6 @@ function BlogDetailBnr({ detail }) {
     <section className="blogs-detail-bnr">
       <div className="detail-layer">
         <img alt="Layer 1" src={detail.layerfirst} />
-        <img alt="Layer 2" src={detail.layersecond} />
       </div>
       <div className="container">
         <div className="grid">

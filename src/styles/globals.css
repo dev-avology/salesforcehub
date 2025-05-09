@@ -1226,8 +1226,8 @@ left: 0;
 }
 
 .blogs-bnr-layer img {
-    width: 477px;
-    height: 314px;
+width: 477px;
+height: 314px;
 }
 
 .common-card .card:hover figure img {
@@ -1304,24 +1304,24 @@ transform: translateY(0); /* Move back to the top */
 margin-top: 122px;
 }
 .pagination-center a:hover {
-    color: #0176d3;
+color: #0176d3;
 }
 
 .pagination .arrow:hover {
-    color: #0176d3;
+color: #0176d3;
 }
 .tabs-bar button.Mui-selected {
 color: #fff;
 background: #032d60;
 }
 .tabs-bar button {
-    color: #181818;
-    background: #f3f4f6;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 400;
-    text-transform: capitalize;
+color: #181818;
+background: #f3f4f6;
+border-radius: 4px;
+padding: 8px 16px;
+font-size: 14px;
+font-weight: 400;
+text-transform: capitalize;
 }
 
 .tabs-bar .MuiTabs-list {
@@ -1343,7 +1343,7 @@ gap: 10px;
 grid-template-columns: 2.4fr 1fr;
 }
 .common-tabs .grid-cols-2 .item {
-    position: relative;
+position: relative;
 }
 
 .common-tabs .css-13xfq8m-MuiTabPanel-root {padding-top: 49px;}
@@ -1593,9 +1593,9 @@ color: var(--blue);
 }
 
 .join-bottom-bnr {
-  background: var(--blue);
-  padding: 68px 0;
-  position: relative;
+background: var(--blue);
+padding: 68px 0;
+position: relative;
 }
 
 
@@ -1609,19 +1609,19 @@ z-index: 0;
 }
 
 .join-bottom-bnr-layer img:last-child {
-  z-index: 0;
-  position: absolute;
-  top: -49px;
-  right: 20%;
+z-index: 0;
+position: absolute;
+top: -49px;
+right: 20%;
 }
 
 .join-card {
-  position: sticky;
-  top: 50px;
+position: sticky;
+top: 50px;
 }
 .join-bottom-bnr .primary-btn:hover {
-  background: #fff;
-  color: #032d60;
+background: #fff;
+color: #032d60;
 }
 .join-bottom-bnr .item {
 position: relative;
@@ -1654,46 +1654,46 @@ max-width: 226px;
 text-align: center;
 }
 .blogs-bnr-layer-mobile {
-  display: none;
+display: none;
 }
 
 
 
 
 .dropdown-wrapper {
-    width: 104px;
-    position: absolute;
-    top: 6px;
-    right: 0;
+width: 104px;
+position: absolute;
+top: 6px;
+right: 0;
 }
 .dropdown-label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: #333;
+display: block;
+margin-bottom: 6px;
+font-size: 14px;
+color: #333;
 }
 .custom-select {
-    appearance: none;
-    color: #000;
-    cursor: pointer;
-    background-color: #fff;
-    border-radius: 4px;
-    width: 100%;
-    padding: 8px 30px 8px 10px;
-    border: 0;
-    box-shadow: none;
-    outline: none;
-    font-size: 16px;
-    font-weight: 400;
+appearance: none;
+color: #000;
+cursor: pointer;
+background-color: #fff;
+border-radius: 4px;
+width: 100%;
+padding: 8px 30px 8px 10px;
+border: 0;
+box-shadow: none;
+outline: none;
+font-size: 16px;
+font-weight: 400;
 }
 
 .dropdown-arrow {
-    pointer-events: none;
-    color: #555;
-    font-size: 12px;
-  position: absolute;
-  top: 10px;
-  right: 10px;
+pointer-events: none;
+color: #555;
+font-size: 12px;
+position: absolute;
+top: 10px;
+right: 10px;
 }
 .selected-text {
 margin-top: 10px;
@@ -1707,6 +1707,75 @@ display: none;
 }
 
 
+.blogs-detail-bnr {
+border: 0 solid #e5e5e5;
+border-top-width: 1px;
+padding-top: 68px;
+}
+
+.blogs-detail-bnr .custom-badge {
+background: #0176d3;
+color: #ffffff;
+margin-bottom: 16px;
+}
+
+.bnr-title {
+color: #032d60;
+text-align: left;
+font-size: 40px;
+line-height: 48px;
+font-weight: 600;
+}
+.bnr-paragraph {
+color: hsl(213deg 94% 19% / 75%);
+font-size: 20px;
+line-height: 28px;
+padding-top: 24px;
+}
+
+.blogs-detail-bnr .custom-flex {
+margin-top: 40px;
+}
+
+.blogs-detail-bnr .custom-flex li span:before {
+display: none;
+}
+
+.blogs-detail-bnr .custom-flex li span {
+display: flex;
+padding-left: 39px;
+align-items: center;
+gap: 10px;
+}
+
+.blogs-detail-bnr .custom-flex li {
+display: block;
+}
+
+.blogs-detail-bnr .custom-flex li a span {
+padding-left: 0;
+}
+
+.blogs-detail-bnr .custom-flex li span span {
+width: 5px;
+height: 5px;
+background: #000000;
+border-radius: 50%;
+display: block;
+padding: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1716,24 +1785,24 @@ display: none;
 
 /* responsive */
 @media (max-width: 1700px) {
-  .blogs-bnr-layer img {
-    width: 454px;
-    height: 277px;
+.blogs-bnr-layer img {
+width: 454px;
+height: 277px;
 }
 .blogs-bnr-layer img {
-    width: 410px;
-    height: 246px;
+width: 410px;
+height: 246px;
 }
 }
 @media (max-width: 1600px) {
 .blogs-bnr-layer img {
-    width: 410px;
-    height: 246px;
+width: 410px;
+height: 246px;
 }
 }
 @media (max-width: 1500px) {
 .join-bottom-bnr-layer img:last-child {
-  right: 8%;
+right: 8%;
 }
 }
 
@@ -1749,8 +1818,8 @@ font-size: 45px;
 line-height: 56px;
 }
 .blogs-bnr-layer img {
-    max-width: 193px;
-    max-height: 218px;
+max-width: 193px;
+max-height: 218px;
 }
 .join .gap {
 gap: 18px;
@@ -1777,7 +1846,7 @@ grid-template-columns: repeat(3, 1fr);
 }
 .blogs-heding h1{
 font-size: 45px;
-    line-height: 56px;
+line-height: 56px;
 }
 .second-bnr .gap {
 gap: 26px;
@@ -1793,7 +1862,7 @@ font-size: 26px;
 line-height: 36.12px;
 }
 .join-card h3 {
-  font-size: 27px;
+font-size: 27px;
 line-height: 37.44px;
 max-width: 280px;
 margin: 0 auto;
@@ -1936,13 +2005,13 @@ margin: 0 auto;
 display: none;
 }
 .blogs-bnr-layer-mobile {
-    max-width: 371px;
-    max-height: 273px;
-    display: block;
-    position: absolute;
-    bottom: 0;
-    left: -87px;
-    border-radius: 0 !important;
+max-width: 371px;
+max-height: 273px;
+display: block;
+position: absolute;
+bottom: 0;
+left: -87px;
+border-radius: 0 !important;
 }
 .blogs-bnr-img {
 position: relative;
@@ -2055,8 +2124,8 @@ text-align: left;
 line-height: 24px;
 }
 .blogs-bnr-layer-mobile {
-    max-width: 318px;
-    max-height: 215px;
+max-width: 318px;
+max-height: 215px;
 }
 .grid-cols-3 {
 grid-template-columns: 1fr;
@@ -2266,8 +2335,8 @@ min-height: auto;
 max-width: 100%;
 }
 .blogs-bnr-layer-mobile {
-  max-width: 221px;
-  max-height: 149px;
+max-width: 221px;
+max-height: 149px;
 }
 .site-footer .grid {
 grid-template-columns: 1fr;
@@ -2309,8 +2378,8 @@ width: 40%;
 width: 70%;
 }
 .feature-sec .grid-cols-3 {
-  grid-template-columns: 1fr;
-  gap: 32px;
+grid-template-columns: 1fr;
+gap: 32px;
 }
 .tabs-bar .MuiTabs-list {
 padding-right: 0;
