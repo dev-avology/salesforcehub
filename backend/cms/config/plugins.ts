@@ -1,17 +1,7 @@
-export default {
-  'upload': {
-    config: {
-      provider: 'local',
-      actionOptions: {
-        upload: {},
-        uploadStream: {},
-        delete: {},
-      },
-    },
-  },
+export default ({ env }) => ({
   'upload-plugin': {
     config: {
-      serverUrl: 'https://phpstack-1180784-5492094.cloudwaysapps.com',
+      serverUrl: env('PUBLIC_URL'),
     },
   },
-};
+});
