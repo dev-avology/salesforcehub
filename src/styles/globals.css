@@ -2033,21 +2033,23 @@ gap: 8px;
 }
 
 .explore-details .heading ul li a {
-background: #ffffff;
+    color: #58575b;
+letter-spacing: .7px;
+background: #fff;
+border: 2px solid #dddbda;
 border-radius: 100px;
-border-style: solid;
-border-color: #dddbda;
-border-width: 2px;
 padding: 14px 24px;
-color: #58575b;
 font-size: 12px;
-line-height: 15.96px;
-letter-spacing: 0.7px;
 font-weight: 400;
+line-height: 15.96px;
+transition: all .3s ease;
 }
 
-
-
+.explore-details .heading ul li a:hover {
+background:var(--blue);
+color: #fff;
+border-color: var(--blue);
+}
 
 
 
