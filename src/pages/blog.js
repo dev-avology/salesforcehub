@@ -12,7 +12,7 @@ const blogPosts = [
     image: "/images/step.png",
     badge: "Trending Post",
     title: "SF Arch Interview scenario at Amazon Seattle",
-     url: "/posts/sf-arch-interview-scenario-at-amazon-seattle",
+     url: "/blogDetail",
     author: "Jay Prasad",
     date: "March 24, 2025",
     description:
@@ -22,7 +22,7 @@ const blogPosts = [
     image: "/images/step.png",
     badge: "Trending Post",
     title: "SF Arch Interview scenario at Amazon Seattle",
-    url: "/posts/sf-arch-interview-scenario-at-amazon-seattle",
+  url: "/blogDetail",
     author: "Jay Prasad",
     date: "March 24, 2025",
     description:
@@ -32,7 +32,7 @@ const blogPosts = [
     image: "/images/step.png",
     badge: "Trending Post",
     title: "SF Arch Interview scenario at Amazon Seattle",
-    url: "/posts/sf-arch-interview-scenario-at-amazon-seattle",
+   url: "/blogDetail",
     author: "Jay Prasad",
     date: "March 24, 2025",
     description:
@@ -61,7 +61,7 @@ const tabData = [
           "Gathering integration requirements for enterprise-wide salesforce implementations",
         author: "Jay Prasad",
         date: "March 24, 2025",
-        badgeText: "Trending Post",
+        badgeText: "Integration",
         badgeColor: "",
         description:
           "This is second blog in series of 8 blog focussing on gathering Salesforce integration requirements. The blog will focus on enterprise-wide integration where Salesforce is the primary system but interacts with other core systems.",
@@ -237,25 +237,25 @@ const tabData = [
 
 const someTeamData = [
   {
-    name: "Aisha Rahman",
-    role: "Product Manager",
+    name: "Jay Prasad",
+    role: "Salesforce Technical Architect",
     image: "/images/tony1.svg",
   },
   {
-    name: "Daniel Lee",
-    role: "UX Designer",
+    name: "Priya Sharma",
+    role: "Salesforce Developer",
     image: "/images/tony2.svg",
   },
   {
-    name: "Carlos Mendes",
-    role: "Frontend Developer",
+    name: "James Wilson",
+    role: "Solution Architect",
     image: "/images/tony3.svg",
   },
 ];
 
 
 const joinData = {
-  heading: "A Community Built for Learning & Fun",
+  heading: "Join the newsletter & stay up to date!",
   description: `Stay connected and informed! Join our newsletter to receive the latest updates, exclusive offers, and exciting news straight to your inbox`,
   buttonText: "Sign up now",
   buttonLink: "#", // You can change this to the actual link

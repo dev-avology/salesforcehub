@@ -3,7 +3,7 @@ import React from 'react'
 function BlogDetailBnr() {
   return (
     <div>
-      egrtg
+      test
     </div>
   )
 }
