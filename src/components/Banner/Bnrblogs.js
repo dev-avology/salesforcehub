@@ -2,48 +2,61 @@ import React from "react";
 import Link from "next/link";
 
 
-function Bnrblogs(props) {
+function Bnrblogs({ posts }) {
   return (
     <>
-   <section className="second-bnr">
-      <div className="blogs-bnr-layer">
-        <img src={props.layer} alt="bnr-img" className="blogs-bnr-layer-desktop" />
-      </div>
-
-      <div className="container">
-        <div className="grid">
-          <div className="blogs-heding">
-            <h1>{props.heading}</h1>
-          </div>
+      <section className="second-bnr">
+        <div className="blogs-bnr-layer">
+          <img src="/images/blogs-bnr-layer.png" alt="bnr-img" className="blogs-bnr-layer-desktop" />
         </div>
 
-        <div className="grid grid-cols-2 gap">
-          <div className="item">
-            <div className="blogs-bnr-img">
-              <img src={props.image} alt="Featured"/>
-              <img src={props.layermobile} alt="bnr-img" className="blogs-bnr-layer-mobile" />
+        <div className="container">
+          <div className="grid">
+            <div className="blogs-heding">
+              <h1>Our Blog</h1>
             </div>
           </div>
+          {posts.filter((blogs)=>blogs.isFeatured === true).map((blogs) => (
+            <div className="grid grid-cols-2 gap" key={blogs.documentId}>
+              <div className="item">
+                <div className="blogs-bnr-img">
+                <img src={`http://localhost:1337${blogs.Image?.url}`} alt={blogs.Title} />
+                  <img src="/images/blogs-bnr-layer.png" alt="bnr-img" className="blogs-bnr-layer-mobile" />
+                </div>
+              </div>
 
-          <div className="item">
-            <div className="blogs-bnr-text">
-              <Link href="#" className="custom-badge">Featured Post</Link>
-              <h2>{props.title}</h2>
-              <ul className="custom-flex">
-                <li>
-                  <Link href="">
-                    <img src="/images/circle-bnr.png" alt="Date icon" />
-                    <span>Jay Prasad</span> 
+              <div className="item">
+                <div className="blogs-bnr-text">
+                  <Link href="#" className="custom-badge">Featured Post</Link>
+                  <Link href={`/blogs/${blogs.Slug}`}>
+                    <h2>{blogs.Title}</h2>
                   </Link>
-                  <span>{props.date}</span>
-                </li>
-              </ul>
-              <p>{props.description}</p>
+                  <ul className="custom-flex">
+                    <li>
+                      <Link href="">
+                        <img src={`http://localhost:1337${blogs.author_logo?.url}`} alt="Date icon" />
+                        <span>{blogs.author}</span>
+                      </Link>
+                      <span>{new Date(blogs.Date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}</span>
+
+                    </li>
+                  </ul>
+                  <div>
+                    {blogs.Content?.map((block, idx) => (
+                      <p key={idx}>{block.children?.[0]?.text}</p>
+                    ))}
+                  </div>
+
+                </div>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
-      </div>
-    </section>
+      </section>
     </>
   );
 }
