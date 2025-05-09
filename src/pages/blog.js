@@ -263,7 +263,11 @@ const joinData = {
   imageSrclayer:"/images/most2.png",
 };
 
-
+const dropdownOptions = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'popular', label: 'Popular' },
+  { value: 'trending', label: 'Trending' }
+];
 
 function blog() {
 
@@ -293,7 +297,7 @@ function blog() {
             <div className="item">
               <div className="tabs-bar">
                 <Tabs tabs={tabData} />
-
+               <CommonDrop options={dropdownOptions} />
               </div>
               <div class="pagination">
               <span class="arrow disabled">

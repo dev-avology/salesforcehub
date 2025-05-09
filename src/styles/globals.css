@@ -1324,8 +1324,9 @@ background: #032d60;
     text-transform: capitalize;
 }
 
-.tabs-bar  .css-hzcega-MuiTabs-list {
-gap: 12px;
+.tabs-bar .css-hzcega-MuiTabs-list {
+    gap: 12px;
+    padding-right: 122px;
 }
 
 
@@ -1339,7 +1340,9 @@ gap: 10px;
 .common-tabs .grid-cols-2 {
 grid-template-columns: 2.4fr 1fr;
 }
-
+.common-tabs .grid-cols-2 .item {
+    position: relative;
+}
 
 .common-tabs .css-13xfq8m-MuiTabPanel-root {padding-top: 49px;}
 
@@ -1651,6 +1654,60 @@ text-align: center;
 .blogs-bnr-layer-mobile {
   display: none;
 }
+
+
+
+
+.dropdown-wrapper {
+    width: 104px;
+    position: absolute;
+    top: 6px;
+    right: 0;
+}
+.dropdown-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #333;
+}
+.custom-select {
+    appearance: none;
+    color: #000;
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: 4px;
+    width: 100%;
+    padding: 8px 30px 8px 10px;
+    border: 0;
+    box-shadow: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.dropdown-arrow {
+    pointer-events: none;
+    color: #555;
+    font-size: 12px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.selected-text {
+margin-top: 10px;
+font-size: 13px;
+color: #555;
+}
+
+
+.tabs-bar .MuiTabs-indicator {
+display: none;
+}
+
+
+
+
+
 
 
 
@@ -2253,6 +2310,18 @@ width: 70%;
   grid-template-columns: 1fr;
   gap: 32px;
 }
+.tabs-bar .css-hzcega-MuiTabs-list {
+padding-right: 0;
+padding-bottom: 50px;
+}
+.tabs-bar .css-1qltlow-MuiTabs-indicator {
+display: none;
+}
+.dropdown-wrapper {
+top: 132px;
+left: 0;
+right:unset;
+}
 }
 
 
@@ -2265,7 +2334,10 @@ padding: 9px 10px;
 .header .grid {
 grid-template-columns: 108px 1fr;
 }
-
+.tabs-bar button {
+padding: 8px 15px;
+font-size: 13px;
+}
 
 .link-bar ul li .header-btn {
 padding: 6px;
