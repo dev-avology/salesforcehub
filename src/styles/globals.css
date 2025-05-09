@@ -1711,6 +1711,7 @@ display: none;
 border: 0 solid #e5e5e5;
 border-top-width: 1px;
 padding-top: 68px;
+position: relative;
 }
 
 .blogs-detail-bnr .custom-badge {
@@ -1764,9 +1765,33 @@ border-radius: 50%;
 display: block;
 padding: 0;
 }
+.detail-layer img {
+position: absolute;
+bottom: 62px;
+right: 0;
+z-index: -1;
+}
 
+.detail-layer img:last-child {
+width: 351px;
+height: 359px;
+}
+.blogs-detail-bnr .grid {
+padding-top: 63px;
+}
 
+.blogs-detail-right img {
+border-radius: 16px;
+}
 
+.blogs-detail-right p {
+font-size: 12px;
+line-height: 21px;
+font-weight: 400;
+color: #58575b;
+padding-top: 10px;
+max-width: 442px;
+}
 
 
 

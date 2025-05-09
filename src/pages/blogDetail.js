@@ -10,9 +10,11 @@ description:
 author: "Jay Prasad",
 date: "March 24, 2025 <span></span> 5 min read",
 image: "/images/detail-bbg.png",
-layerfirst: "/images/layerbg.png",
+layerfirst: "/images/tree1.png",
+layersecond: "/images/tree2.png",
 slug: "intro-to-salesforce-integration-decision-making-framework" ,
-badge:"Salesforce Platform"
+badge:"Salesforce Platform",
+imgpara:"Over the next seven blogs, we’ll tackle each pillar with a deeper dive and more visual aids, ensuring you’re well-equipped to navigate the integration maze.",
 };
 
 

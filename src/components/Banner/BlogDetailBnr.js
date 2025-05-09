@@ -6,9 +6,9 @@ function BlogDetailBnr({ detail }) {
     <section className="blogs-detail-bnr">
       <div className="detail-layer">
         <img alt="Layer 1" src={detail.layerfirst} />
+         <img alt="Layer 1" src={detail.layersecond} />
       </div>
       <div className="container">
-        <div className="grid">
           <div className="grid grid-cols-2 gap">
             <div className="item">
               <div className="blogs-detail-left">
@@ -33,10 +33,10 @@ function BlogDetailBnr({ detail }) {
             <div className="item">
               <div className="blogs-detail-right">
                 <img alt="Featured" src={detail.image} />
+                <p>{detail.imgpara}</p>
               </div>
             </div>
           </div>
-        </div>
       </div>
     </section>
   );
