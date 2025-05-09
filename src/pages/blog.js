@@ -12,6 +12,7 @@ const blogPosts = [
     image: "/images/step.png",
     badge: "Trending Post",
     title: "SF Arch Interview scenario at Amazon Seattle",
+     url: "/posts/sf-arch-interview-scenario-at-amazon-seattle",
     author: "Jay Prasad",
     date: "March 24, 2025",
     description:
@@ -21,6 +22,7 @@ const blogPosts = [
     image: "/images/step.png",
     badge: "Trending Post",
     title: "SF Arch Interview scenario at Amazon Seattle",
+    url: "/posts/sf-arch-interview-scenario-at-amazon-seattle",
     author: "Jay Prasad",
     date: "March 24, 2025",
     description:
@@ -30,12 +32,15 @@ const blogPosts = [
     image: "/images/step.png",
     badge: "Trending Post",
     title: "SF Arch Interview scenario at Amazon Seattle",
+    url: "/posts/sf-arch-interview-scenario-at-amazon-seattle",
     author: "Jay Prasad",
     date: "March 24, 2025",
     description:
       "In this blog post, I share a real-life Salesforce Architect interview scenario from Amazon. The use case centers on a restaurant order management...",
   },
 ];
+
+
 
 const imageUrl = "/images/hange.png";
 
@@ -273,6 +278,7 @@ function blog() {
         layer="/images/blogs-bnr-layer.png"
         layermobile="/images/blogs-bnr-layer.png"
       />
+
       <CommonCard blogPosts={blogPosts} />
       {/* blogs-animation-img */}
       <section className="blogs-animation-img">

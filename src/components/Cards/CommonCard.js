@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link"; // ✅ Add this
 
 function CommonCard({ blogPosts }) {
   return (
@@ -19,7 +20,13 @@ function CommonCard({ blogPosts }) {
                   <a className="custom-badge" href="/blog#">
                     {post.badge}
                   </a>
-                  <h3 className="title-custom">{post.title}</h3>
+                  <h3 className="title-custom">
+                    {post.url ? (
+                      <Link href={post.url}>{post.title}</Link>
+                    ) : (
+                      post.title
+                    )}
+                  </h3>
                   <ul className="custom-flex">
                     <li>
                       <a href="/blog">
