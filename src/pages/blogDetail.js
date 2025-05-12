@@ -1,4 +1,6 @@
 import BlogDetailBnr from '@/components/Banner/BlogDetailBnr'
+import Content from '@/components/BlogsDetails/Content';
+import Explore from '@/components/BlogsDetails/Explore';
 import React from 'react'
 
 
@@ -18,10 +20,15 @@ imgpara:"Over the next seven blogs, we’ll tackle each pillar with a deeper div
 };
 
 
+
+
+
 function blogDetail() {
   return (
     <>
     <BlogDetailBnr detail={detailBanner} />
+      <Content/>
+      <Explore/>
     </>
   )
 }
