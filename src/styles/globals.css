@@ -2614,13 +2614,27 @@ color: #fff;
 }
 
 span.arrow.disabled img {
-    margin-right: 10px;
-    margin-left: 0;
+margin-right: 10px;
+margin-left: 0;
 }
 
 .pagination .arrow img {
-    margin-left: 10px;
+margin-left: 10px;
 }
+
+.link-bar ul li a.active {
+border-bottom: 1px solid #032d60;
+}
+
+
+
+
+
+
+
+
+
+
 
 /* responsive */
 @media (max-width: 1700px) {
