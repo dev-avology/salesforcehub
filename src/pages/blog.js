@@ -87,20 +87,8 @@ function Blog({ posts }) {
       </motion.div>
 
       {/* Common Cards with Staggered Fade-In */}
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        variants={{
-          hidden: { opacity: 0 },
-          visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.2 },
-          },
-        }}
-        viewport={{ once: true }}
-      >
-        <CommonCard posts={posts} />
-      </motion.div>
+
+      <CommonCard posts={posts} />
 
       {/* Blogs Animation Image with Scale Effect */}
       <motion.section
@@ -141,9 +129,7 @@ function Blog({ posts }) {
                 />
               </div>
             </div>
-            <motion.div
-              className="item"
-            >
+            <motion.div className="item">
               <div className="join-card">
                 <figure>
                   <img
