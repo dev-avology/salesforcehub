@@ -1,8 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import CommonDrop from "../Dropdown/CommonDrop";
 
+function Modal({ isOpen, onClose, children }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="custom-model">
+      <div className="modal-overlay">
+        <div className="modal">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ChatBox() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <>
       <section className="join-detailsblog">
@@ -32,6 +51,7 @@ function ChatBox() {
                   rows={3}
                   defaultValue={""}
                   placeholder="Please log in to join the discussion..."
+                  onClick={openModal} // Trigger modal on click
                 />
                 <div className="emoji-flex">
                   <div className="emoji-left">
@@ -131,6 +151,7 @@ function ChatBox() {
                         rows={1}
                         defaultValue={""}
                         placeholder="Please log in to join the discussion..."
+                        onClick={openModal} // Trigger modal on click
                       />
                       <div className="emoji-flex">
                         <div className="emoji-left">
@@ -181,12 +202,35 @@ function ChatBox() {
                 </div>
               </div>
               <div className="loadmore">
-                <button class="primary-btn">Load more comments</button>
+                <button className="primary-btn">Load more comments</button>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Modal for login prompt */}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div className="subscribe-modal">
+          <h2>Log in to join the discussion</h2>
+          <p>
+           Choose a login method to add your comment.
+          </p>
+          <form className="subscribe-form">
+            <input type="text" placeholder="Full name" required />
+            <input type="email" placeholder="Email address" required />
+            <button type="submit" className="primary-btn">
+              Subscribe Now
+            </button>
+          </form>
+          <p className="privacy-note">
+            We respect your privacy. Unsubscribe anytime.
+          </p>
+        </div>
+        <button onClick={() => setIsModalOpen(false)} className="cancil-btn">
+          <img src="images/cross.svg" alt="cross.svg" />
+        </button>
+      </Modal>
     </>
   );
 }

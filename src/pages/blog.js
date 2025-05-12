@@ -12,24 +12,24 @@ const imageUrl = "/images/hange.png";
 
 const someTeamData = [
   {
-    name: "Aisha Rahman",
-    role: "Product Manager",
+    name: "Jay Prasad",
+    role: "Salesforce Technical Architect",
     image: "/images/tony1.svg",
   },
   {
-    name: "Daniel Lee",
-    role: "UX Designer",
+    name: "Priya Sharma",
+    role: "Salesforce Developer",
     image: "/images/tony2.svg",
   },
   {
-    name: "Carlos Mendes",
-    role: "Frontend Developer",
+    name: "James Wilson",
+    role: "Solution Architect",
     image: "/images/tony3.svg",
   },
 ];
 
 const joinData = {
-  heading: "A Community Built for Learning & Fun",
+  heading: "Join the newsletter & stay up to date!",
   description: `Stay connected and informed! Join our newsletter to receive the latest updates, exclusive offers, and exciting news straight to your inbox`,
   buttonText: "Sign up now",
   buttonLink: "#", // You can change this to the actual link
