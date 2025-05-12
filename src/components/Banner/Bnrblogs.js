@@ -20,7 +20,7 @@ function Bnrblogs({ posts }) {
             <div className="grid grid-cols-2 gap" key={blogs.documentId}>
               <div className="item">
                 <div className="blogs-bnr-img">
-                <img src={`http://localhost:1337${blogs.Image?.url}`} alt={blogs.Title} />
+                <img src={`${process.env.NEXT_PUBLIC_API_URL}${blogs.Image?.url}`} alt={blogs.Title} />
                   <img src="/images/blogs-bnr-layer.png" alt="bnr-img" className="blogs-bnr-layer-mobile" />
                 </div>
               </div>
@@ -34,7 +34,7 @@ function Bnrblogs({ posts }) {
                   <ul className="custom-flex">
                     <li>
                       <Link href="">
-                        <img src={`http://localhost:1337${blogs.author_logo?.url}`} alt="Date icon" />
+                        <img src={`${process.env.NEXT_PUBLIC_API_URL}${blogs.author_logo?.url}`} alt="Date icon" />
                         <span>{blogs.author}</span>
                       </Link>
                       <span>{new Date(blogs.Date).toLocaleDateString('en-US', {
