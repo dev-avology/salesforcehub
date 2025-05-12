@@ -12,6 +12,49 @@ const tags = [
   { label: "AI Research", url: "/tags/ai-research" },
 ];
 
+const sliderData = [
+  {
+    id: 1,
+    image: "images/Silvio.png",
+    name: "Jay Prasad",
+    position: "Salesforce Technical Architect",
+    description:
+      "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
+    link: "/profile/jay-prasad",
+    arrow: "images/Vectorright.svg",
+  },
+  {
+    id: 2,
+    image: "images/Silvio.png",
+    name: "Jay Prasad",
+    position: "Salesforce Technical Architect",
+    description:
+      "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
+    link: "/profile/jay-prasad",
+    arrow: "images/Vectorright.svg",
+  },
+  {
+    id: 3,
+    image: "images/Silvio.png",
+    name: "Jay Prasad",
+    position: "Salesforce Technical Architect",
+    description:
+      "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
+    link: "/profile/jay-prasad",
+    arrow: "images/Vectorright.svg",
+  },
+  {
+    id: 4,
+    image: "images/Silvio.png",
+    name: "Jay Prasad",
+    position: "Salesforce Technical Architect",
+    description:
+      "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
+    link: "/profile/jay-prasad",
+    arrow: "images/Vectorright.svg",
+  },
+];
+
 function Explore() {
   <Swiper
     modules={[Navigation, Pagination, Autoplay]}
@@ -42,6 +85,9 @@ function Explore() {
             </ul>
           </div>
           <div className="explore-slider">
+            <div className="slider-container-layer">
+              <img alt="cloud.png" src="images/cloud.png"></img>
+            </div>
             <Swiper
               spaceBetween={50}
               slidesPerView={1}
@@ -49,18 +95,30 @@ function Explore() {
                 delay: 2500, // Delay between slide transitions (in ms)
                 disableOnInteraction: false, // Keep autoplay running after interaction
               }}
+               loop={true} // Optional: Enable looping through slides
             >
-              <SwiperSlide>
-                <div>
-                    
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div>Slide 2</div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div>Slide 3</div>
-              </SwiperSlide>
+              {sliderData.map((item) => (
+                <SwiperSlide key={item.id}>
+                  <div className="slider-container">
+                    <div className="slider-flexbar">
+                      <div className="slider-image">
+                        <img src={item.image} alt="professional" />
+                      </div>
+                      <div className="slider-content">
+                        <h3 className="slider-name">{item.name}</h3>
+                        <span className="slider-position">{item.position}</span>
+                      </div>
+                    </div>
+                    <p>{item.description}</p>
+                    <Link href={item.link}>
+                      Read More <img src={item.arrow} alt="arrow" />
+                    </Link>
+                    <div className="author-layer">
+                      <img src="images/author.png" alt="author" />
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </div>

@@ -16,7 +16,7 @@ export default function CommonDrop({ options = [] }) {
   };
 
   if (options.length === 0) {
-    return <p className="selected-text">No options available</p>;
+    return <p className="selected-text"></p>;
   }
 
   return (

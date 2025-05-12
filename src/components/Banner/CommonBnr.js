@@ -1,12 +1,22 @@
 import React from 'react';
 import Link from 'next/link';
 
-function CommonBnr({ heading, description, buttonText, buttonLink, imageSrc, imageSrclayer, imageSrclayer2 }) {
+function CommonBnr({
+  heading,
+  description,
+  buttonText,
+  buttonLink,
+  imageSrc,
+  imageSrclayer,
+  imageSrclayer2,
+  className = '',
+  ...props
+}) {
   return (
-    <section className="join-bottom-bnr">
+    <section className={`join-bottom-bnr ${className}`} {...props}>
       <div className="join-bottom-bnr-layer">
-        <img src={imageSrclayer} alt="join banner" />
-        <img src={imageSrclayer2} alt="join banner" />
+        <img src={imageSrclayer} alt="layer 1" />
+        <img src={imageSrclayer2} alt="layer 2" />
       </div>
       <div className="container">
         <div className="grid">
