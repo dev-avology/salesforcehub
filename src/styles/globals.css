@@ -1382,12 +1382,13 @@ font-weight: 400;
 color: #fff;
 }
 
-.common-tabs  .title-custom {
-font-size: 36px;
-line-height: 42.12px;
-letter-spacing: -0.4px;
-font-weight: 600;
+.common-tabs .title-custom {
+letter-spacing: -.4px;
 max-width: 100%;
+font-size: 36px;
+font-weight: 600;
+line-height: 42.12px;
+max-width: 600px;
 }
 
 .common-tabs  .custom-flex {
@@ -2508,6 +2509,7 @@ padding: 9px;
 .subscribe-modal {
 text-align: center;
 max-width: 495px;
+position: relative;
 }
 .subscribe-modal .privacy-note {
 margin-top: 16px;
@@ -2533,9 +2535,7 @@ top: 22px;
 left: -25px;
 max-width: 395px;
 }
-.modal {
-    position: relative;
-}
+
 .model-bg img:last-child {
 bottom: 0;
 right: 0;
@@ -3205,6 +3205,16 @@ display: none;
 }
 .join-bottom-bnr-details p {
 color: #032d60;
+}
+.custom-model .modal-overlay {
+padding: 39px 20px;
+}
+.subscribe-modal h2 {
+font-size: 24px;
+line-height: 32px;
+}
+.subscribe-modal form {
+margin: 43px auto 0;
 }
 }
 

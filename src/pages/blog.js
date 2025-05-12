@@ -5,10 +5,8 @@ import CommonDrop from "@/components/Dropdown/CommonDrop";
 import FeaturedSec from "@/components/Featured/FeaturedSec";
 import Tabs from "@/components/Tabs/Tabs";
 import React from "react";
-import axios from 'axios';
-import API from '../services/api'
-
-
+import axios from "axios";
+import API from "../services/api";
 
 const imageUrl = "/images/hange.png";
 
@@ -30,7 +28,6 @@ const someTeamData = [
   },
 ];
 
-
 const joinData = {
   heading: "A Community Built for Learning & Fun",
   description: `Stay connected and informed! Join our newsletter to receive the latest updates, exclusive offers, and exciting news straight to your inbox`,
@@ -42,33 +39,30 @@ const joinData = {
 
 export const getServerSideProps = async () => {
   const [blogsRes, featureRes] = await Promise.all([
-    API.get('/api/blogs?populate=*'),
+    API.get("/api/blogs?populate=*"),
   ]);
 
   const posts = blogsRes.data.data;
   return {
     props: {
       posts,
-     
     },
   };
 };
 
-
 function blog({ posts }) {
-
-
-
   const allPosts = posts;
 
-  const categories = ["all", ...new Set(allPosts.map((post) => post.category).filter(Boolean))];
+  const categories = [
+    "all",
+    ...new Set(allPosts.map((post) => post.category).filter(Boolean)),
+  ];
 
   const tabs = categories.map((category) => ({
     label: category === "all" ? "All" : category,
     value: category,
     content: allPosts,
   }));
-
 
   return (
     <>
@@ -91,9 +85,14 @@ function blog({ posts }) {
             <div className="item">
               <div className="tabs-bar">
                 <Tabs tabs={tabs} />
-
+                <CommonDrop
+                  options={[
+                    { label: "Newest", value: "newest" },
+                    { label: "Oldest", value: "oldest" },
+                    { label: "Top", value: "top" },
+                  ]}
+                />
               </div>
-              
             </div>
             <div className="item">
               <div className="join-card">
@@ -125,7 +124,6 @@ function blog({ posts }) {
         teamMembers={someTeamData}
       />
       <CommonBnr {...joinData} />
-      <CommonDrop />
     </>
   );
 }
