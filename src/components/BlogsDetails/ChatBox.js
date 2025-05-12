@@ -1,8 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import CommonDrop from "../Dropdown/CommonDrop";
 
+
+const loginMethods = [
+  { href: "#", className: "white", img: "images/log1.svg", label: "Continue with Disqus" },
+  { href: "#", className: "blue", img: "images/log2.svg", label: "Continue with Facebook" },
+  { href: "#", className: "black", img: "images/log3.svg", label: "Continue with X" },
+  { href: "#", className: "white", img: "images/log4.svg", label: "Continue with Google" },
+  { href: "#", className: "white", img: "images/log5.svg", label: "Continue with Microsoft" },
+  { href: "#", className: "black", img: "images/log6.svg", label: "Continue with Apple" },
+];
+
+
+
+
+
+
+function Modal({ isOpen, onClose, children }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="custom-model">
+      <div className="modal-overlay">
+        <div className="modal">{children}</div>
+      </div>
+    </div>
+  );
+}
+
 function ChatBox() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <>
       <section className="join-detailsblog">
@@ -32,6 +64,7 @@ function ChatBox() {
                   rows={3}
                   defaultValue={""}
                   placeholder="Please log in to join the discussion..."
+                  onClick={openModal} // Trigger modal on click
                 />
                 <div className="emoji-flex">
                   <div className="emoji-left">
@@ -131,6 +164,7 @@ function ChatBox() {
                         rows={1}
                         defaultValue={""}
                         placeholder="Please log in to join the discussion..."
+                        onClick={openModal} // Trigger modal on click
                       />
                       <div className="emoji-flex">
                         <div className="emoji-left">
@@ -181,12 +215,30 @@ function ChatBox() {
                 </div>
               </div>
               <div className="loadmore">
-                <button class="primary-btn">Load more comments</button>
+                <button className="primary-btn">Load more comments</button>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Modal for login prompt */}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div className="subscribe-modal">
+          <h2>Log in to join the discussion</h2>
+          <p>Choose a login method to add your comment.</p>
+          <div className="subscribe-links">
+            {loginMethods.map(({ href, className, img, label }, index) => (
+              <Link href={href} className={className} key={index}>
+                <img src={img} alt={label} /> {label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <button onClick={() => setIsModalOpen(false)} className="cancil-btn">
+          <img src="images/cross.svg" alt="cross.svg" />
+        </button>
+      </Modal>
     </>
   );
 }

@@ -2501,6 +2501,7 @@ top: 16px;
 right: 16px;
 border: 0;
 background: transparent;
+cursor: pointer;
 }
 .subscribe-modal form button {
 width: 100%;
