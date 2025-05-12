@@ -11,9 +11,6 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "User": {
-      "type": "string"
-    },
     "Text": {
       "type": "text"
     },
@@ -26,9 +23,15 @@
       "target": "api::blog.blog",
       "inversedBy": "comments"
     },
-    "reaction": {
+    "replies": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
+      "target": "api::reply.reply",
+      "mappedBy": "comment"
+    },
+    "reactions": {
+      "type": "relation",
+      "relation": "oneToMany",
       "target": "api::reaction.reaction",
       "mappedBy": "comment"
     }

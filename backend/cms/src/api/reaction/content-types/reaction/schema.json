@@ -4,7 +4,8 @@
   "info": {
     "singularName": "reaction",
     "pluralName": "reactions",
-    "displayName": "Reaction"
+    "displayName": "Reaction",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -19,17 +20,11 @@
         "angry"
       ]
     },
-    "blog": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::blog.blog",
-      "inversedBy": "reaction"
-    },
     "comment": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::comment.comment",
-      "inversedBy": "reaction"
+      "inversedBy": "reactions"
     }
   }
 }
