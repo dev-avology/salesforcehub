@@ -21,7 +21,7 @@ function Tabs({ tabs }) {
     <div className="flex-tbs" key={index}>
       <div className="flex-tbs-img">
         <img
-          src={`http://localhost:1337${post.Image?.url}` || 'No img'}
+          src={`${process.env.NEXT_PUBLIC_API_URL}${post.Image?.url}` || 'No img'}
           alt="Guide"
           className="card-img"
         />
@@ -39,7 +39,7 @@ function Tabs({ tabs }) {
         <ul className="custom-flex">
           <li>
             <a href="/blog">
-            <img src={`http://localhost:1337${post.author_logo?.url}`} alt="Date icon" />
+            <img src={`${process.env.NEXT_PUBLIC_API_URL}${post.author_logo?.url}`} alt="Date icon" />
               <span>{post.author}</span>
             </a>
             <span>{new Date(post.Date).toLocaleDateString('en-US', {

@@ -14,7 +14,7 @@ function CommonCard({ posts }) {
                 <div className="card" key={post.documentId}>
                   <figure>
                     <img
-                      src={`http://localhost:1337${post.Image?.url || ""}`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}${post.Image?.url || ""}`}
                       alt="Guide Image"
                       className="card-img"
                     />
@@ -30,7 +30,7 @@ function CommonCard({ posts }) {
                     <ul className="custom-flex">
                       <li>
                         <a href="/blog">
-                        <img src={`http://localhost:1337${post.author_logo?.url}`} alt="Date icon" />
+                        <img src={`${process.env.NEXT_PUBLIC_API_URL}${post.author_logo?.url}`} alt="Date icon" />
                           <span>{post.author}</span>
                         </a>
                         <span>
