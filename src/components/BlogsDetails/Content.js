@@ -174,6 +174,29 @@ function Content() {
                     </p>
                   </div>
                 </div>
+                <div className="details-article">
+                    <div className="details-article-bg">
+                      <img
+                        src="/images/sticky-bg.png"
+                        alt="Guide"
+                        class="card-img"
+                      ></img>
+                    </div>
+                    <h3>Just For You</h3>
+                    {posts.map((postright, index) => (
+                      <div className="box" key={index}>
+                        <img
+                          src={postright.image}
+                          alt="Guide"
+                          className="card-img"
+                        />
+                        <h4>
+                          <Link href={postright.url}>{postright.title}</Link>
+                        </h4>
+                        <span>{postright.readTime}</span>
+                      </div>
+                    ))}
+                  </div>
                 <h2>
                   The Integration Decision Making Framework: A Quick Overview
                 </h2>
@@ -247,6 +270,25 @@ function Content() {
                   up-to-date loyalty info without unnecessary complexity or
                   risk.
                 </p>
+
+                            <div className="blogs-detail-sidebar">
+                <div className="icons">
+                    <ul>
+                      {shareLinks.map((share, index) => (
+                        <li key={index}>
+                          <Link href={share.url} target="_blank">
+                            <img
+                              alt={`Share icon ${index + 1}`}
+                              src={share.icon}
+                            />
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                </div>
+              </div>
+
+
               </div>
             </div>
             <div className="item">
@@ -291,7 +333,7 @@ function Content() {
                     ))}
                   </div>
                 </div>
-                             <div className="icons">
+                    <div className="icons">
                     <h3>Share article</h3>
                     <ul>
                       {shareLinks.map((share, index) => (

@@ -29,7 +29,7 @@ description: `Stay connected and informed! Join our newsletter to receive the la
 buttonText: "Sign up now",
 buttonLink: "#", // You can change this to the actual link
 imageSrclayer2: "/images/ommonBnr-details.png",
-// imageSrclayer: "/images/most2.png",
+ imageSrclayer: "/images/middle section.png",
 };
 
 
