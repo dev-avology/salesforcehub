@@ -201,7 +201,7 @@ function Content() {
                     structured steps, you’ll avoid massive rework later.
                   </p>
                 </ul>
-                <h2>The Integration Path</h2>
+                <h2 className="spaces">The Integration Path</h2>
                 <figure>
                   <img src="images/Background4.png" alt="" />
                 </figure>

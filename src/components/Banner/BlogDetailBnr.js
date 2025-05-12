@@ -7,6 +7,7 @@ function BlogDetailBnr({ detail }) {
       <div className="detail-layer">
         <img alt="Layer 1" src={detail.layerfirst} />
          <img alt="Layer 1" src={detail.layersecond} />
+          <img alt="Layer 1" src={detail.layerthree} />
       </div>
       <div className="container">
           <div className="grid grid-cols-2 gap">
