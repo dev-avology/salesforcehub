@@ -111,7 +111,7 @@ function Explore() {
                     </div>
                     <p>{item.description}</p>
                     <Link href={item.link}>
-                      Read More <img src={item.arrow} alt="arrow" />
+                      More Articles by Jay <img src={item.arrow} alt="arrow" />
                     </Link>
                     <div className="author-layer">
                       <img src="images/author.png" alt="author" />
