@@ -2,15 +2,28 @@ import React, { useState } from "react";
 import Link from "next/link";
 import CommonDrop from "../Dropdown/CommonDrop";
 
+
+const loginMethods = [
+  { href: "#", className: "white", img: "images/log1.svg", label: "Continue with Disqus" },
+  { href: "#", className: "blue", img: "images/log2.svg", label: "Continue with Facebook" },
+  { href: "#", className: "black", img: "images/log3.svg", label: "Continue with X" },
+  { href: "#", className: "white", img: "images/log4.svg", label: "Continue with Google" },
+  { href: "#", className: "white", img: "images/log5.svg", label: "Continue with Microsoft" },
+  { href: "#", className: "black", img: "images/log6.svg", label: "Continue with Apple" },
+];
+
+
+
+
+
+
 function Modal({ isOpen, onClose, children }) {
   if (!isOpen) return null;
 
   return (
     <div className="custom-model">
       <div className="modal-overlay">
-        <div className="modal">
-          {children}
-        </div>
+        <div className="modal">{children}</div>
       </div>
     </div>
   );
@@ -213,19 +226,14 @@ function ChatBox() {
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <div className="subscribe-modal">
           <h2>Log in to join the discussion</h2>
-          <p>
-           Choose a login method to add your comment.
-          </p>
-          <form className="subscribe-form">
-            <input type="text" placeholder="Full name" required />
-            <input type="email" placeholder="Email address" required />
-            <button type="submit" className="primary-btn">
-              Subscribe Now
-            </button>
-          </form>
-          <p className="privacy-note">
-            We respect your privacy. Unsubscribe anytime.
-          </p>
+          <p>Choose a login method to add your comment.</p>
+          <div className="subscribe-links">
+            {loginMethods.map(({ href, className, img, label }, index) => (
+              <Link href={href} className={className} key={index}>
+                <img src={img} alt={label} /> {label}
+              </Link>
+            ))}
+          </div>
         </div>
         <button onClick={() => setIsModalOpen(false)} className="cancil-btn">
           <img src="images/cross.svg" alt="cross.svg" />
