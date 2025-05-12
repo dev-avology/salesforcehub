@@ -5,7 +5,6 @@ import CommonDrop from "@/components/Dropdown/CommonDrop";
 import FeaturedSec from "@/components/Featured/FeaturedSec";
 import Tabs from "@/components/Tabs/Tabs";
 import React from "react";
-import axios from 'axios';
 import API from '../services/api'
 
 
@@ -41,18 +40,16 @@ const joinData = {
 };
 
 export const getServerSideProps = async () => {
-  const [blogsRes, featureRes] = await Promise.all([
-    API.get('/api/blogs?populate=*'),
-  ]);
-
+  const blogsRes = await API.get('/api/blogs?populate=*');
   const posts = blogsRes.data.data;
+
   return {
     props: {
       posts,
-     
     },
   };
 };
+
 
 
 function blog({ posts }) {
