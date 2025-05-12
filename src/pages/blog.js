@@ -85,6 +85,13 @@ function blog({ posts }) {
             <div className="item">
               <div className="tabs-bar">
                 <Tabs tabs={tabs} />
+                <CommonDrop
+                  options={[
+                    { label: "Newest", value: "newest" },
+                    { label: "Oldest", value: "oldest" },
+                    { label: "Top", value: "top" },
+                  ]}
+                />
               </div>
             </div>
             <div className="item">
@@ -117,13 +124,6 @@ function blog({ posts }) {
         teamMembers={someTeamData}
       />
       <CommonBnr {...joinData} />
-      <CommonDrop
-        options={[
-          { label: "Newest", value: "newest" },
-          { label: "Oldest", value: "oldest" },
-          { label: "Top", value: "top" },
-        ]}
-      />
     </>
   );
 }

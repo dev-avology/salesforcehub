@@ -1382,12 +1382,13 @@ font-weight: 400;
 color: #fff;
 }
 
-.common-tabs  .title-custom {
-font-size: 36px;
-line-height: 42.12px;
-letter-spacing: -0.4px;
-font-weight: 600;
+.common-tabs .title-custom {
+letter-spacing: -.4px;
 max-width: 100%;
+font-size: 36px;
+font-weight: 600;
+line-height: 42.12px;
+max-width: 600px;
 }
 
 .common-tabs  .custom-flex {
