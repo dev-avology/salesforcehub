@@ -1513,6 +1513,11 @@ text-align: left;
 font-size: 16px;
 line-height: 18.4px;
 font-weight: 400;
+cursor: pointer;
+}
+.subscribe-links a:hover {
+background: #2a2d60;
+color: #fff;
 }
 
 .feature-sec {
@@ -2576,6 +2581,58 @@ font-weight: 400;
 color: #adaebc;
 }
 
+.custom-model.log .modal-overlay {
+max-width: 448px;
+background: #fff;
+padding: 32px;
+}
+
+.custom-model.log .subscribe-modal h2 {
+margin-bottom: 8px;
+}
+
+.subscribe-links a { display: block; border-radius: 4px; border-style: solid; border-color: #e5e7eb; border-width: 1px; color: #374151; font-size: 16px; line-height: 16px; font-weight: 400; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 16px; margin-bottom: 16px; transition:all .3s ease;
+}
+
+
+.subscribe-links a:last-child {
+margin-bottom: 0;
+}
+
+.subscribe-links {
+margin-top: 24px;
+}
+
+.subscribe-links .blue {
+background: #485f9c;
+color: #ffffff;
+}
+
+.subscribe-links a.black {
+background: #000;
+color: #fff;
+}
+
+span.arrow.disabled img {
+margin-right: 10px;
+margin-left: 0;
+}
+
+.pagination .arrow img {
+margin-left: 10px;
+}
+
+.link-bar ul li a.active {
+border-bottom: 1px solid #032d60;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -3366,6 +3423,9 @@ margin: 55px 0 3px;
 }
 .join-bottom-bnr h3 {
 font-size: 27px;
+}
+.custom-model.log .modal-overlay {
+padding: 32px 10px;
 }
 }
 
