@@ -4,13 +4,14 @@
   "info": {
     "singularName": "reply",
     "pluralName": "replies",
-    "displayName": "Reply"
+    "displayName": "Reply",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "attributes": {
-    "comment": {
+    "commentID": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::comment.comment",
@@ -19,11 +20,20 @@
     "Text": {
       "type": "string"
     },
-    "users_permissions_user": {
+    "user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "replies"
+    },
+    "Date": {
+      "type": "datetime"
+    },
+    "reaction": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::reaction.reaction",
+      "inversedBy": "reply"
     }
   }
 }

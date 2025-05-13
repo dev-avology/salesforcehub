@@ -4,13 +4,13 @@ import MixedMarkdownRenderer from "../MixedMarkdownRenderer";
 
 const posts = [
   {
-    image: "/images/oil2.png",
+    image: "../images/oil2.png",
     title: "SF Arch Interview scenario at Amazon Seattle",
     readTime: "7 min read",
     url: "/blog/amazon-seattle-arch-interview",
   },
   {
-    image: "/images/oil.png",
+    image: "../images/oil.png",
     title: "Intro to the Salesforce Integration Decision Making Framework",
     readTime: "4 min read",
     url: "/blog/salesforce-integration-framework",
@@ -19,19 +19,19 @@ const posts = [
 
 const shareLinks = [
   {
-    icon: "images/share1.svg",
+    icon: "../images/share1.svg",
     url: "https://www.facebook.com/sharer/sharer.php?u=yourpage.com",
   },
   {
-    icon: "images/share3.svg",
+    icon: "../images/share3.svg",
     url: "https://www.linkedin.com/shareArticle?mini=true&url=yourpage.com",
   },
   {
-    icon: "images/share2.svg",
+    icon: "../images/share2.svg",
     url: "https://twitter.com/intent/tweet?url=yourpage.com",
   },
   {
-    icon: "images/share4.svg",
+    icon: "../images/share4.svg",
     url: "mailto:?subject=Check this out&body=yourpage.com",
   },
 ];

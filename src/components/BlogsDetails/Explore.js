@@ -86,7 +86,7 @@ function Explore() {
           </div>
           <div className="explore-slider">
             <div className="slider-container-layer">
-              <img alt="cloud.png" src="images/cloud.png"></img>
+              <img alt="cloud.png" src="../images/cloud.png"></img>
             </div>
             <Swiper
               spaceBetween={50}
@@ -114,7 +114,7 @@ function Explore() {
                       More Articles by Jay <img src={item.arrow} alt="arrow" />
                     </Link>
                     <div className="author-layer">
-                      <img src="images/author.png" alt="author" />
+                      <img src="../images/author.png" alt="author" />
                     </div>
                   </div>
                 </SwiperSlide>

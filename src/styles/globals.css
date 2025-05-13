@@ -2575,7 +2575,9 @@ font-weight: 400;
 .subscribe-modal form input::placeholder {
 color: #adaebc;
 }
-
+.blogs-bnr-text a {
+    display: inline;
+}
 
 
 

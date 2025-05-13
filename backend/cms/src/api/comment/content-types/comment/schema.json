@@ -15,7 +15,7 @@
       "type": "text"
     },
     "Date": {
-      "type": "date"
+      "type": "datetime"
     },
     "blog": {
       "type": "relation",
@@ -23,17 +23,23 @@
       "target": "api::blog.blog",
       "inversedBy": "comments"
     },
-    "replies": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::reply.reply",
-      "mappedBy": "comment"
-    },
     "reactions": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::reaction.reaction",
       "mappedBy": "comment"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "comments"
+    },
+    "replies": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::reply.reply",
+      "mappedBy": "commentID"
     }
   }
 }

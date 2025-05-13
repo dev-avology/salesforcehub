@@ -426,7 +426,7 @@ export interface ApiCommentComment extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    Date: Schema.Attribute.Date;
+    Date: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -440,6 +440,10 @@ export interface ApiCommentComment extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -466,6 +470,7 @@ export interface ApiReactionReaction extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    reply: Schema.Attribute.Relation<'oneToOne', 'api::reply.reply'>;
     type: Schema.Attribute.Enumeration<['like', 'love', 'clap', 'angry']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -476,6 +481,7 @@ export interface ApiReactionReaction extends Struct.CollectionTypeSchema {
 export interface ApiReplyReply extends Struct.CollectionTypeSchema {
   collectionName: 'replies';
   info: {
+    description: '';
     displayName: 'Reply';
     pluralName: 'replies';
     singularName: 'reply';
@@ -484,19 +490,21 @@ export interface ApiReplyReply extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    comment: Schema.Attribute.Relation<'manyToOne', 'api::comment.comment'>;
+    commentID: Schema.Attribute.Relation<'manyToOne', 'api::comment.comment'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Date: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::reply.reply'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    reaction: Schema.Attribute.Relation<'oneToOne', 'api::reaction.reaction'>;
     Text: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    users_permissions_user: Schema.Attribute.Relation<
+    user: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'
     >;

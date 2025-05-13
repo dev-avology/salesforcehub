@@ -2,8 +2,30 @@
 
 import { useState, useEffect } from 'react';
 
-export default function CommonDrop({ options = [] }) {
+export default function CommonDrop({ options = [], comments}) {
   const [selectedOption, setSelectedOption] = useState('');
+  const [filteredComments, setFilteredComments] = useState([]);
+  console.log(selectedOption);
+
+
+  // Sorting functions
+  const sortComments = (selectedOption) => {
+    let sortedComments;
+    switch (selectedOption) {
+      case 'Newest':
+        sortedComments = [...comments].sort((a, b) => b.Date.getTime() - a.Date.getTime());
+        break;
+      case 'Oldest':
+        sortedComments = [...comments].sort((a, b) => a.Date.getTime() - b.Date.getTime()); 
+        break;
+      // case 'Top':
+      //   sortedComments = [...comments].sort((a, b) => b.likes - a.likes); // Sort by likes (top comments first)
+      //   break;
+      default:
+        sortedComments = [...comments];
+    }
+    setFilteredComments(sortedComments);
+  };
 
   useEffect(() => {
     if (options.length > 0) {
