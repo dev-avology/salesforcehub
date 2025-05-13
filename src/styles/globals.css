@@ -2627,7 +2627,9 @@ border-bottom: 1px solid #032d60;
 }
 
 
-
+.blogs-bnr-text a {
+display: inline;
+}
 
 
 
