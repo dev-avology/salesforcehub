@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import MixedMarkdownRenderer from "../MixedMarkdownRenderer";
 
 const posts = [
   {
@@ -38,14 +39,20 @@ const shareLinks = [
 
 
 
-function Content() {
+function Content({ detail }) {
   return (
     <>
       <section className="details-contents">
         <div className="container">
           <div className="grid grid-cols-2">
             <div className="items">
-              <div className="content">
+              <div>
+                {detail.MainContent ? (
+                  <MixedMarkdownRenderer content={detail.MainContent} />
+                ) : (<p>No Content</p>)}
+
+              </div>
+              {/* <div className="content">
                 <p>
                   In any enterprise, Salesforce rarely stands alone – it must
                   connect with a web of other systems to deliver a unified
@@ -271,25 +278,7 @@ function Content() {
                   risk.
                 </p>
 
-                            <div className="blogs-detail-sidebar">
-                <div className="icons">
-                    <ul>
-                      {shareLinks.map((share, index) => (
-                        <li key={index}>
-                          <Link href={share.url} target="_blank">
-                            <img
-                              alt={`Share icon ${index + 1}`}
-                              src={share.icon}
-                            />
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                </div>
-              </div>
-
-
-              </div>
+*/}
             </div>
             <div className="item">
               <div className="blogs-detail-sidebar">
@@ -312,7 +301,7 @@ function Content() {
                   <div className="details-article">
                     <div className="details-article-bg">
                       <img
-                        src="/images/sticky-bg.png"
+                        src="../images/sticky-bg.png"
                         alt="Guide"
                         class="card-img"
                       ></img>
@@ -333,21 +322,22 @@ function Content() {
                     ))}
                   </div>
                 </div>
-                    <div className="icons">
-                    <h3>Share article</h3>
-                    <ul>
-                      {shareLinks.map((share, index) => (
-                        <li key={index}>
-                          <Link href={share.url} target="_blank">
-                            <img
-                              alt={`Share icon ${index + 1}`}
-                              src={share.icon}
-                            />
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+
+                <div className="icons">
+                  <h3>Share article</h3>
+                  <ul>
+                    {shareLinks.map((share, index) => (
+                      <li key={index}>
+                        <Link href={share.url} target="_blank">
+                          <img
+                            alt={`Share icon ${index + 1}`}
+                            src={share.icon}
+                          />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

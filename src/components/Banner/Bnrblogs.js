@@ -3,6 +3,7 @@ import Link from "next/link";
 
 
 function Bnrblogs({ posts }) {
+  console.log(posts);
   return (
     <>
       <section className="second-bnr">
@@ -16,9 +17,11 @@ function Bnrblogs({ posts }) {
               <h1>Our Blog</h1>
             </div>
           </div>
+          
           {posts.filter((blogs)=>blogs.isFeatured === true).map((blogs) => (
-            <div className="grid grid-cols-2 gap" key={blogs.documentId}>
+            <div className="grid grid-cols-2 gap" key={blogs.documentId}> 
               <div className="item">
+               
                 <div className="blogs-bnr-img">
                 <img src={`${process.env.NEXT_PUBLIC_API_URL}${blogs.Image?.url}`} alt={blogs.Title} />
                   <img src="/images/blogs-bnr-layer.png" alt="bnr-img" className="blogs-bnr-layer-mobile" />
@@ -28,7 +31,7 @@ function Bnrblogs({ posts }) {
               <div className="item">
                 <div className="blogs-bnr-text">
                   <Link href="#" className="custom-badge">Featured Post</Link>
-                  <Link href={`/blogs/${blogs.Slug}`}>
+                  <Link href={`/blog/${blogs.Slug}`}>
                     <h2>{blogs.Title}</h2>
                   </Link>
                   <ul className="custom-flex">
