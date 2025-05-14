@@ -42,6 +42,7 @@ function ChatBox({ comments, postID, updateComments }) {
   const [filteredComments, setFilteredComments] = useState([]);
   const [showPicker, setShowPicker] = useState(false);
   const [showPickerreply, setShowPickerreply] = useState(false);
+  const [valueiD, setValueiD] = useState(null);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -72,12 +73,23 @@ function ChatBox({ comments, postID, updateComments }) {
     setNewComments((prev) => prev + emojiData.emoji);
     setShowPicker(false);
   };
-  
- const handleEmojiClickReply = (emojiData) => {
-  console.log("kjk",emojiData);
+
+  const handleEmojiClickReply = (emojiData) => {
+    console.log("kjk", emojiData);
     setNewReply((prev) => prev + emojiData.emoji);
     setShowPickerreply(false);
   };
+
+  //...
+  const handleShowPickerreply = (id) => {
+    console.log("->", id);
+    setValueiD(id);
+    setCommentID(id);
+    setShowPickerreply(true);
+    console.log("->", valueiD);
+  }
+
+
 
   const handleCommentChange = (e) => setNewComments(e.target.value);
 
@@ -124,11 +136,14 @@ function ChatBox({ comments, postID, updateComments }) {
         user: 2,
       },
     };
+    console.log(replyPayload);
 
     const replyRes = await API.post('/api/replies', replyPayload);
+    console.log(replyRes);
     updateComments();
     setCommentID(null);
     setNewReply('');
+    setValueiD(null);
     const createdreplyId = replyRes.data.data.id;
   }
 
@@ -342,7 +357,9 @@ function ChatBox({ comments, postID, updateComments }) {
                                       <Link href="#">
                                         <img src="../images/emoiy1.svg" alt="emoji1" />
                                       </Link>
-                                      <button type="button" onClick={() => setShowPickerreply(!showPickerreply)}>
+                                      {/* onClick={() => setShowPickerreply(!showPickerreply)} */}
+                                      <button type="button"
+                                        onClick={(e) => handleShowPickerreply(comment.documentId)}>
                                         <img src="../images/emoiy2.svg" alt="emoji2" />
                                       </button>
                                     </div>
@@ -352,11 +369,16 @@ function ChatBox({ comments, postID, updateComments }) {
 
                                   </div>
                                 </form>
-                                
-                                {showPickerreply && (
+                                {comment.documentId == valueiD && (
+                                  showPickerreply && (
+
+                                    <EmojiPicker onEmojiClick={handleEmojiClickReply} />
+                                  ))}
+
+                                {/* {showPickerreply &&  (
                                      
                                   <EmojiPicker onEmojiClick={handleEmojiClickReply} />
-                                )}
+                                )} */}
                               </div>
                             </div>
                           </div>
