@@ -24,7 +24,7 @@ function Modal({ isOpen, onClose, children }) {
   if (!isOpen) return null;
 
   return (
-    <div className="custom-model">
+    <div className="custom-model log ">
       <div className="modal-overlay">
         <div className="modal">{children}</div>
       </div>
