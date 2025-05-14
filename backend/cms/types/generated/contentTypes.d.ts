@@ -423,6 +423,9 @@ export interface ApiCommentComment extends Struct.CollectionTypeSchema {
   };
   attributes: {
     blog: Schema.Attribute.Relation<'manyToOne', 'api::blog.blog'>;
+    CommentImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -500,6 +503,7 @@ export interface ApiReplyReply extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     reaction: Schema.Attribute.Relation<'oneToOne', 'api::reaction.reaction'>;
+    Rimg: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Text: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

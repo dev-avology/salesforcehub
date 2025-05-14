@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import CommonDrop from "../Dropdown/CommonDrop";
 import API from '../../services/api'
 import EmojiPicker from 'emoji-picker-react';
+import { Api } from "@mui/icons-material";
 
 
 
@@ -32,7 +33,7 @@ function Modal({ isOpen, onClose, children }) {
   );
 }
 
-function ChatBox({ comments, postID, updateComments }) {
+function ChatBox({ comments, postID, replies, updateComments }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newComments, setNewComments] = useState('');
   const [newReply, setNewReply] = useState('');
@@ -43,6 +44,12 @@ function ChatBox({ comments, postID, updateComments }) {
   const [showPicker, setShowPicker] = useState(false);
   const [showPickerreply, setShowPickerreply] = useState(false);
   const [valueiD, setValueiD] = useState(null);
+  const [file, setFile] = useState(null);
+  const [rfile, setRfile] = useState(null);
+  const [inputKey, setInputKey] = useState(Date.now());
+  const fileInputRef = useRef(null);
+  const textareaRef = useRef(null);
+
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -52,6 +59,27 @@ function ChatBox({ comments, postID, updateComments }) {
       sortComments(filter);
     }
   }, [comments, filter]);
+
+
+  //handling code format
+  const handleCodeFormat = () => {
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = newComments.substring(start, end);
+
+    const formatted = '`' + selectedText + '`';
+
+    const newText =
+      newComments.substring(0, start) + formatted + newComments.substring(end);
+
+    setNewComments(newText);
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + 1, start + formatted.length - 1);
+    }, 0);
+  };
 
 
   const formatTimeAgo = (dateString) => {
@@ -69,9 +97,35 @@ function ChatBox({ comments, postID, updateComments }) {
     return `${diffDay} day${diffDay > 1 ? 's' : ''} ago`;
   };
 
+  //comments section 
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    console.log(selectedFile);
+  };
+  const handleRemoveImage = () => {
+    setFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleEmojiClick = (emojiData) => {
     setNewComments((prev) => prev + emojiData.emoji);
     setShowPicker(false);
+  };
+
+  //replay section
+
+  const handleFileReplyChange = (e, id) => {
+    const selectedFile = e.target.files[0];
+    setCommentID(id);
+    setRfile(selectedFile);
+  }
+
+  const handleRemoveReImage = () => {
+    setRfile(null);
+    setInputKey(Date.now());
   };
 
   const handleEmojiClickReply = (emojiData) => {
@@ -96,28 +150,45 @@ function ChatBox({ comments, postID, updateComments }) {
   //handle comments
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-
     try {
+      let imgID = null;
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('files', file, file.name);
+        const uploadRes = await API.post('/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        const uploadedFile = uploadRes.data[0];
+        imgID = uploadedFile.id;
+
+
+      }
+      if (!imgID && newComments.trim() === '') {
+        alert('Please enter a comment or upload an image before submitting.');
+        return;
+      }
       const commentPayload = {
         data: {
           Text: newComments,
           Date: new Date().toISOString(),
           blog: postID,
+          CommentImage: imgID || null,
           reactions: null,
           replies: null,
           user: 2,
         },
       };
-
       const commentRes = await API.post('/api/comments', commentPayload);
       const createdCommentId = commentRes.data.data.id;
+      imgID = null;
+      handleRemoveImage();
       updateComments();
 
       // Reset the form
       setNewComments('');
-      // setImage(null);
-      // setImageFile(null);
     } catch (err) {
       console.error('Error submitting comment and reaction:', err.response?.data || err.message);
     }
@@ -127,19 +198,41 @@ function ChatBox({ comments, postID, updateComments }) {
   //handle reply
   const handleReplySubmit = async (e) => {
     e.preventDefault();
+
+    let imgID = null;
+
+    if (rfile) {
+      const formData = new FormData();
+      formData.append('files', rfile, rfile.name);
+      const uploadRes = await API.post('/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      const uploadedFile = uploadRes.data[0];
+      imgID = uploadedFile.id;
+      console.log(imgID);
+    }
+    if (!imgID && newReply.trim() === '') {
+      alert('Please enter a comment or upload an image before submitting.');
+      return;
+    }
     const replyPayload = {
       data: {
         Text: newReply,
         Date: new Date().toISOString(),
         commentID: commentID,
+        Rimg: imgID || null,
         reaction: null,
         user: 2,
       },
     };
-    console.log(replyPayload);
+    console.log("kkjk", replyPayload);
 
     const replyRes = await API.post('/api/replies', replyPayload);
     console.log(replyRes);
+    imgID = null;
+    handleRemoveReImage();
     updateComments();
     setCommentID(null);
     setNewReply('');
@@ -219,22 +312,59 @@ function ChatBox({ comments, postID, updateComments }) {
                     className="form-control"
                     id="exampleFormControlTextarea1"
                     rows={3}
+                    ref={textareaRef}
                     value={newComments}
                     onChange={handleCommentChange}
                     placeholder="Please log in to join the discussion..."
                   // onClick={openModal} // Trigger modal on click
                   />
+                  {file && (
+                    <div style={{ position: 'relative', marginTop: '10px' }}>
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt="Preview"
+                        style={{ maxWidth: '150px', borderRadius: '5px' }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        style={{
+                          position: 'relative',
+                          bottom: 80,
+                          right: 0,
+                          background: 'red',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '20px',
+                          height: '20px',
+                          cursor: 'pointer'
+                        }}
+                        title="Remove image"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
                   <div className="emoji-flex">
                     <div className="emoji-left">
-                      <Link href="#">
+                      <label>
                         <img src="../images/emoiy1.svg" alt="emoji1" />
-                      </Link>
+                        <input
+                          type="file"
+                          name="files"
+                          ref={fileInputRef}
+                          onChange={handleFileChange}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
                       <button type="button" onClick={() => setShowPicker(!showPicker)}>
                         <img src="../images/emoiy2.svg" alt="emoji2" />
                       </button>
-                      <Link href="#">
+                      <p onClick={handleCodeFormat}>
                         <img src="../images/emoiy3.svg" alt="emoji3" />
-                      </Link>
+                      </p>
+
                     </div>
                     <div className="emoji-right">
                       <button className="primary-btn" type="submit"  >Comment</button>
@@ -285,6 +415,9 @@ function ChatBox({ comments, postID, updateComments }) {
                           <span>{formatTimeAgo(comment.Date)}</span>
 
                         </div>
+                        {comment.CommentImage ?
+                          <img src={`${process.env.NEXT_PUBLIC_API_URL}${comment.CommentImage?.url}`} alt={comment.Title} />
+                          : ''}
                         <p>
                           {comment.Text}
                         </p>
@@ -306,8 +439,8 @@ function ChatBox({ comments, postID, updateComments }) {
                         <div className="doe-flex">
                           <div className="doe-flex doe-flex-common" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             {/* replies */}
-                            {comment.replies.length > 0 ?
-                              (comment.replies.map((r) => (
+                            {replies.length > 0 ?
+                              (replies.map((r) => (
                                 <div className="doe-flex doe-flex-common" key={r.documentId}>
                                   <div className="doe-left">
                                     <figure>
@@ -319,6 +452,11 @@ function ChatBox({ comments, postID, updateComments }) {
                                       <h4>John Doe</h4>
                                       <span>{formatTimeAgo(r.Date)}</span>
                                     </div>
+                                    {r.Rimg ?
+
+                                      <img src={`${process.env.NEXT_PUBLIC_API_URL}${r.Rimg?.url}`} alt={r.Title} />
+                                      : ''}
+
                                     <p>
                                       {r.Text}
                                     </p>
@@ -352,12 +490,47 @@ function ChatBox({ comments, postID, updateComments }) {
                                     placeholder="Please log in to join the discussion..."
                                   // onClick={openModal} // Trigger modal on click
                                   />
+                                  {rfile && (
+                                    <div style={{ position: 'relative', marginTop: '10px' }}>
+                                      <img
+                                        src={URL.createObjectURL(rfile)}
+                                        alt="Preview"
+                                        style={{ maxWidth: '150px', borderRadius: '5px' }}
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={handleRemoveReImage}
+                                        style={{
+                                          position: 'relative',
+                                          bottom: 80,
+                                          right: 0,
+                                          background: 'red',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '50%',
+                                          width: '20px',
+                                          height: '20px',
+                                          cursor: 'pointer'
+                                        }}
+                                        title="Remove image"
+                                      >
+                                        ×
+                                      </button>
+                                    </div>
+                                  )}
                                   <div className="emoji-flex">
                                     <div className="emoji-left">
-                                      <Link href="#">
+                                      <label>
                                         <img src="../images/emoiy1.svg" alt="emoji1" />
-                                      </Link>
-                                      {/* onClick={() => setShowPickerreply(!showPickerreply)} */}
+                                        <input
+                                          type="file"
+                                          name="files"
+                                          key={inputKey}
+                                          onChange={(e) => handleFileReplyChange(e, comment.documentId)}
+                                          style={{ display: 'none' }}
+                                        />
+                                      </label>
+
                                       <button type="button"
                                         onClick={(e) => handleShowPickerreply(comment.documentId)}>
                                         <img src="../images/emoiy2.svg" alt="emoji2" />
@@ -375,10 +548,7 @@ function ChatBox({ comments, postID, updateComments }) {
                                     <EmojiPicker onEmojiClick={handleEmojiClickReply} />
                                   ))}
 
-                                {/* {showPickerreply &&  (
-                                     
-                                  <EmojiPicker onEmojiClick={handleEmojiClickReply} />
-                                )} */}
+
                               </div>
                             </div>
                           </div>
@@ -390,43 +560,13 @@ function ChatBox({ comments, postID, updateComments }) {
                   ) : <p>No comments yet</p>}
 
               </div>
-              {/* <div className="doe-flex doe-flex-common">
-                <div className="doe-left">
-                  <figure>
-                    <img src="../images/mike.png" alt="mike" />
-                  </figure>
-                </div>
-                <div className="doe-right">
-                  <div className="name">
-                    <h4>Mike Johnson</h4>
-                    <span>5 hours ago</span>
-                  </div>
-                  <p>
-                    Great perspective on this topic. I'd love to see more
-                    articles exploring similar themes in the future.
-                  </p>
-                  <div className="replay-sec">
-                    <span>
-                      <Link href="#">
-                        <img src="../images/replay1.svg" alt="like icon" /> 0 likes
-                      </Link>
-                      <Link href="#" className="">
-                        <img src="../images/replay2.svg" alt="reply icon" />0 reply
-                      </Link>
-                      <Link href="#">
-                        <img src="../images/replay3.svg" alt="share icon" />
-                        Share
-                      </Link>
-                    </span>
-                  </div>
-                </div>
-              </div> */}
+
               < div className="loadmore" >
                 <button className="primary-btn" onClick={() => setLoadcomment(loadcomment + 3)}>Load more comments</button>
               </div>
             </div>
           </div>
-        </div>
+        </div >
       </section >
 
       {/* Modal for login prompt */}

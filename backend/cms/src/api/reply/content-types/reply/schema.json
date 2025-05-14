@@ -34,6 +34,17 @@
       "relation": "oneToOne",
       "target": "api::reaction.reaction",
       "inversedBy": "reply"
+    },
+    "Rimg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

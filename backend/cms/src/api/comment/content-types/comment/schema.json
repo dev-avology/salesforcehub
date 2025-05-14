@@ -40,6 +40,16 @@
       "relation": "oneToMany",
       "target": "api::reply.reply",
       "mappedBy": "commentID"
+    },
+    "CommentImage": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

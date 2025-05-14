@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 export default function CommonDrop({ options = [], comments}) {
   const [selectedOption, setSelectedOption] = useState('');
   const [filteredComments, setFilteredComments] = useState([]);
-  console.log(selectedOption);
+ 
 
 
   // Sorting functions

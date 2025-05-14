@@ -1,7 +1,7 @@
 import BlogDetailBnr from '@/components/Banner/BlogDetailBnr'
 import Content from '@/components/BlogsDetails/Content';
 import Explore from '@/components/BlogsDetails/Explore';
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import API from '../../services/api'
 import ChatBox from '@/components/BlogsDetails/ChatBox';
 import CommonBnr from '@/components/Banner/CommonBnr';
@@ -43,24 +43,26 @@ export async function getStaticProps({ params }) {
 function blogDetail({ slugData }) {
 
   const [comments, setComments] = useState([]);
+  const [replies,setReplies] = useState([]);
   const [commentsRefresh, setCommentsRefresh] = useState(false);
 
-   const handleRefresh = () => {
-    console.log("work");
-    setCommentsRefresh(prevState => !prevState);  
+  const handleRefresh = () => {
+    setCommentsRefresh(prevState => !prevState);
   };
-    useEffect(() => {
-        const getComments = async () => {
-          try {
-            const res = await API.get('/api/comments?populate=*');
-            setComments(res.data.data);
-          } catch (error) {
-            console.error('Error fetching comments:', error);
-          }
-        };
-      
-        getComments();
-      }, [commentsRefresh]);
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const res = await API.get('/api/comments?populate=*');
+        setComments(res.data.data);
+        const repliesRes = await API.get('/api/replies?populate=*'); 
+        setReplies(repliesRes.data.data);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+
+    getComments();
+  }, [commentsRefresh]);
 
   const detailBanner = {
     image: "/images/detail-bbg.png",
@@ -109,7 +111,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.6, delay: 0.6, ease: "backOut" }}
         viewport={{ once: true }}
       >
-        <ChatBox  comments={comments}  postID ={slugData.documentId}  updateComments={handleRefresh} />
+        <ChatBox comments={comments} postID={slugData.documentId} replies={replies} updateComments={handleRefresh} />
       </motion.div>
 
       <motion.div
