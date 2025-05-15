@@ -1,24 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useAuthContext } from "@/context/AuthContext";
 import Link from "next/link";
 import CommonDrop from "../Dropdown/CommonDrop";
 import API from '../../services/api'
 import EmojiPicker from 'emoji-picker-react';
 import { Api } from "@mui/icons-material";
-
-
-
-const loginMethods = [
-  { href: "#", className: "white", img: "images/log1.svg", label: "Continue with Disqus" },
-  { href: "#", className: "blue", img: "images/log2.svg", label: "Continue with Facebook" },
-  { href: "#", className: "black", img: "images/log3.svg", label: "Continue with X" },
-  { href: "#", className: "white", img: "images/log4.svg", label: "Continue with Google" },
-  { href: "#", className: "white", img: "images/log5.svg", label: "Continue with Microsoft" },
-  { href: "#", className: "black", img: "images/log6.svg", label: "Continue with Apple" },
-];
-
-
-
-
+import Login from '../Login';
 
 
 function Modal({ isOpen, onClose, children }) {
@@ -34,6 +21,10 @@ function Modal({ isOpen, onClose, children }) {
 }
 
 function ChatBox({ comments, postID, replies, updateComments }) {
+
+
+
+  const { Authuser, isAuthenticated } = useAuthContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newComments, setNewComments] = useState('');
   const [newReply, setNewReply] = useState('');
@@ -51,7 +42,9 @@ function ChatBox({ comments, postID, replies, updateComments }) {
   const textareaRef = useRef(null);
 
 
-  const openModal = () => setIsModalOpen(true);
+  const openModal = () => {
+    setIsModalOpen(true);
+  }
   const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
@@ -59,6 +52,38 @@ function ChatBox({ comments, postID, replies, updateComments }) {
       sortComments(filter);
     }
   }, [comments, filter]);
+
+
+  const handleLikes = async (commentId) => {
+  if (!isAuthenticated) {
+    return openModal(); 
+  }
+
+  try {
+    // Step 1: Check if the user has already liked the comment
+    const response = await API.get(`/api/likes?user=${Authuser.id}&comment=${commentId}`);
+    
+    console.log(response.data); // For debugging purposes
+
+    if (response.data.length > 0) {
+      // Step 2: If like exists, remove it
+      const likeId = response.data[0].id; // Assuming the response contains the like ID
+      await API.delete(`/api/likes/${likeId}`);
+      console.log('Like removed');
+    } else {
+      // Step 3: If like doesn't exist, add it
+      const formData = { user: Authuser.id, comment: commentId };
+      await API.post('/api/likes', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('Like added');
+    }
+  } catch (error) {
+    console.error('Error handling like:', error); // Log any errors that happen during the process
+  }
+};
 
 
   //handling code format
@@ -99,6 +124,9 @@ function ChatBox({ comments, postID, replies, updateComments }) {
 
   //comments section 
   const handleFileChange = (e) => {
+     if (!isAuthenticated) {
+      return openModal();
+    }
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
     console.log(selectedFile);
@@ -150,6 +178,11 @@ function ChatBox({ comments, postID, replies, updateComments }) {
   //handle comments
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isAuthenticated) {
+      return openModal();
+    }
+
     try {
       let imgID = null;
 
@@ -178,7 +211,7 @@ function ChatBox({ comments, postID, replies, updateComments }) {
           CommentImage: imgID || null,
           reactions: null,
           replies: null,
-          user: 2,
+          user: Authuser.id,
         },
       };
       const commentRes = await API.post('/api/comments', commentPayload);
@@ -198,6 +231,9 @@ function ChatBox({ comments, postID, replies, updateComments }) {
   //handle reply
   const handleReplySubmit = async (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      return openModal();
+    }
 
     let imgID = null;
 
@@ -224,7 +260,7 @@ function ChatBox({ comments, postID, replies, updateComments }) {
         commentID: commentID,
         Rimg: imgID || null,
         reaction: null,
-        user: 2,
+        user: Authuser.id,
       },
     };
     console.log("kkjk", replyPayload);
@@ -307,7 +343,8 @@ function ChatBox({ comments, postID, replies, updateComments }) {
                 </figure>
               </div>
               <div className="box-content">
-                <form onSubmit={handleSubmit} >
+                <form
+                  onSubmit={handleSubmit} >
                   <textarea
                     className="form-control"
                     id="exampleFormControlTextarea1"
@@ -315,9 +352,13 @@ function ChatBox({ comments, postID, replies, updateComments }) {
                     ref={textareaRef}
                     value={newComments}
                     onChange={handleCommentChange}
-                    placeholder="Please log in to join the discussion..."
-                  // onClick={openModal} // Trigger modal on click
+                    placeholder={
+                      isAuthenticated ? "Write your comment here..." : "Please log in to join the discussion..."
+                    }
+                    onClick={!isAuthenticated ? () => openModal() : undefined}
+
                   />
+
                   {file && (
                     <div style={{ position: 'relative', marginTop: '10px' }}>
                       <img
@@ -411,7 +452,7 @@ function ChatBox({ comments, postID, replies, updateComments }) {
                       </div>
                       <div className="doe-right">
                         <div className="name">
-                          <h4>John Doe</h4>
+                          <h4>{comment.user?.username}</h4>
                           <span>{formatTimeAgo(comment.Date)}</span>
 
                         </div>
@@ -424,9 +465,9 @@ function ChatBox({ comments, postID, replies, updateComments }) {
 
                         <div className="replay-sec">
                           <span>
-                            <Link href="#">
-                              <img src="../images/replay1.svg" alt="like icon" /> 0 likes
-                            </Link>
+                            <button onClick={(e)=>handleLikes(comment.documentId)}>
+                               <img src="../images/replay1.svg" alt="like icon" /> {comment.likes?.length} likes
+                            </button>
                             <Link href="#" className="active">
                               <img src="../images/replay2.svg" alt="reply icon" />{comment.replies.length} reply
                             </Link>
@@ -439,8 +480,8 @@ function ChatBox({ comments, postID, replies, updateComments }) {
                         <div className="doe-flex">
                           <div className="doe-flex doe-flex-common" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             {/* replies */}
-                            {replies.length > 0 ?
-                              (replies.map((r) => (
+                            {comment.replies.length > 0 ?
+                              (comment.replies.map((r) => (
                                 <div className="doe-flex doe-flex-common" key={r.documentId}>
                                   <div className="doe-left">
                                     <figure>
@@ -449,7 +490,7 @@ function ChatBox({ comments, postID, replies, updateComments }) {
                                   </div>
                                   < div className="doe-right" >
                                     <div className="name">
-                                      <h4>John Doe</h4>
+                                      <h4>{r.user?.username}</h4>
                                       <span>{formatTimeAgo(r.Date)}</span>
                                     </div>
                                     {r.Rimg ?
@@ -488,7 +529,7 @@ function ChatBox({ comments, postID, replies, updateComments }) {
                                     value={newReply}
                                     onChange={(e) => handleReplyChange(e, comment.documentId)}
                                     placeholder="Please log in to join the discussion..."
-                                  // onClick={openModal} // Trigger modal on click
+                                    onClick={!isAuthenticated ? () => openModal() : undefined}
                                   />
                                   {rfile && (
                                     <div style={{ position: 'relative', marginTop: '10px' }}>
@@ -575,11 +616,7 @@ function ChatBox({ comments, postID, replies, updateComments }) {
           <h2>Log in to join the discussion</h2>
           <p>Choose a login method to add your comment.</p>
           <div className="subscribe-links">
-            {loginMethods.map(({ href, className, img, label }, index) => (
-              <Link href={href} className={className} key={index}>
-                <img src={img} alt={label} /> {label}
-              </Link>
-            ))}
+            <Login />
           </div>
         </div>
         <button onClick={() => setIsModalOpen(false)} className="cancil-btn">

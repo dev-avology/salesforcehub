@@ -45,6 +45,7 @@ function blogDetail({ slugData }) {
   const [comments, setComments] = useState([]);
   const [replies,setReplies] = useState([]);
   const [commentsRefresh, setCommentsRefresh] = useState(false);
+  const [blogs,setBlogs]=useState([]);
 
   const handleRefresh = () => {
     setCommentsRefresh(prevState => !prevState);
@@ -52,10 +53,14 @@ function blogDetail({ slugData }) {
   useEffect(() => {
     const getComments = async () => {
       try {
+        const blogsRes = await API.get('/api/blogs?populate=*');
+        setBlogs(blogsRes.data.data);
+
         const res = await API.get('/api/comments?populate=*');
         setComments(res.data.data);
         const repliesRes = await API.get('/api/replies?populate=*'); 
         setReplies(repliesRes.data.data);
+        
       } catch (error) {
         console.error('Error fetching comments:', error);
       }
@@ -95,7 +100,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         viewport={{ once: true }}
       >
-        <Content detail={slugData} />
+        <Content detail={slugData} blogs={blogs} />
       </motion.div>
       <motion.div
         initial={{ opacity: 0, x: -50 }}

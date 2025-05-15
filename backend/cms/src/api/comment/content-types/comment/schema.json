@@ -35,21 +35,28 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "comments"
     },
-    "replies": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::reply.reply",
-      "mappedBy": "commentID"
-    },
     "CommentImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "replies": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::reply.reply",
+      "mappedBy": "comment"
+    },
+    "likes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::like.like",
+      "mappedBy": "comment"
     }
   }
 }
