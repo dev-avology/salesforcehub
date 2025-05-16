@@ -33,7 +33,7 @@
       ]
     },
     "Date": {
-      "type": "date"
+      "type": "datetime"
     },
     "comments": {
       "type": "relation",

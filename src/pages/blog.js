@@ -5,7 +5,7 @@ import CommonCard from "@/components/Cards/CommonCard";
 import CommonDrop from "@/components/Dropdown/CommonDrop";
 import FeaturedSec from "@/components/Featured/FeaturedSec";
 import Tabs from "@/components/Tabs/Tabs";
-import React from "react";
+import React, { useState,useEffect } from "react";
 import API from '../services/api'
 
 const imageUrl = "/images/hange.png";
@@ -50,8 +50,57 @@ export const getServerSideProps = async () => {
   };
 };
 
-function Blog({ posts }) {
-  const allPosts = posts;
+function blog({ posts }) {
+  const [filter,setFilter] =useState("Newest");
+   const [filteredPosts, setFilteredPosts] = useState([]);
+
+    useEffect(() => {
+      if (posts.length > 0) {
+        sortComments(filter);
+      }
+    }, [posts, filter]);
+
+  
+
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+    sortComments(filter);
+  }
+
+  //filter data
+  const sortComments = (filter) => {
+    let sortedComments = [...posts];
+   
+
+    switch (filter) {
+      case 'Oldest':
+        sortedComments.sort((a, b) => {
+          const dateA = new Date(a.Date).getTime();
+          const dateB = new Date(b.Date).getTime();
+          return dateA - dateB; // Oldest first
+        });
+        break;
+
+      case 'Newest':
+        sortedComments.sort((a, b) => {
+          const dateA = new Date(a.Date).getTime();
+          const dateB = new Date(b.Date).getTime();
+          return dateB - dateA; // Newest first
+        });
+        break;
+
+
+      default:
+        // No sorting
+        break;
+    }
+
+    setFilteredPosts(sortedComments);
+  };
+ 
+
+  const allPosts = filteredPosts;
+
 
   const categories = [
     "all",
@@ -122,14 +171,16 @@ function Blog({ posts }) {
           <div className="grid grid-cols-2 gap">
             <div className="item">
               <div className="tabs-bar">
-                <Tabs tabs={tabs} />
-                <CommonDrop
-                  options={[
-                    { label: "Newest", value: "newest" },
-                    { label: "Oldest", value: "oldest" },
-                    { label: "Top", value: "top" },
-                  ]}
-                />
+                <Tabs tabs={tabs} filteredPosts={filteredPosts} />
+                <div className="dropdown-wrapper">
+                  <select className="custom-select" onChange={handleFilterChange} value={filter} >
+                    <option value="Newest">Newest</option>
+                    <option value="Oldest">Oldest</option>
+                  </select>
+                  <div className="dropdown-arrow">
+                    <img src="../images/drop-arrow.svg" alt="drop-arrow" />
+                  </div>
+                </div>
               </div>
             </div>
             <motion.div className="item">

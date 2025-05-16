@@ -1,7 +1,7 @@
 import BlogDetailBnr from '@/components/Banner/BlogDetailBnr'
 import Content from '@/components/BlogsDetails/Content';
 import Explore from '@/components/BlogsDetails/Explore';
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import API from '../../services/api'
 import ChatBox from '@/components/BlogsDetails/ChatBox';
 import CommonBnr from '@/components/Banner/CommonBnr';
@@ -43,24 +43,29 @@ export async function getStaticProps({ params }) {
 function blogDetail({ slugData }) {
 
   const [comments, setComments] = useState([]);
+  const [replies,setReplies] = useState([]);
   const [commentsRefresh, setCommentsRefresh] = useState(false);
+  const [blogs,setBlogs]=useState([]);
 
-   const handleRefresh = () => {
-    console.log("work");
-    setCommentsRefresh(prevState => !prevState);  
+  const handleRefresh = () => {
+    setCommentsRefresh(prevState => !prevState);
   };
-    useEffect(() => {
-        const getComments = async () => {
-          try {
-            const res = await API.get('/api/comments?populate=*');
-            setComments(res.data.data);
-          } catch (error) {
-            console.error('Error fetching comments:', error);
-          }
-        };
-      
-        getComments();
-      }, [commentsRefresh]);
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const blogsRes = await API.get('/api/blogs?populate=*');
+        setBlogs(blogsRes.data.data);
+
+        const res = await API.get('/api/comments?populate[user]=true&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user]=true&populate[replies][populate][likes]=true');
+        setComments(res.data.data);
+        
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+
+    getComments();
+  }, [commentsRefresh]);
 
   const detailBanner = {
     image: "/images/detail-bbg.png",
@@ -93,7 +98,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         viewport={{ once: true }}
       >
-        <Content detail={slugData} />
+        <Content detail={slugData} blogs={blogs} />
       </motion.div>
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -109,7 +114,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.6, delay: 0.6, ease: "backOut" }}
         viewport={{ once: true }}
       >
-        <ChatBox  comments={comments}  postID ={slugData.documentId}  updateComments={handleRefresh} />
+        <ChatBox comments={comments} postID={slugData.documentId} replies={replies} updateComments={handleRefresh} />
       </motion.div>
 
       <motion.div

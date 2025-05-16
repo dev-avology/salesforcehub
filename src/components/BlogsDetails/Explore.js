@@ -15,43 +15,43 @@ const tags = [
 const sliderData = [
   {
     id: 1,
-    image: "images/Silvio.png",
+    image: "../images/Silvio.png",
     name: "Jay Prasad",
     position: "Salesforce Technical Architect",
     description:
       "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
     link: "/profile/jay-prasad",
-    arrow: "images/Vectorright.svg",
+    arrow: "../images/Vectorright.svg",
   },
   {
     id: 2,
-    image: "images/Silvio.png",
+    image: "../images/Silvio.png",
     name: "Jay Prasad",
     position: "Salesforce Technical Architect",
     description:
       "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
     link: "/profile/jay-prasad",
-    arrow: "images/Vectorright.svg",
+    arrow: "../images/Vectorright.svg",
   },
   {
     id: 3,
-    image: "images/Silvio.png",
+    image: "../images/Silvio.png",
     name: "Jay Prasad",
     position: "Salesforce Technical Architect",
     description:
       "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
     link: "/profile/jay-prasad",
-    arrow: "images/Vectorright.svg",
+    arrow: "../images/Vectorright.svg",
   },
   {
     id: 4,
-    image: "images/Silvio.png",
+    image: "../images/Silvio.png",
     name: "Jay Prasad",
     position: "Salesforce Technical Architect",
     description:
       "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
     link: "/profile/jay-prasad",
-    arrow: "images/Vectorright.svg",
+    arrow: "../images/Vectorright.svg",
   },
 ];
 

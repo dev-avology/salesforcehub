@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useAuthContext } from '@/context/AuthContext';
+import Login from '../Login';
 
 function CommonBnr({
   heading,
@@ -12,6 +14,9 @@ function CommonBnr({
   className = '',
   ...props
 }) {
+
+  const [showlogin, setShowlogin] = useState(false);
+  const { isAuthenticated } = useAuthContext();
   return (
     <section className={`join-bottom-bnr ${className}`} {...props}>
       <div className="join-bottom-bnr-layer">
@@ -23,9 +28,15 @@ function CommonBnr({
           <div className="item">
             <h3>{heading}</h3>
             <p>{description}</p>
-            <a href={buttonLink} className="primary-btn">
-              {buttonText}
-            </a>
+            {!isAuthenticated && (
+              showlogin ? (
+                <Login />
+              ) : (
+                <button className="primary-btn"  onClick={()=>setShowlogin(true)}>{buttonText}</button>
+              )
+            )}
+
+
           </div>
         </div>
       </div>
