@@ -33,8 +33,8 @@ function Tabs({ tabs }) {
         >
           {post.category}
         </a>
-        <Link className="title-custom" href={`/blog/${post.Slug}`}>
-          <h3>{post.Title}</h3>
+        <Link  href={`/blog/${post.Slug}`}>
+          <h3 className="title-custom">{post.Title}</h3>
         </Link>
         <ul className="custom-flex">
           <li>

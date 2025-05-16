@@ -46,7 +46,7 @@ function Content({ detail, blogs }) {
         <div className="container">
           <div className="grid grid-cols-2">
             <div className="items">
-              <div>
+              <div className="content">
                 {detail.MainContent ? (
                   <MixedMarkdownRenderer content={detail.MainContent} />
                 ) : (<p>No Content</p>)}

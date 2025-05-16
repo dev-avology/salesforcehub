@@ -58,33 +58,33 @@ function ChatBox({ comments, postID, updateComments }) {
     if (!isAuthenticated) return openModal();
 
     // try {
-      const response = await API.get(
-        `http://localhost:3002/api/likes?filters[user][$eq]=${Authuser.id}&populate[comment]=true`
-      );
+    const response = await API.get(
+      `http://localhost:3002/api/likes?filters[user][$eq]=${Authuser.id}&populate[comment]=true`
+    );
 
-      const likes = response.data?.data;
-    
-      const hasLiked = likes.some((val) => val.comment?.documentId === commentId);
+    const likes = response.data?.data;
 
-      if (hasLiked) {
-        console.log("User has already liked this comment.");
-        
-      } else {
-        const likePayload = {
-          data: {
-            comment: commentId,
-            user: Authuser.id,
-          },
-        };
+    const hasLiked = likes.find((val) => val.comment?.documentId === commentId);
 
-        await API.post('/api/likes', likePayload, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        updateComments();
-        console.log('Like added');
-      }
+    if (hasLiked) {
+      console.log("User has already liked this comment.", hasLiked);
+
+    } else {
+      const likePayload = {
+        data: {
+          comment: commentId,
+          user: Authuser.id,
+        },
+      };
+
+      await API.post('/api/likes', likePayload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      updateComments();
+      console.log('Like added');
+    }
     // } catch (error) {
     //   console.error('Error handling like:', error);
     // }
@@ -115,33 +115,33 @@ function ChatBox({ comments, postID, updateComments }) {
     if (!isAuthenticated) return openModal();
 
     // try {
-      const response = await API.get(
-        `http://localhost:3002/api/likes?filters[user][$eq]=${Authuser.id}&populate[reply]=true`
-      );
+    const response = await API.get(
+      `http://localhost:3002/api/likes?filters[user][$eq]=${Authuser.id}&populate[reply]=true`
+    );
 
-      const likes = response.data?.data;
-      console.log(response.data);
+    const likes = response.data?.data;
+    console.log(response.data);
 
-      const hasLiked = likes.some((val) => val.reply?.documentId === commentId);
+    const hasLiked = likes.some((val) => val.reply?.documentId === commentId);
 
-      if (hasLiked) {
-        console.log("User has already liked this comment.");
-      } else {
-        const likePayload = {
-          data: {
-            reply: commentId,
-            user: Authuser.id,
-          },
-        };
+    if (hasLiked) {
+      console.log("User has already liked this comment.");
+    } else {
+      const likePayload = {
+        data: {
+          reply: commentId,
+          user: Authuser.id,
+        },
+      };
 
-        await API.post('/api/likes', likePayload, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        updateComments();        
-        console.log('Like added');
-      }
+      await API.post('/api/likes', likePayload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      updateComments();
+      console.log('Like added');
+    }
     // } catch (error) {
     //   console.error('Error handling like:', error);
     // }
@@ -194,7 +194,7 @@ function ChatBox({ comments, postID, updateComments }) {
     }
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
-    
+
   };
   const handleRemoveImage = () => {
     setFile(null);
@@ -228,7 +228,7 @@ function ChatBox({ comments, postID, updateComments }) {
 
   //...
   const handleShowPickerreply = (id) => {
-   
+
     setValueiD(id);
     setCommentID(id);
     setShowPickerreply(!showPickerreply);
@@ -349,6 +349,8 @@ function ChatBox({ comments, postID, updateComments }) {
   };
 
 
+
+
   //filter data
   const sortComments = (filter) => {
     let sortedComments = [...comments];
@@ -420,27 +422,15 @@ function ChatBox({ comments, postID, updateComments }) {
                   />
 
                   {file && (
-                    <div style={{ position: 'relative', marginTop: '10px' }}>
+                    <div className="imgs-uploads">
                       <img
                         src={URL.createObjectURL(file)}
                         alt="Preview"
-                        style={{ maxWidth: '150px', borderRadius: '5px' }}
                       />
                       <button
                         type="button"
                         onClick={handleRemoveImage}
-                        style={{
-                          position: 'relative',
-                          bottom: 80,
-                          right: 0,
-                          background: 'red',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '50%',
-                          width: '20px',
-                          height: '20px',
-                          cursor: 'pointer'
-                        }}
+
                         title="Remove image"
                       >
                         ×
@@ -538,123 +528,122 @@ function ChatBox({ comments, postID, updateComments }) {
 
                           </span>
                         </div>
-                        <div className="doe-flex">
-                          <div className="doe-flex doe-flex-common" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                            {/* replies */}
-                            {comment.replies.length > 0 ?
-                              (comment.replies.map((r) => (
-                                <div className="doe-flex doe-flex-common" key={r.documentId}>
-                                  <div className="doe-left">
-                                    <figure>
-                                      <img src="../images/doe.png" alt="messgee.svg" />
-                                    </figure>
+
+
+                        <div className="">
+                          {/* replies */}
+                          {comment.replies.length > 0 ?
+                            (comment.replies.map((r) => (
+                              <div className="doe-flex doe-flex-common" key={r.documentId}>
+                                <div className="doe-left">
+                                  <figure>
+                                    <img src="../images/doe.png" alt="messgee.svg" />
+                                  </figure>
+                                </div>
+                                < div className="doe-right" >
+                                  <div className="name">
+                                    <h4>{r.user?.username}</h4>
+                                    <span>{formatTimeAgo(r.Date)}</span>
                                   </div>
-                                  < div className="doe-right" >
-                                    <div className="name">
-                                      <h4>{r.user?.username}</h4>
-                                      <span>{formatTimeAgo(r.Date)}</span>
-                                    </div>
-                                    {r.Rimg ?
+                                  {r.Rimg ?
 
-                                      <img src={`${process.env.NEXT_PUBLIC_API_URL}${r.Rimg?.url}`} alt={r.Title} />
-                                      : ''}
+                                    <img src={`${process.env.NEXT_PUBLIC_API_URL}${r.Rimg?.url}`} alt={r.Title} />
+                                    : ''}
 
-                                    <p>
-                                      {r.Text}
-                                    </p>
-                                    <div className="replay-sec">
-                                      <span>
-                                        <button onClick={(e) => handleReplyLikes(r.documentId)}>
-                                          <img src="../images/replay1.svg" alt="like icon" /> {r.likes?.length} likes
+                                  <p>
+                                    {r.Text}
+                                  </p>
+                                  <div className="replay-sec">
+                                    <span>
+                                      <button onClick={(e) => handleReplyLikes(r.documentId)}>
+                                        <img src="../images/replay1.svg" alt="like icon" /> {r.likes?.length} likes
+                                      </button>
+
+                                    </span>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                            ))) : ''}
+                          <div className="box-main">
+                            <div className="box-flex">
+                              <figure>
+                                <img src="../images/profilebar.png" alt="messgee.svg" />
+                              </figure>
+                            </div>
+                            <div className="box-content">
+                              <form onSubmit={handleReplySubmit} >
+                                <textarea
+                                  className="form-control"
+                                  id="exampleFormControlTextarea1"
+                                  rows={1}
+                                  value={comment.documentId === commentID ? newReply : ''}
+                                  onChange={(e) => handleReplyChange(e, comment.documentId)}
+                                  placeholder="Please log in to join the discussion..."
+                                  onClick={!isAuthenticated ? () => openModal() : undefined}
+                                />
+                                {rfile && (
+                                  <div className="imgs-uploads">
+                                    {comment.documentId === commentID  && (
+                                      <>
+                                        <img
+                                          src={URL.createObjectURL(rfile)}
+                                          alt="Preview"
+                                          style={{ maxWidth: '150px', borderRadius: '5px' }}
+                                        />
+                                        <button
+                                          type="button"
+                                          onClick={handleRemoveReImage}
+                                          title="Remove image"
+                                        >
+                                          ×
                                         </button>
-                                    
-                                      </span>
-                                    </div>
+                                      </>
+                                    )}
+                                  </div>
+
+                                )}
+                                <div className="emoji-flex">
+                                  <div className="emoji-left">
+                                    <label>
+                                      <img src="../images/emoiy1.svg" alt="emoji1" />
+                                      <input
+                                        type="file"
+                                        name="files"
+                                        key={inputKey}
+                                        onChange={(e) => handleFileReplyChange(e, comment.documentId)}
+                                        style={{ display: 'none' }}
+                                      />
+                                    </label>
+
+                                    <button type="button"
+                                      onClick={(e) => handleShowPickerreply(comment.documentId)}>
+                                      <img src="../images/emoiy2.svg" alt="emoji2" />
+                                    </button>
+                                  </div>
+                                  <div className="emoji-right">
+                                    <button className="primary-btn" type="submit" >Reply</button>
                                   </div>
 
                                 </div>
+                              </form>
+                              {comment.documentId == valueiD && (
+                                showPickerreply && (
 
-                              ))) : ''}
-                            <div className="box-main">
-                              <div className="box-flex">
-                                <figure>
-                                  <img src="../images/profilebar.png" alt="messgee.svg" />
-                                </figure>
-                              </div>
-                              <div className="box-content">
-                                <form onSubmit={handleReplySubmit} >
-                                  <textarea
-                                    className="form-control"
-                                    id="exampleFormControlTextarea1"
-                                    rows={1}
-                                    value={newReply}
-                                    onChange={(e) => handleReplyChange(e, comment.documentId)}
-                                    placeholder="Please log in to join the discussion..."
-                                    onClick={!isAuthenticated ? () => openModal() : undefined}
-                                  />
-                                  {rfile && (
-                                    <div style={{ position: 'relative', marginTop: '10px' }}>
-                                      <img
-                                        src={URL.createObjectURL(rfile)}
-                                        alt="Preview"
-                                        style={{ maxWidth: '150px', borderRadius: '5px' }}
-                                      />
-                                      <button
-                                        type="button"
-                                        onClick={handleRemoveReImage}
-                                        style={{
-                                          position: 'relative',
-                                          bottom: 80,
-                                          right: 0,
-                                          background: 'red',
-                                          color: 'white',
-                                          border: 'none',
-                                          borderRadius: '50%',
-                                          width: '20px',
-                                          height: '20px',
-                                          cursor: 'pointer'
-                                        }}
-                                        title="Remove image"
-                                      >
-                                        ×
-                                      </button>
-                                    </div>
-                                  )}
-                                  <div className="emoji-flex">
-                                    <div className="emoji-left">
-                                      <label>
-                                        <img src="../images/emoiy1.svg" alt="emoji1" />
-                                        <input
-                                          type="file"
-                                          name="files"
-                                          key={inputKey}
-                                          onChange={(e) => handleFileReplyChange(e, comment.documentId)}
-                                          style={{ display: 'none' }}
-                                        />
-                                      </label>
-
-                                      <button type="button"
-                                        onClick={(e) => handleShowPickerreply(comment.documentId)}>
-                                        <img src="../images/emoiy2.svg" alt="emoji2" />
-                                      </button>
-                                    </div>
-                                    <div className="emoji-right">
-                                      <button className="primary-btn" type="submit" >Reply</button>
-                                    </div>
-
-                                  </div>
-                                </form>
-                                {comment.documentId == valueiD && (
-                                  showPickerreply && (
-
-                                    <EmojiPicker onEmojiClick={handleEmojiClickReply} />
-                                  ))}
+                                  <EmojiPicker onEmojiClick={handleEmojiClickReply} />
+                                ))}
 
 
-                              </div>
                             </div>
                           </div>
                         </div>
+
+
+
+
+
+
                       </div>
 
                     </div>
@@ -677,7 +666,7 @@ function ChatBox({ comments, postID, updateComments }) {
           <h2>Log in to join the discussion</h2>
           <p>Choose a login method to add your comment.</p>
           <div className="subscribe-links">
-            <Login />
+            <Login cutbox={closeModal} />
           </div>
         </div>
         <button onClick={() => setIsModalOpen(false)} className="cancil-btn">

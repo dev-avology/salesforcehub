@@ -43,9 +43,9 @@ export async function getStaticProps({ params }) {
 function blogDetail({ slugData }) {
 
   const [comments, setComments] = useState([]);
-  const [replies,setReplies] = useState([]);
+  const [replies, setReplies] = useState([]);
   const [commentsRefresh, setCommentsRefresh] = useState(false);
-  const [blogs,setBlogs]=useState([]);
+  const [blogs, setBlogs] = useState([]);
 
   const handleRefresh = () => {
     setCommentsRefresh(prevState => !prevState);
@@ -58,7 +58,7 @@ function blogDetail({ slugData }) {
 
         const res = await API.get('/api/comments?populate[user]=true&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user]=true&populate[replies][populate][likes]=true');
         setComments(res.data.data);
-        
+
       } catch (error) {
         console.error('Error fetching comments:', error);
       }
@@ -70,7 +70,9 @@ function blogDetail({ slugData }) {
   const detailBanner = {
     image: "/images/detail-bbg.png",
     layerfirst: "/images/tree1.png",
-    layersecond: "/images/tree2.png",
+    layersecond: "/images/tree4.png",
+    layerthree: "/images/tree5.png",
+
     imgpara: "Over the next seven blogs, we’ll tackle each pillar with a deeper dive and more visual aids, ensuring you’re well-equipped to navigate the integration maze.",
   };
 

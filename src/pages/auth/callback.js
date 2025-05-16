@@ -6,7 +6,7 @@ import API from '../../services/api';
 
 const Callback = () => {
     const router = useRouter();
-    const {login} = useAuthContext();
+    const { login } = useAuthContext();
     const { id_token, access_token, } = router.query;
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const Callback = () => {
                     );
 
                     console.log("----->", res.data);
-                    localStorage.setItem('jwt', res.data.jwt);  
+                    localStorage.setItem('jwt', res.data.jwt);
                     localStorage.setItem('user', JSON.stringify(res.data.user));
                     login();
                     router.push('/blog');
@@ -34,9 +34,16 @@ const Callback = () => {
 
 
         }
-    }, [id_token, access_token, router]); 
+    }, [id_token, access_token, router]);
 
-    return <div>Loading...</div>;
+    return (
+    <div>
+        <div className="loader-wrapper">
+            <div className="spinner" />
+            <p className="loading-text">Loading...</p>
+        </div>
+    </div>
+    )
 };
 
 export default Callback;
