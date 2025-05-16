@@ -22,6 +22,12 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "likes"
+    },
+    "reply": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::reply.reply",
+      "inversedBy": "likes"
     }
   }
 }

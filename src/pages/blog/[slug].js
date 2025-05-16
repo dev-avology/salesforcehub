@@ -56,10 +56,8 @@ function blogDetail({ slugData }) {
         const blogsRes = await API.get('/api/blogs?populate=*');
         setBlogs(blogsRes.data.data);
 
-        const res = await API.get('/api/comments?populate=*');
+        const res = await API.get('/api/comments?populate[user]=true&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user]=true&populate[replies][populate][likes]=true');
         setComments(res.data.data);
-        const repliesRes = await API.get('/api/replies?populate=*'); 
-        setReplies(repliesRes.data.data);
         
       } catch (error) {
         console.error('Error fetching comments:', error);

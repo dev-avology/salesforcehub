@@ -20,8 +20,7 @@ function Modal({ isOpen, onClose, children }) {
   );
 }
 
-function ChatBox({ comments, postID, replies, updateComments }) {
-
+function ChatBox({ comments, postID, updateComments }) {
 
 
   const { Authuser, isAuthenticated } = useAuthContext();
@@ -55,35 +54,101 @@ function ChatBox({ comments, postID, replies, updateComments }) {
 
 
   const handleLikes = async (commentId) => {
-  if (!isAuthenticated) {
-    return openModal(); 
-  }
 
-  try {
-    // Step 1: Check if the user has already liked the comment
-    const response = await API.get(`/api/likes?user=${Authuser.id}&comment=${commentId}`);
+    if (!isAuthenticated) return openModal();
+
+    // try {
+      const response = await API.get(
+        `http://localhost:3002/api/likes?filters[user][$eq]=${Authuser.id}&populate[comment]=true`
+      );
+
+      const likes = response.data?.data;
     
-    console.log(response.data); // For debugging purposes
+      const hasLiked = likes.some((val) => val.comment?.documentId === commentId);
 
-    if (response.data.length > 0) {
-      // Step 2: If like exists, remove it
-      const likeId = response.data[0].id; // Assuming the response contains the like ID
-      await API.delete(`/api/likes/${likeId}`);
-      console.log('Like removed');
+      if (hasLiked) {
+        console.log("User has already liked this comment.");
+        
+      } else {
+        const likePayload = {
+          data: {
+            comment: commentId,
+            user: Authuser.id,
+          },
+        };
+
+        await API.post('/api/likes', likePayload, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        updateComments();
+        console.log('Like added');
+      }
+    // } catch (error) {
+    //   console.error('Error handling like:', error);
+    // }
+  };
+
+  //handle share
+  const handleShare = (commentId) => {
+    const shareUrl = `${window.location.origin}/blog`;
+
+    if (navigator.share) {
+      navigator.share({
+        title: 'Check out this comment',
+        text: 'Take a look at this comment!',
+        url: shareUrl,
+      }).then(() => console.log('Shared successfully'))
+        .catch((error) => console.error('Error sharing:', error));
     } else {
-      // Step 3: If like doesn't exist, add it
-      const formData = { user: Authuser.id, comment: commentId };
-      await API.post('/api/likes', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      console.log('Like added');
+      navigator.clipboard.writeText(shareUrl)
+        .then(() => alert('Link copied to clipboard!'))
+        .catch((err) => console.error('Failed to copy:', err));
     }
-  } catch (error) {
-    console.error('Error handling like:', error); // Log any errors that happen during the process
-  }
-};
+  };
+
+
+  //handle reply like
+  const handleReplyLikes = async (commentId) => {
+    console.log(commentId);
+    if (!isAuthenticated) return openModal();
+
+    // try {
+      const response = await API.get(
+        `http://localhost:3002/api/likes?filters[user][$eq]=${Authuser.id}&populate[reply]=true`
+      );
+
+      const likes = response.data?.data;
+      console.log(response.data);
+
+      const hasLiked = likes.some((val) => val.reply?.documentId === commentId);
+
+      if (hasLiked) {
+        console.log("User has already liked this comment.");
+      } else {
+        const likePayload = {
+          data: {
+            reply: commentId,
+            user: Authuser.id,
+          },
+        };
+
+        await API.post('/api/likes', likePayload, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        updateComments();        
+        console.log('Like added');
+      }
+    // } catch (error) {
+    //   console.error('Error handling like:', error);
+    // }
+  };
+
+
+
 
 
   //handling code format
@@ -124,12 +189,12 @@ function ChatBox({ comments, postID, replies, updateComments }) {
 
   //comments section 
   const handleFileChange = (e) => {
-     if (!isAuthenticated) {
+    if (!isAuthenticated) {
       return openModal();
     }
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
-    console.log(selectedFile);
+    
   };
   const handleRemoveImage = () => {
     setFile(null);
@@ -157,18 +222,16 @@ function ChatBox({ comments, postID, replies, updateComments }) {
   };
 
   const handleEmojiClickReply = (emojiData) => {
-    console.log("kjk", emojiData);
     setNewReply((prev) => prev + emojiData.emoji);
     setShowPickerreply(false);
   };
 
   //...
   const handleShowPickerreply = (id) => {
-    console.log("->", id);
+   
     setValueiD(id);
     setCommentID(id);
     setShowPickerreply(true);
-    console.log("->", valueiD);
   }
 
 
@@ -247,7 +310,6 @@ function ChatBox({ comments, postID, replies, updateComments }) {
       });
       const uploadedFile = uploadRes.data[0];
       imgID = uploadedFile.id;
-      console.log(imgID);
     }
     if (!imgID && newReply.trim() === '') {
       alert('Please enter a comment or upload an image before submitting.');
@@ -257,16 +319,14 @@ function ChatBox({ comments, postID, replies, updateComments }) {
       data: {
         Text: newReply,
         Date: new Date().toISOString(),
-        commentID: commentID,
+        comment: commentID,
         Rimg: imgID || null,
-        reaction: null,
         user: Authuser.id,
       },
     };
-    console.log("kkjk", replyPayload);
+
 
     const replyRes = await API.post('/api/replies', replyPayload);
-    console.log(replyRes);
     imgID = null;
     handleRemoveReImage();
     updateComments();
@@ -465,16 +525,17 @@ function ChatBox({ comments, postID, replies, updateComments }) {
 
                         <div className="replay-sec">
                           <span>
-                            <button onClick={(e)=>handleLikes(comment.documentId)}>
-                               <img src="../images/replay1.svg" alt="like icon" /> {comment.likes?.length} likes
+                            <button onClick={(e) => handleLikes(comment.documentId)}>
+                              <img src="../images/replay1.svg" alt="like icon" /> {comment.likes?.length} likes
                             </button>
                             <Link href="#" className="active">
                               <img src="../images/replay2.svg" alt="reply icon" />{comment.replies.length} reply
                             </Link>
-                            <Link href="#">
+                            <button onClick={() => handleShare(comment.documentId)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                               <img src="../images/replay3.svg" alt="share icon" />
                               Share
-                            </Link>
+                            </button>
+
                           </span>
                         </div>
                         <div className="doe-flex">
@@ -503,10 +564,10 @@ function ChatBox({ comments, postID, replies, updateComments }) {
                                     </p>
                                     <div className="replay-sec">
                                       <span>
-                                        <Link href="#">
-                                          <img src="../images/replay1.svg" alt="like icon" /> 0
-                                          likes
-                                        </Link>
+                                        <button onClick={(e) => handleReplyLikes(r.documentId)}>
+                                          <img src="../images/replay1.svg" alt="like icon" /> {r.likes?.length} likes
+                                        </button>
+                                    
                                       </span>
                                     </div>
                                   </div>
