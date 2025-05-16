@@ -244,4 +244,4 @@ function blog({ posts }) {
   );
 }
 
-export default Blog;
+export default blog;
