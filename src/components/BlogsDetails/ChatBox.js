@@ -67,7 +67,11 @@ function ChatBox({ comments, postID, updateComments }) {
     const hasLiked = likes.find((val) => val.comment?.documentId === commentId);
 
     if (hasLiked) {
-      console.log("User has already liked this comment.", hasLiked);
+      const response = await API.delete(
+        `http://localhost:3002/api/likes/${hasLiked.documentId}`
+      );
+      updateComments();
+
 
     } else {
       const likePayload = {
@@ -111,7 +115,7 @@ function ChatBox({ comments, postID, updateComments }) {
 
   //handle reply like
   const handleReplyLikes = async (commentId) => {
-    console.log(commentId);
+
     if (!isAuthenticated) return openModal();
 
     // try {
@@ -120,12 +124,17 @@ function ChatBox({ comments, postID, updateComments }) {
     );
 
     const likes = response.data?.data;
-    console.log(response.data);
 
-    const hasLiked = likes.some((val) => val.reply?.documentId === commentId);
+
+    const hasLiked = likes.find((val) => val.reply?.documentId === commentId);
 
     if (hasLiked) {
-      console.log("User has already liked this comment.");
+      
+      const response = await API.delete(
+        `http://localhost:3002/api/likes/${hasLiked.documentId}`
+      );
+
+      updateComments();
     } else {
       const likePayload = {
         data: {
@@ -585,7 +594,7 @@ function ChatBox({ comments, postID, updateComments }) {
                                 />
                                 {rfile && (
                                   <div className="imgs-uploads">
-                                    {comment.documentId === commentID  && (
+                                    {comment.documentId === commentID && (
                                       <>
                                         <img
                                           src={URL.createObjectURL(rfile)}
