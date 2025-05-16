@@ -231,7 +231,7 @@ function ChatBox({ comments, postID, updateComments }) {
    
     setValueiD(id);
     setCommentID(id);
-    setShowPickerreply(true);
+    setShowPickerreply(!showPickerreply);
   }
 
 
