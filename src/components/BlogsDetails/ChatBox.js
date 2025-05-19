@@ -20,7 +20,29 @@ function Modal({ isOpen, onClose, children }) {
   );
 }
 
-function ChatBox({ comments, postID, updateComments }) {
+function ChatBox({ postID }) {
+  const [comments,setComments]=useState([])
+  const [commentsRefresh, setCommentsRefresh] = useState(false);
+
+   const handleRefresh = () => {
+    setCommentsRefresh(prevState => !prevState);
+  };
+
+useEffect(() => {
+    const fetchComments = async () => {
+      try {
+       
+        const res = await API.get(`/api/comments?filters[blog][documentId][$eq]=${postID}&populate[user]=true&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user]=true&populate[replies][populate][likes]=true`);
+        
+        setComments(res.data.data);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+    if (postID) {
+      fetchComments();
+    }
+  }, [postID,commentsRefresh]);
 
 
   const { Authuser, isAuthenticated } = useAuthContext();
@@ -70,7 +92,7 @@ function ChatBox({ comments, postID, updateComments }) {
       const response = await API.delete(
         `http://localhost:3002/api/likes/${hasLiked.documentId}`
       );
-      updateComments();
+      handleRefresh();
 
 
     } else {
@@ -86,7 +108,7 @@ function ChatBox({ comments, postID, updateComments }) {
           'Content-Type': 'application/json',
         },
       });
-      updateComments();
+      handleRefresh();
       console.log('Like added');
     }
     // } catch (error) {
@@ -129,12 +151,12 @@ function ChatBox({ comments, postID, updateComments }) {
     const hasLiked = likes.find((val) => val.reply?.documentId === commentId);
 
     if (hasLiked) {
-      
+
       const response = await API.delete(
         `http://localhost:3002/api/likes/${hasLiked.documentId}`
       );
 
-      updateComments();
+      handleRefresh();
     } else {
       const likePayload = {
         data: {
@@ -148,7 +170,7 @@ function ChatBox({ comments, postID, updateComments }) {
           'Content-Type': 'application/json',
         },
       });
-      updateComments();
+      handleRefresh();
       console.log('Like added');
     }
     // } catch (error) {
@@ -290,7 +312,7 @@ function ChatBox({ comments, postID, updateComments }) {
       const createdCommentId = commentRes.data.data.id;
       imgID = null;
       handleRemoveImage();
-      updateComments();
+      handleRefresh();
 
       // Reset the form
       setNewComments('');
@@ -338,7 +360,7 @@ function ChatBox({ comments, postID, updateComments }) {
     const replyRes = await API.post('/api/replies', replyPayload);
     imgID = null;
     handleRemoveReImage();
-    updateComments();
+    handleRefresh();
     setCommentID(null);
     setNewReply('');
     setValueiD(null);
@@ -389,6 +411,8 @@ function ChatBox({ comments, postID, updateComments }) {
 
     setFilteredComments(sortedComments);
   };
+
+
 
 
   return (
@@ -589,7 +613,9 @@ function ChatBox({ comments, postID, updateComments }) {
                                   rows={1}
                                   value={comment.documentId === commentID ? newReply : ''}
                                   onChange={(e) => handleReplyChange(e, comment.documentId)}
-                                  placeholder="Please log in to join the discussion..."
+                                  placeholder={
+                                    isAuthenticated ? "Write your comment here..." : "Please log in to join the discussion..."
+                                  }
                                   onClick={!isAuthenticated ? () => openModal() : undefined}
                                 />
                                 {rfile && (

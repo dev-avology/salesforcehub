@@ -42,7 +42,6 @@ export async function getStaticProps({ params }) {
 
 function blogDetail({ slugData }) {
 
-  const [comments, setComments] = useState([]);
   const [replies, setReplies] = useState([]);
   const [commentsRefresh, setCommentsRefresh] = useState(false);
   const [blogs, setBlogs] = useState([]);
@@ -55,9 +54,6 @@ function blogDetail({ slugData }) {
       try {
         const blogsRes = await API.get('/api/blogs?populate=*');
         setBlogs(blogsRes.data.data);
-
-        const res = await API.get('/api/comments?populate[user]=true&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user]=true&populate[replies][populate][likes]=true');
-        setComments(res.data.data);
 
       } catch (error) {
         console.error('Error fetching comments:', error);
@@ -116,7 +112,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.6, delay: 0.6, ease: "backOut" }}
         viewport={{ once: true }}
       >
-        <ChatBox comments={comments} postID={slugData.documentId} replies={replies} updateComments={handleRefresh} />
+        <ChatBox  postID={slugData.documentId} replies={replies}  />
       </motion.div>
 
       <motion.div
