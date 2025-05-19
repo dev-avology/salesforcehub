@@ -6,6 +6,8 @@ import API from '../../services/api'
 import ChatBox from '@/components/BlogsDetails/ChatBox';
 import CommonBnr from '@/components/Banner/CommonBnr';
 import { motion } from 'framer-motion';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 export async function getStaticPaths() {
   const res = await API.get('/api/blogs');
@@ -45,6 +47,11 @@ function blogDetail({ slugData }) {
   const [replies, setReplies] = useState([]);
   const [commentsRefresh, setCommentsRefresh] = useState(false);
   const [blogs, setBlogs] = useState([]);
+
+  const router = useRouter();
+  const { slug } = router.query;
+
+
 
   const handleRefresh = () => {
     setCommentsRefresh(prevState => !prevState);
@@ -112,7 +119,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.6, delay: 0.6, ease: "backOut" }}
         viewport={{ once: true }}
       >
-        <ChatBox  postID={slugData.documentId} replies={replies}  />
+        <ChatBox  postID={slugData.documentId} replies={replies}  slug={slug}  />
       </motion.div>
 
       <motion.div

@@ -77,7 +77,7 @@ function Content({ detail, blogs }) {
                       <img
                         src="../images/sticky-bg.png"
                         alt="Guide"
-                        class="card-img"
+                        className="card-img"
                       ></img>
                     </div>
                     <h3>Just For You</h3>

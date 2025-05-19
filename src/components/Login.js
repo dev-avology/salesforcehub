@@ -3,7 +3,7 @@
 export default function Login({cutbox}) {
 
     const handleGoogleLogin = () => {
-        window.location.href = 'http://localhost:3002/api/connect/google';
+        window.location.href =  `${process.env.NEXT_PUBLIC_API_URL}/api/connect/google`;
     };
     const handleDisqusLogin = () => {
 

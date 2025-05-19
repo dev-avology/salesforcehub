@@ -20,7 +20,7 @@ function Modal({ isOpen, onClose, children }) {
   );
 }
 
-function ChatBox({ postID }) {
+function ChatBox({ postID , slug}) {
   const [comments,setComments]=useState([])
   const [commentsRefresh, setCommentsRefresh] = useState(false);
 
@@ -32,8 +32,7 @@ useEffect(() => {
     const fetchComments = async () => {
       try {
        
-        const res = await API.get(`/api/comments?filters[blog][documentId][$eq]=${postID}&populate[user]=true&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user]=true&populate[replies][populate][likes]=true`);
-        
+        const res = await API.get(`/api/comments?filters[blog][documentId][$eq]=${postID}&populate[user]=true&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user]=true&populate[replies][populate][likes]=true`); 
         setComments(res.data.data);
       } catch (error) {
         console.error('Error fetching comments:', error);
@@ -79,21 +78,21 @@ useEffect(() => {
 
     if (!isAuthenticated) return openModal();
 
-    // try {
+    try {
     const response = await API.get(
-      `http://localhost:3002/api/likes?filters[user][$eq]=${Authuser.id}&populate[comment]=true`
+      `/api/likes?filters[user][$eq]=${Authuser.id}&populate[comment]=true`
     );
 
     const likes = response.data?.data;
 
     const hasLiked = likes.find((val) => val.comment?.documentId === commentId);
 
+
     if (hasLiked) {
       const response = await API.delete(
-        `http://localhost:3002/api/likes/${hasLiked.documentId}`
+        `/api/likes/${hasLiked.documentId}`
       );
       handleRefresh();
-
 
     } else {
       const likePayload = {
@@ -111,14 +110,14 @@ useEffect(() => {
       handleRefresh();
       console.log('Like added');
     }
-    // } catch (error) {
-    //   console.error('Error handling like:', error);
-    // }
+    } catch (error) {
+      console.error('Error handling like:', error);
+    }
   };
 
   //handle share
   const handleShare = (commentId) => {
-    const shareUrl = `${window.location.origin}/blog`;
+    const shareUrl = `${window.location.origin}/blog/${slug}`;
 
     if (navigator.share) {
       navigator.share({
@@ -140,20 +139,19 @@ useEffect(() => {
 
     if (!isAuthenticated) return openModal();
 
-    // try {
+    try {
     const response = await API.get(
-      `http://localhost:3002/api/likes?filters[user][$eq]=${Authuser.id}&populate[reply]=true`
+      `/api/likes?filters[user][$eq]=${Authuser.id}&populate[reply]=true`
     );
 
     const likes = response.data?.data;
-
 
     const hasLiked = likes.find((val) => val.reply?.documentId === commentId);
 
     if (hasLiked) {
 
       const response = await API.delete(
-        `http://localhost:3002/api/likes/${hasLiked.documentId}`
+        `/api/likes/${hasLiked.documentId}`
       );
 
       handleRefresh();
@@ -173,14 +171,10 @@ useEffect(() => {
       handleRefresh();
       console.log('Like added');
     }
-    // } catch (error) {
-    //   console.error('Error handling like:', error);
-    // }
+    } catch (error) {
+      console.error('Error handling like:', error);
+    }
   };
-
-
-
-
 
   //handling code format
   const handleCodeFormat = () => {
@@ -259,12 +253,10 @@ useEffect(() => {
 
   //...
   const handleShowPickerreply = (id) => {
-
     setValueiD(id);
     setCommentID(id);
     setShowPickerreply(!showPickerreply);
   }
-
 
 
   const handleCommentChange = (e) => setNewComments(e.target.value);
@@ -378,8 +370,6 @@ useEffect(() => {
     setCommentID(commentId);
 
   };
-
-
 
 
   //filter data
