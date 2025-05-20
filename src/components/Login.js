@@ -20,7 +20,7 @@ export default function Login({cutbox}) {
                 <div className="modal">
                     <div className="new_m_model">
                         <button onClick={handleGoogleLogin}><img src="../images/log4.svg" />Continue with Google</button>
-                        <button onClick={handleDisqusLogin}><img src="../images/github.svg" />Continue with Disqus</button>
+                        <button onClick={handleDisqusLogin}><img src="../images/github.svg" />Continue with Github</button>
                         <button class="cancil-btn" onClick={cutbox}> <img alt="cross.svg" src="../images/cross.svg"></img></button>
                     </div>
                 </div>
