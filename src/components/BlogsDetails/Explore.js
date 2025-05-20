@@ -20,7 +20,7 @@ const sliderData = [
     position: "Salesforce Technical Architect",
     description:
       "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
-    link: "/profile/jay-prasad",
+    link: "#",
     arrow: "../images/Vectorright.svg",
   },
   {
@@ -30,7 +30,7 @@ const sliderData = [
     position: "Salesforce Technical Architect",
     description:
       "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
-    link: "/profile/jay-prasad",
+    link: "#",
     arrow: "../images/Vectorright.svg",
   },
   {
@@ -40,7 +40,7 @@ const sliderData = [
     position: "Salesforce Technical Architect",
     description:
       "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
-    link: "/profile/jay-prasad",
+    link: "#",
     arrow: "../images/Vectorright.svg",
   },
   {
@@ -50,7 +50,7 @@ const sliderData = [
     position: "Salesforce Technical Architect",
     description:
       "Jay Prasad is a seasoned Salesforce Technical Architect and Developer with over 15 years of experience working with companies from small startups to large enterprises. With a strong background in Salesforce, AWS, Azure and Adobe, he knows how to turn real business needs into practical, scalable solutions.",
-    link: "/profile/jay-prasad",
+    link: "#",
     arrow: "../images/Vectorright.svg",
   },
 ];
