@@ -1,27 +1,25 @@
-// pages/auth/callback.js
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useAuthContext } from '@/context/AuthContext'; // Import your context
-import API from '../../services/api';
-
+import { useAuthContext } from '@/context/AuthContext';
+import API from '../../services/api'
 const Callback = () => {
     const router = useRouter();
+    const [errorMessage,setErrorMessage]=useState('');
     const { login } = useAuthContext();
-     const [errorMessage,setErrorMessage]=useState('');
-    const { id_token, access_token, } = router.query;
+    const { access_token, } = router.query;
+    console.log("token", access_token);
 
 
     useEffect(() => {
 
-        if (id_token && access_token) {
+        if (access_token) {
             const GetToken = async () => {
 
                 try {
                     const res = await API.get(
-                        `/api/auth/google/callback?access_token=${access_token}`
+                        `/api/auth/github/callback?access_token=${access_token}`
                     );
 
-                    
                     localStorage.setItem('jwt', res.data.jwt);
                     localStorage.setItem('user', JSON.stringify(res.data.user));
                     login();
@@ -39,10 +37,10 @@ const Callback = () => {
 
 
         }
-    }, [id_token, access_token, router]);
+    }, [access_token, router]);
 
     return (
-    <div>
+        <div>
             <div className="loader-wrapper">
                 <div className="spinner" />
                 <p className="loading-text">Loading...</p>
