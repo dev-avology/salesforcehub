@@ -2766,7 +2766,10 @@ transform: rotate(360deg);
 50% { opacity: 1; }
 }
 
-
+.details-contents .content a {
+color: #032d73;
+text-decoration: underline;
+}
 
 
 

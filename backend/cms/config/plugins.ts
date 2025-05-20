@@ -7,7 +7,7 @@ export default () => ({
           google: {
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            redirectUri: 'http://localhost:1337/api/connect/google/callback',
+            redirectUri:process.env.GOOGLE_CALLBACK_URL,
             scope: ['email', 'profile'],
           },
         },
