@@ -2520,6 +2520,9 @@ border: 0;
 background: transparent;
 cursor: pointer;
 }
+.new_m_model button{
+cursor: pointer;
+}
 .subscribe-modal form button {
 width: 100%;
 padding: 9px;
