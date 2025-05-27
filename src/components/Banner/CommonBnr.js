@@ -17,6 +17,8 @@ function CommonBnr({
 
   const [showlogin, setShowlogin] = useState(false);
   const { isAuthenticated } = useAuthContext();
+  const closeModal = () => setShowlogin(false);
+
   return (
     <section className={`join-bottom-bnr ${className}`} {...props}>
       <div className="join-bottom-bnr-layer">
@@ -30,7 +32,7 @@ function CommonBnr({
             <p>{description}</p>
             {!isAuthenticated && (
               showlogin ? (
-                <Login />
+                <Login cutbox={closeModal} />
               ) : (
                 <button className="primary-btn"  onClick={()=>setShowlogin(true)}>{buttonText}</button>
               )
