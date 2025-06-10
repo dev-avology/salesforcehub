@@ -51,6 +51,21 @@ export const getServerSideProps = async () => {
 };
 
 function blog({ posts }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const handleUserData = async (e) => {
+    e.preventDefault();
+
+    const res = await API.post('/api/users', {
+      name,
+      email
+    })
+
+  }
+
+
   const [filter,setFilter] =useState("Newest");
    const [filteredPosts, setFilteredPosts] = useState([]);
 
@@ -60,7 +75,7 @@ function blog({ posts }) {
       }
     }, [posts, filter]);
 
-  
+
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
@@ -70,7 +85,7 @@ function blog({ posts }) {
   //filter data
   const sortComments = (filter) => {
     let sortedComments = [...posts];
-   
+
 
     switch (filter) {
       case 'Oldest':
@@ -97,7 +112,7 @@ function blog({ posts }) {
 
     setFilteredPosts(sortedComments);
   };
- 
+
 
   const allPosts = filteredPosts;
 
@@ -196,14 +211,14 @@ function blog({ posts }) {
                   <h3>
                     Join the <span>newsletter & stay</span> up to date!
                   </h3>
-                  <motion.a
-                    href=""
+                  <motion.button
+                    onClick={() => setIsModalOpen(true)}
                     className="primary-btn"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.3 }}
                   >
                     Subscribe
-                  </motion.a>
+                  </motion.button>
                 </article>
               </div>
             </motion.div>
@@ -240,6 +255,51 @@ function blog({ posts }) {
       >
         <CommonBnr {...joinData} />
       </motion.div>
+
+      {isModalOpen && (
+        <div className="custom-model">
+          <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+            <div className="model-bg">
+              <img src='../images/model-bg1.png' alt='model-bg' />
+              <img src='../images/model-bg2.png' alt='model-bg' />
+            </div>
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <div className="subscribe-modal">
+                <h2>Join the newsletter & stay up to date!</h2>
+                <p>
+                  Stay connected and informed! Join our newsletter to receive
+                  the latest updates, exclusive offers, and exciting news
+                  straight to your inbox
+                </p>
+                <form className="subscribe-form" onSubmit={handleUserData}>
+                  <input
+                    type="text"
+                    placeholder="Full name"
+                    name={name}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required />
+
+                  <input
+                    type="email"
+                    placeholder="Email address"
+                    name={email}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required />
+                  <button type="submit" className="primary-btn">Subscribe Now</button>
+                </form>
+                <p className="privacy-note">
+                  We respect your privacy. Unsubscribe anytime.
+                </p>
+              </div>
+              <button onClick={() => setIsModalOpen(false)} className="cancil-btn">
+                <img src='../images/cross.svg' alt='cross.svg' />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
