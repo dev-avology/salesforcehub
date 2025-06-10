@@ -598,7 +598,7 @@ export default function Home() {
             ))}
           </motion.div>
           <motion.a
-            href="#"
+            onClick={() => setIsModalOpen(true)}
             className="primary-btn"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
