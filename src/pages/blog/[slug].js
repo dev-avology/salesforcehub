@@ -1,11 +1,13 @@
 import BlogDetailBnr from '@/components/Banner/BlogDetailBnr'
 import Content from '@/components/BlogsDetails/Content';
 import Explore from '@/components/BlogsDetails/Explore';
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import API from '../../services/api'
 import ChatBox from '@/components/BlogsDetails/ChatBox';
 import CommonBnr from '@/components/Banner/CommonBnr';
 import { motion } from 'framer-motion';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 export async function getStaticPaths() {
   const res = await API.get('/api/blogs');
@@ -42,30 +44,38 @@ export async function getStaticProps({ params }) {
 
 function blogDetail({ slugData }) {
 
-  const [comments, setComments] = useState([]);
+  const [replies, setReplies] = useState([]);
   const [commentsRefresh, setCommentsRefresh] = useState(false);
+  const [blogs, setBlogs] = useState([]);
 
-   const handleRefresh = () => {
-    console.log("work");
-    setCommentsRefresh(prevState => !prevState);  
+  const router = useRouter();
+  const { slug } = router.query;
+
+
+
+  const handleRefresh = () => {
+    setCommentsRefresh(prevState => !prevState);
   };
-    useEffect(() => {
-        const getComments = async () => {
-          try {
-            const res = await API.get('/api/comments?populate=*');
-            setComments(res.data.data);
-          } catch (error) {
-            console.error('Error fetching comments:', error);
-          }
-        };
-      
-        getComments();
-      }, [commentsRefresh]);
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const blogsRes = await API.get('/api/blogs?populate=*');
+        setBlogs(blogsRes.data.data);
+
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+
+    getComments();
+  }, [commentsRefresh]);
 
   const detailBanner = {
     image: "/images/detail-bbg.png",
     layerfirst: "/images/tree1.png",
-    layersecond: "/images/tree2.png",
+    layersecond: "/images/tree4.png",
+    layerthree: "/images/tree5.png",
+
     imgpara: "Over the next seven blogs, we’ll tackle each pillar with a deeper dive and more visual aids, ensuring you’re well-equipped to navigate the integration maze.",
   };
 
@@ -93,7 +103,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         viewport={{ once: true }}
       >
-        <Content detail={slugData} />
+        <Content detail={slugData} blogs={blogs} />
       </motion.div>
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -109,7 +119,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.6, delay: 0.6, ease: "backOut" }}
         viewport={{ once: true }}
       >
-        <ChatBox  comments={comments}  postID ={slugData.documentId}  updateComments={handleRefresh} />
+        <ChatBox  postID={slugData.documentId} replies={replies}  slug={slug}  />
       </motion.div>
 
       <motion.div

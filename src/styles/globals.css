@@ -288,6 +288,7 @@ transition: all .3s ease;
 -ms-transition: all .3s ease;
 -o-transition: all .3s ease;
 transform: none !important;
+cursor: pointer;
 }
 
 .primary-btn:hover {
@@ -1814,6 +1815,7 @@ color: #181818;
 font-size: 16px;
 line-height: 24px;
 font-weight: 400;
+padding-bottom: 10px;
 }
 .details-contents .content p strong {
 font-weight: 600;
@@ -1836,15 +1838,23 @@ padding: 0 5px;
 padding: 40px 0;
 }
 
+.details-contents ul li {
+margin-left: 20px;
+padding-bottom: 8px;
+list-style: outside;
+font-size: 16px;
+font-weight: 400;
+line-height: 22px;
+}
 
-
-.details-contents  .content h2 {
+.details-contents .content h2 ,.details-contents .content h3 ,.details-contents .content h4 ,.details-contents .content h5, .details-contents .content h6 {
 color: #032d60;
 text-align: left;
-font-size: 20px;
-line-height: 28px;
-font-weight: 600;
 padding-bottom: 23px;
+font-size: 20px;
+font-weight: 600;
+line-height: 28px;
+margin-top: 30px;
 }
 
 .details-contents  .toc ul li a {
@@ -2302,6 +2312,7 @@ display: flex;
 align-items: center;
 gap: 10px;
 margin-bottom: 16px;
+flex-wrap: wrap;
 }
 
 .doe-right .name span {
@@ -2360,7 +2371,7 @@ padding-bottom: 32px;
 margin-bottom: 32px;
 }
 
-.doe-flex.doe-flex-common:nth-last-child(2){
+.doe-flex.doe-flex-common:last-child {
 margin-bottom: 0;
 border: 0;
 padding-bottom: 0;
@@ -2453,6 +2464,7 @@ display: none;
 .blogs-detail-left img.mobile {
 margin: 24px 0;
 width: 100%;
+border-radius: 16px;
 }
 
 .blogs-detail-left p.mobile {
@@ -2506,6 +2518,9 @@ top: 16px;
 right: 16px;
 border: 0;
 background: transparent;
+cursor: pointer;
+}
+.new_m_model button{
 cursor: pointer;
 }
 .subscribe-modal form button {
@@ -2580,17 +2595,18 @@ font-weight: 400;
 .subscribe-modal form input::placeholder {
 color: #adaebc;
 }
-.blogs-bnr-text a {
-    display: inline;
-}
-
 
 .custom-model.log .modal-overlay {
 max-width: 448px;
 background: #fff;
-padding: 32px;
+    padding: 45px 32px 30px;
 }
-
+.new_m_model .cancil-btn {
+    border: 0;
+    width: auto;
+    padding: 0;
+    margin: 0;
+}
 .custom-model.log .subscribe-modal h2 {
 margin-bottom: 8px;
 }
@@ -2629,6 +2645,135 @@ margin-left: 10px;
 .link-bar ul li a.active {
 border-bottom: 1px solid #032d60;
 }
+
+
+.blogs-bnr-text a {
+display: inline;
+}
+
+.common-card .card-content a.custom-badge {
+display: block;
+width: fit-content;
+}
+
+.new_m_model button {
+color: #374151;
+border: 1px solid #e5e7eb;
+border-radius: 4px;
+justify-content: center;
+align-items: center;
+gap: 12px;
+margin-bottom: 16px;
+padding: 16px;
+font-size: 16px;
+font-weight: 400;
+line-height: 16px;
+transition: all .3s;
+display: flex;
+width: 100%;
+background: transparent;
+}
+
+.details-contents .content  img {
+margin: 40px 0;
+}
+
+.emoji-left button {
+border: 0;
+background: transparent;
+}
+.EmojiPickerReact {
+    width: 100%!important;
+}
+.replay-sec span button {
+    color: #181818;
+    opacity: .5;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 15.96px;
+    display: flex;
+    border: 0;
+}
+
+
+.imgs-uploads img {
+width: 100px;
+height: 100px;
+object-fit: cover;
+border-radius: 8px;
+}
+
+.imgs-uploads {
+margin: 19px 10px 10px 15px;
+position: relative;
+}
+
+.imgs-uploads button {
+position: absolute;
+bottom: 80px;
+background: red;
+color: white;
+border: none;
+border-radius: 50%;
+width: 20px;
+height: 20px;
+cursor: pointer;
+left: -8px;
+top: -14px;
+}
+.custom-model.log.contineu .modal {
+width: 100%;
+}
+
+
+.loader-wrapper {
+position: fixed;
+top: 0; left: 0; right: 0; bottom: 0;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+background: rgba(26, 26, 26, 0.95);
+z-index: 1000;
+animation: fadeOut 2s ease 2s forwards;
+}
+
+.spinner {
+width: 60px;
+height: 60px;
+border: 6px solid #444;
+border-top-color: #00f7ff;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin-bottom: 1rem;
+}
+
+.loading-text {
+color: #aaa;
+font-size: 1.2rem;
+opacity: 0;
+animation: fadeInOut 2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes spin {
+to {
+transform: rotate(360deg);
+}
+}
+
+@keyframes fadeInOut {
+0%, 100% { opacity: 0; }
+50% { opacity: 1; }
+}
+
+.details-contents .content a {
+color: #032d73;
+text-decoration: underline;
+}
+
 
 
 
@@ -3425,9 +3570,7 @@ margin: 55px 0 3px;
 .join-bottom-bnr h3 {
 font-size: 27px;
 }
-.custom-model.log .modal-overlay {
-padding: 32px 10px;
-}
+
 }
 
 @media (max-width: 420px) {

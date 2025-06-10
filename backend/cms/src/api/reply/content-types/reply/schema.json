@@ -11,14 +11,17 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "commentID": {
+    "Text": {
+      "type": "string"
+    },
+    "Date": {
+      "type": "datetime"
+    },
+    "comment": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::comment.comment",
       "inversedBy": "replies"
-    },
-    "Text": {
-      "type": "string"
     },
     "user": {
       "type": "relation",
@@ -26,14 +29,22 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "replies"
     },
-    "Date": {
-      "type": "datetime"
+    "Rimg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     },
-    "reaction": {
+    "likes": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::reaction.reaction",
-      "inversedBy": "reply"
+      "relation": "oneToMany",
+      "target": "api::like.like",
+      "mappedBy": "reply"
     }
   }
 }
