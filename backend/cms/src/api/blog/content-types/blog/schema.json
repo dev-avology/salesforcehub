@@ -15,7 +15,8 @@
       "type": "string"
     },
     "Slug": {
-      "type": "uid"
+      "type": "uid",
+      "targetField": "Title"
     },
     "Content": {
       "type": "blocks"
@@ -32,7 +33,7 @@
       ]
     },
     "Date": {
-      "type": "date"
+      "type": "datetime"
     },
     "comments": {
       "type": "relation",
@@ -40,11 +41,38 @@
       "target": "api::comment.comment",
       "mappedBy": "blog"
     },
-    "reaction": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::reaction.reaction",
-      "mappedBy": "blog"
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "DataArch",
+        "Integration",
+        "DevOps",
+        "Governance"
+      ]
+    },
+    "badge": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false
+    },
+    "author_logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "MainContent": {
+      "type": "richtext"
     }
   }
 }

@@ -381,19 +381,28 @@ export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    author: Schema.Attribute.String;
+    author_logo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    badge: Schema.Attribute.String;
+    category: Schema.Attribute.Enumeration<
+      ['DataArch', 'Integration', 'DevOps', 'Governance']
+    >;
     comments: Schema.Attribute.Relation<'oneToMany', 'api::comment.comment'>;
     Content: Schema.Attribute.Blocks;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    Date: Schema.Attribute.Date;
+    Date: Schema.Attribute.DateTime;
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    isFeatured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'> &
       Schema.Attribute.Private;
+    MainContent: Schema.Attribute.RichText;
     publishedAt: Schema.Attribute.DateTime;
-    reaction: Schema.Attribute.Relation<'oneToOne', 'api::reaction.reaction'>;
-    Slug: Schema.Attribute.UID;
+    Slug: Schema.Attribute.UID<'Title'>;
     Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -414,10 +423,14 @@ export interface ApiCommentComment extends Struct.CollectionTypeSchema {
   };
   attributes: {
     blog: Schema.Attribute.Relation<'manyToOne', 'api::blog.blog'>;
+    CommentImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    Date: Schema.Attribute.Date;
+    Date: Schema.Attribute.DateTime;
+    likes: Schema.Attribute.Relation<'oneToMany', 'api::like.like'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -425,18 +438,54 @@ export interface ApiCommentComment extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    reaction: Schema.Attribute.Relation<'oneToOne', 'api::reaction.reaction'>;
+    reactions: Schema.Attribute.Relation<'oneToMany', 'api::reaction.reaction'>;
+    replies: Schema.Attribute.Relation<'oneToMany', 'api::reply.reply'>;
     Text: Schema.Attribute.Text;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    User: Schema.Attribute.String;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiLikeLike extends Struct.CollectionTypeSchema {
+  collectionName: 'likes';
+  info: {
+    description: '';
+    displayName: 'like';
+    pluralName: 'likes';
+    singularName: 'like';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    comment: Schema.Attribute.Relation<'manyToOne', 'api::comment.comment'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::like.like'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    reply: Schema.Attribute.Relation<'manyToOne', 'api::reply.reply'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
 export interface ApiReactionReaction extends Struct.CollectionTypeSchema {
   collectionName: 'reactions';
   info: {
+    description: '';
     displayName: 'Reaction';
     pluralName: 'reactions';
     singularName: 'reaction';
@@ -445,8 +494,7 @@ export interface ApiReactionReaction extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    blog: Schema.Attribute.Relation<'oneToOne', 'api::blog.blog'>;
-    comment: Schema.Attribute.Relation<'oneToOne', 'api::comment.comment'>;
+    comment: Schema.Attribute.Relation<'manyToOne', 'api::comment.comment'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -461,6 +509,40 @@ export interface ApiReactionReaction extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiReplyReply extends Struct.CollectionTypeSchema {
+  collectionName: 'replies';
+  info: {
+    description: '';
+    displayName: 'Reply';
+    pluralName: 'replies';
+    singularName: 'reply';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    comment: Schema.Attribute.Relation<'manyToOne', 'api::comment.comment'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Date: Schema.Attribute.DateTime;
+    likes: Schema.Attribute.Relation<'oneToMany', 'api::like.like'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::reply.reply'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    Rimg: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Text: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -919,10 +1001,10 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    comments: Schema.Attribute.Relation<'oneToMany', 'api::reply.reply'>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
@@ -933,6 +1015,7 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    likes: Schema.Attribute.Relation<'oneToMany', 'api::like.like'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -946,6 +1029,8 @@ export interface PluginUsersPermissionsUser
       }>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    reactions: Schema.Attribute.Relation<'oneToMany', 'api::reaction.reaction'>;
+    replies: Schema.Attribute.Relation<'oneToMany', 'api::reply.reply'>;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
     role: Schema.Attribute.Relation<
       'manyToOne',
@@ -975,7 +1060,9 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::blog.blog': ApiBlogBlog;
       'api::comment.comment': ApiCommentComment;
+      'api::like.like': ApiLikeLike;
       'api::reaction.reaction': ApiReactionReaction;
+      'api::reply.reply': ApiReplyReply;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "replies",
+  "info": {
+    "singularName": "reply",
+    "pluralName": "replies",
+    "displayName": "Reply",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Text": {
+      "type": "string"
+    },
+    "Date": {
+      "type": "datetime"
+    },
+    "comment": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::comment.comment",
+      "inversedBy": "replies"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "replies"
+    },
+    "Rimg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "likes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::like.like",
+      "mappedBy": "reply"
+    }
+  }
+}

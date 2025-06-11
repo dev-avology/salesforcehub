@@ -11,14 +11,11 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "User": {
-      "type": "string"
-    },
     "Text": {
       "type": "text"
     },
     "Date": {
-      "type": "date"
+      "type": "datetime"
     },
     "blog": {
       "type": "relation",
@@ -26,10 +23,39 @@
       "target": "api::blog.blog",
       "inversedBy": "comments"
     },
-    "reaction": {
+    "reactions": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::reaction.reaction",
+      "mappedBy": "comment"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "comments"
+    },
+    "CommentImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "replies": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::reply.reply",
+      "mappedBy": "comment"
+    },
+    "likes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::like.like",
       "mappedBy": "comment"
     }
   }

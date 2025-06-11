@@ -1,7 +1,3 @@
-export default ({ env }) => ({
-  'upload-plugin': {
-    config: {
-      serverUrl: env('PUBLIC_URL'),
-    },
-  },
-});
+// path: config/plugins.js
+
+export default ({ env }) => ({});
