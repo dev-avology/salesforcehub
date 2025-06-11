@@ -822,7 +822,7 @@ export default function Home({ events }) {
                 Because learning is better when it doesn't feel like work.
               </p>
               <motion.a
-                onClick={() => setIsModalOpen(true)}
+                href="#"
                 className="primary-btn"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
