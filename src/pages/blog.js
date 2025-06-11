@@ -5,8 +5,10 @@ import CommonCard from "@/components/Cards/CommonCard";
 import CommonDrop from "@/components/Dropdown/CommonDrop";
 import FeaturedSec from "@/components/Featured/FeaturedSec";
 import Tabs from "@/components/Tabs/Tabs";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import API from '../services/api'
+import ConfirmModal from "@/components/NewsLetter/confirmModel";
+import NewsletterModal from "@/components/NewsLetter/NewsletterModal";
 
 const imageUrl = "/images/hange.png";
 
@@ -54,26 +56,58 @@ function blog({ posts }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+   const [confirmOpen, setConfirmOpen] = useState(false);
+    const [confirmMsg, setConfirmMsg] = useState("");
+    const [confirmType, setConfirmType] = useState("info");
 
   const handleUserData = async (e) => {
     e.preventDefault();
 
-    const res = await API.post('/api/users', {
-      name,
-      email
-    })
+    try {
+      const existingSubscribers = await API.get('/api/subscribers');
+      const subscribers = existingSubscribers?.data?.data;
 
-  }
+      const emailExists = subscribers.some(
+        (subscriber) => subscriber.email.toLowerCase() === email.toLowerCase()
+      );
 
-
-  const [filter,setFilter] =useState("Newest");
-   const [filteredPosts, setFilteredPosts] = useState([]);
-
-    useEffect(() => {
-      if (posts.length > 0) {
-        sortComments(filter);
+      if (emailExists) {
+       setConfirmMsg("This email is already subscribed.");
+        setConfirmType("error");
+        setConfirmOpen(true);
+        setEmail('');
+       setName('');
+        return;
       }
-    }, [posts, filter]);
+
+      await API.post('/api/subscribers', {
+        data: {
+          name,
+          email,
+        },
+      });
+      setIsModalOpen(false);
+     setConfirmMsg("Successfully subscribed to the newsletter!");
+      setConfirmType("success");
+      setConfirmOpen(true);
+      setIsModalOpen(false);
+      setEmail('');
+      setName('');
+    } catch (error) {
+      console.error("Subscription error:", error);
+      alert("Something went wrong. Please try again later.");
+    }
+  };
+
+
+  const [filter, setFilter] = useState("Newest");
+  const [filteredPosts, setFilteredPosts] = useState([]);
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      sortComments(filter);
+    }
+  }, [posts, filter]);
 
 
 
@@ -220,6 +254,21 @@ function blog({ posts }) {
                     Subscribe
                   </motion.button>
                 </article>
+                <NewsletterModal
+                  isOpen={isModalOpen}
+                  onClose={() => setIsModalOpen(false)}
+                  name={name}
+                  setName={setName}
+                  email={email}
+                  setEmail={setEmail}
+                  handleUserData={handleUserData}
+                />
+                <ConfirmModal
+                  isOpen={confirmOpen}
+                  onClose={() => setConfirmOpen(false)}
+                  message={confirmMsg}
+                  type={confirmType}
+                />
               </div>
             </motion.div>
           </div>
@@ -256,50 +305,6 @@ function blog({ posts }) {
         <CommonBnr {...joinData} />
       </motion.div>
 
-      {isModalOpen && (
-        <div className="custom-model">
-          <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-            <div className="model-bg">
-              <img src='../images/model-bg1.png' alt='model-bg' />
-              <img src='../images/model-bg2.png' alt='model-bg' />
-            </div>
-            <div className="modal" onClick={(e) => e.stopPropagation()}>
-              <div className="subscribe-modal">
-                <h2>Join the newsletter & stay up to date!</h2>
-                <p>
-                  Stay connected and informed! Join our newsletter to receive
-                  the latest updates, exclusive offers, and exciting news
-                  straight to your inbox
-                </p>
-                <form className="subscribe-form" onSubmit={handleUserData}>
-                  <input
-                    type="text"
-                    placeholder="Full name"
-                    name={name}
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required />
-
-                  <input
-                    type="email"
-                    placeholder="Email address"
-                    name={email}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required />
-                  <button type="submit" className="primary-btn">Subscribe Now</button>
-                </form>
-                <p className="privacy-note">
-                  We respect your privacy. Unsubscribe anytime.
-                </p>
-              </div>
-              <button onClick={() => setIsModalOpen(false)} className="cancil-btn">
-                <img src='../images/cross.svg' alt='cross.svg' />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
