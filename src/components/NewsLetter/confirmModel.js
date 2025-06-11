@@ -10,14 +10,17 @@ const ConfirmModal = ({ isOpen, onClose, message, type = "info" }) => {
   };
 
   return (
-     <div className="custom-model">
+     <div className="custom-model custom-model-last">
       <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <p>{message}</p>
-        <button className="primary-btn" onClick={onClose}>
-          OK
-        </button>
+       <button class="cancil-btn"  onClick={onClose} ><img alt="cross" src="../images/cross.svg"/></button>
+
       </div>
+      <div className="birdss">
+         <img src="../images/justfory.png"/> 
+         <img src="../images/tmpas.png"/> 
+       </div>
       </div>
     </div>
   );

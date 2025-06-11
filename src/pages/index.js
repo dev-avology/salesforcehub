@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import API from '../services/api';
 import NewsletterModal from "@/components/NewsLetter/NewsletterModal";
 import ConfirmModal from "@/components/NewsLetter/confirmModel";
+import FormattedDate from "@/components/NewsLetter/FormattedDate";
 
 export const getServerSideProps = async () => {
 
@@ -230,6 +231,7 @@ export default function Home({ events }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmMsg, setConfirmMsg] = useState("");
   const [confirmType, setConfirmType] = useState("info");
+  
 
 
   useEffect(() => {
@@ -242,16 +244,6 @@ export default function Home({ events }) {
 
   const lowestSeatEvent = events.reduce((min, curr) =>
     curr.availableSeats < min.availableSeats ? curr : min);
-
-  const formattedDate = new Date(lowestSeatEvent.Date).toLocaleString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-
-  });
-
 
 
   const handleEventSeat = async (eventId) => {
@@ -532,7 +524,17 @@ export default function Home({ events }) {
                   <span>Only {lowestSeatEvent.availableSeats} spots left</span>
                 </div>
                 <h4>{lowestSeatEvent.Title}</h4>
-                <p>{formattedDate}</p>
+                {/* <p>
+                  {new Date(lowestSeatEvent.Date).toLocaleString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+
+                  })}
+                </p> */}
+                <p><FormattedDate date={lowestSeatEvent.Date} /></p>
                 <div className="next-only">
                   <figure>
                     <img src={`${process.env.NEXT_PUBLIC_API_URL}${lowestSeatEvent.Avatar?.url}`} alt={lowestSeatEvent.Title} />
@@ -555,7 +557,7 @@ export default function Home({ events }) {
                 <div className="item">
                   <div className="upcoming">
                     <h3>Upcoming Sessions</h3>
-                    {events && events.length > 0 && event.map((session) => (
+                    {event.map((session) => (
                       <motion.div
                         className="upcoming-flex"
                         key={session.documentId}
@@ -563,7 +565,7 @@ export default function Home({ events }) {
                       >
                         <div className="upcoming-box">
                           <h4>{session.Title}</h4>
-                          <p>
+                          {/* <p>
                             {new Date(session.Date).toLocaleString("en-US", {
                               month: "long",
                               day: "numeric",
@@ -572,7 +574,8 @@ export default function Home({ events }) {
                               minute: "2-digit",
 
                             })}
-                          </p>
+                          </p> */}
+                          <p><FormattedDate date={session.Date} /></p>
                         </div>
                         <div className="upcoming-btn">
                           <motion.a

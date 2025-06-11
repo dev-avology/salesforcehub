@@ -87,7 +87,7 @@ function blog({ posts }) {
         },
       });
       setIsModalOpen(false);
-     setConfirmMsg("Successfully subscribed to the newsletter!");
+      setConfirmMsg("Thanks, you're subscribed!");
       setConfirmType("success");
       setConfirmOpen(true);
       setIsModalOpen(false);

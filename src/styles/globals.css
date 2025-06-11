@@ -2591,6 +2591,7 @@ color: #adaebc;
 font-size: 16px;
 line-height: 24px;
 font-weight: 400;
+color:#000;
 }
 .subscribe-modal form input::placeholder {
 color: #adaebc;
@@ -2774,7 +2775,33 @@ color: #032d73;
 text-decoration: underline;
 }
 
+.custom-model.custom-model-last .modal-overlay {
+    background: #fff;
+    max-width: 384px;
+    padding: 79px 20px;
+}
 
+.birdss img {
+position: absolute;
+}
+
+.birdss img:first-child {
+top: 17px;
+right: 79px;
+}
+
+.birdss img:last-child {
+bottom: -2px;
+left: 25px;
+}
+
+.custom-model.custom-model-last .modal-overlay p {
+font-size: 24px;
+line-height: 32px;
+text-align: center;
+color: #032D60;
+font-weight: 600;
+}
 
 
 
