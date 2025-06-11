@@ -79,13 +79,19 @@
     "likes": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::like.like",
+      "target": "api::participent.participent",
       "mappedBy": "user"
     },
     "replies": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::reply.reply",
+      "mappedBy": "user"
+    },
+    "participents": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::participent.participent",
       "mappedBy": "user"
     }
   }

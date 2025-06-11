@@ -7,7 +7,23 @@ import Client from "@/components/Slider/Client";
 import Footer from "@/components/HeaderFooter/Footer";
 import { motion } from "framer-motion"; // Import Framer Motion
 import CountUp from "react-countup"; // Import CountUp for counter animation
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import API from '../services/api';
+import NewsletterModal from "@/components/NewsLetter/NewsletterModal";
+import ConfirmModal from "@/components/NewsLetter/confirmModel";
+
+export const getServerSideProps = async () => {
+
+  const blogsRes = await API.get('api/events?populate=Avatar');
+
+  const events = blogsRes.data.data;
+
+  return {
+    props: {
+      events,
+    },
+  };
+};
 
 // Data definitions remain unchanged
 const boxbar = [
@@ -206,20 +222,122 @@ const hoverEffect = {
   transition: { duration: 0.3 },
 };
 
-export default function Home() {
+export default function Home({ events }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [event, setEvent] = useState(events || []);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmMsg, setConfirmMsg] = useState("");
+  const [confirmType, setConfirmType] = useState("info");
+
+
+  useEffect(() => {
+    if (events && events.length > 0) {
+      setEvent(events);
+    }
+  }, [events]);
+
+
+
+  const lowestSeatEvent = events.reduce((min, curr) =>
+    curr.availableSeats < min.availableSeats ? curr : min);
+
+  const formattedDate = new Date(lowestSeatEvent.Date).toLocaleString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+
+  });
+
+
+
+  const handleEventSeat = async (eventId) => {
+    const userId = 3; // Authuser.id
+    const eventPayload = {
+      data: {
+        events: eventId,
+        EventID: eventId,
+        user: userId,
+      },
+    };
+
+    try {
+      const checkRes = await API.get(
+        `/api/participents?filter[user][$eq]=3`
+      );
+      const alreadyReg = checkRes.data?.data;
+      const hasRegister = alreadyReg.find((val) => val?.EventID === eventId);
+
+      if (hasRegister) {
+        console.log("User already registered for this event.");
+        return;
+      }
+      const registerRes = await API.post('/api/participents', eventPayload);
+      console.log("Registration successful:", registerRes.data);
+
+      const eventRes = await API.get(`/api/events/${eventId}`);
+      const currentSeats = eventRes?.data?.data?.availableSeats;
+
+      if (currentSeats > 0) {
+        await API.put(`/api/events/${eventId}`, {
+          data: {
+            availableSeats: currentSeats - 1,
+          },
+        });
+        console.log("Available seats updated.");
+      } else {
+        console.log("No available seats left.");
+      }
+
+    } catch (error) {
+      console.error("Error booking seat:", error.response?.data || error.message);
+    }
+  };
+
+
 
   const handleUserData = async (e) => {
     e.preventDefault();
 
-    const res = await API.post('/api/users', {
-      name,
-      email
-    })
+    try {
+      const existingSubscribers = await API.get('/api/subscribers');
+      const subscribers = existingSubscribers?.data?.data;
 
-  }
+      const emailExists = subscribers.some(
+        (subscriber) => subscriber.email.toLowerCase() === email.toLowerCase()
+      );
+
+      if (emailExists) {
+        setConfirmMsg("This email is already subscribed.");
+        setConfirmType("error");
+        setConfirmOpen(true);
+        setEmail('');
+        setName('');
+        return;
+      }
+
+      await API.post('/api/subscribers', {
+        data: {
+          name,
+          email,
+        },
+      });
+      setIsModalOpen(false);
+      setConfirmMsg("Successfully subscribed to the newsletter!");
+      setConfirmType("success");
+      setConfirmOpen(true);
+      setIsModalOpen(false);
+      setEmail('');
+      setName('');
+    } catch (error) {
+      console.error("Subscription error:", error);
+      alert("Something went wrong. Please try again later.");
+    }
+  };
+
   return (
     <>
       <Banner
@@ -277,7 +395,7 @@ export default function Home() {
                       className="box"
                       key={index}
                       variants={fadeInUp}
-                      // Removed whileHover to disable hover effect on counters
+                    // Removed whileHover to disable hover effect on counters
                     >
                       <h3>
                         {numericValue ? (
@@ -365,6 +483,21 @@ export default function Home() {
               Join SalesforceHub Today
             </motion.button>
           </motion.div>
+          <NewsletterModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            name={name}
+            setName={setName}
+            email={email}
+            setEmail={setEmail}
+            handleUserData={handleUserData}
+          />
+          <ConfirmModal
+            isOpen={confirmOpen}
+            onClose={() => setConfirmOpen(false)}
+            message={confirmMsg}
+            type={confirmType}
+          />
         </div>
       </motion.section>
 
@@ -396,21 +529,21 @@ export default function Home() {
               <div className="nex-live">
                 <div className="next-flex">
                   <p>Next Live Event</p>
-                  <span>Only 5 spots left</span>
+                  <span>Only {lowestSeatEvent.availableSeats} spots left</span>
                 </div>
-                <h4>Advanced Einstein AI Implementation</h4>
-                <p>March 15, 2025 - 2:00 PM EST</p>
+                <h4>{lowestSeatEvent.Title}</h4>
+                <p>{formattedDate}</p>
                 <div className="next-only">
                   <figure>
-                    <img src="images/sarah.png" alt="sarah" />
+                    <img src={`${process.env.NEXT_PUBLIC_API_URL}${lowestSeatEvent.Avatar?.url}`} alt={lowestSeatEvent.Title} />
                   </figure>
                   <p>
-                    <span>Sarah Johnson </span>
-                    <span>Salesforce Architect @ Microsoft</span>
+                    <span>{lowestSeatEvent.name}</span>
+                    <span>{lowestSeatEvent.role}</span>
                   </p>
                 </div>
                 <motion.a
-                  href="#"
+                  onClick={() => handleEventSeat(lowestSeatEvent.documentId)}
                   className="primary-btn"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -422,24 +555,33 @@ export default function Home() {
                 <div className="item">
                   <div className="upcoming">
                     <h3>Upcoming Sessions</h3>
-                    {upcoming.map((session, index) => (
+                    {events && events.length > 0 && event.map((session) => (
                       <motion.div
                         className="upcoming-flex"
-                        key={index}
+                        key={session.documentId}
                         variants={fadeInUp}
                       >
                         <div className="upcoming-box">
-                          <h4>{session.heading}</h4>
-                          <p>{session.para}</p>
+                          <h4>{session.Title}</h4>
+                          <p>
+                            {new Date(session.Date).toLocaleString("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+
+                            })}
+                          </p>
                         </div>
                         <div className="upcoming-btn">
                           <motion.a
-                            href="#"
+                            onClick={() => handleEventSeat(session.documentId)}
                             className="primary-btn"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            {session.btn}
+                            Save Seat
                           </motion.a>
                         </div>
                       </motion.div>
@@ -550,6 +692,7 @@ export default function Home() {
                 >
                   Join the Conversation
                 </motion.a>
+
               </div>
             </motion.div>
           </motion.div>
@@ -598,12 +741,12 @@ export default function Home() {
             ))}
           </motion.div>
           <motion.a
-            href="#"
+            onClick={() => setIsModalOpen(true)}
             className="primary-btn"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-           Join Our Community
+            Join Our Community
           </motion.a>
         </div>
         <div className="build-layer">
@@ -676,7 +819,7 @@ export default function Home() {
                 Because learning is better when it doesn't feel like work.
               </p>
               <motion.a
-                href="#"
+                onClick={() => setIsModalOpen(true)}
                 className="primary-btn"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -688,50 +831,7 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-      {isModalOpen && (
-        <div className="custom-model">
-          <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-            <div className="model-bg">
-              <img src="../images/model-bg1.png" alt="model-bg" />
-              <img src="../images/model-bg2.png" alt="model-bg" />
-            </div>
-            <div className="modal" onClick={(e) => e.stopPropagation()}>
-              <div className="subscribe-modal">
-                <h2>Join the newsletter & stay up to date!</h2>
-                <p>
-                  Stay connected and informed! Join our newsletter to receive the latest
-                  updates, exclusive offers, and exciting news straight to your inbox
-                </p>
-                <form className="subscribe-form" onSubmit={handleUserData}>
-                  <input
-                    type="text"
-                    placeholder="Full name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                  <button type="submit" className="primary-btn">
-                    Subscribe Now
-                  </button>
-                </form>
-                <p className="privacy-note">
-                  We respect your privacy. Unsubscribe anytime.
-                </p>
-              </div>
-              <button onClick={() => setIsModalOpen(false)} className="cancil-btn">
-                <img src="../images/cross.svg" alt="cross" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
     </>
   );
 }

@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "event",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Date": {
+      "type": "datetime"
+    },
+    "Description": {
+      "type": "blocks"
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "availableSeats": {
+      "type": "integer"
+    },
+    "totalSeats": {
+      "type": "integer"
+    },
+    "Avatar": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "participents": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::participent.participent",
+      "inversedBy": "events"
+    }
+  }
+}
