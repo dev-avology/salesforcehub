@@ -265,6 +265,7 @@ export default function Home({ events }) {
 
       if (hasRegister) {
         console.log("User already registered for this event.");
+        
         return;
       }
       const registerRes = await API.post('/api/participents', eventPayload);
@@ -279,7 +280,7 @@ export default function Home({ events }) {
             availableSeats: currentSeats - 1,
           },
         });
-        console.log("Available seats updated.");
+        
       } else {
         console.log("No available seats left.");
       }

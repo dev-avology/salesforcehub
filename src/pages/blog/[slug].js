@@ -9,21 +9,34 @@ import { motion } from 'framer-motion';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
+
 export async function getStaticPaths() {
-  const res = await API.get('/api/blogs');
-  const posts = res.data.data;
+  try {
+    const res = await API.get('/api/blogs');
+    const posts = res.data.data;
 
-  const paths = posts.map((post) => ({
-    params: { slug: post.Slug },
-  }));
+    const paths = posts.map((post) => ({
+      params: { slug: post.Slug },
+    }));
 
-  return {
-    paths,
-    fallback: 'blocking',
-  };
+    return {
+      paths,
+      fallback: 'blocking', 
+    };
+  } catch (error) {
+    console.error("Error fetching paths in getStaticPaths:", error);
+
+
+    return {
+      paths: [],
+      fallback: false,
+    };
+  }
 }
 
+
 export async function getStaticProps({ params }) {
+  try{
   const { slug } = params;
 
   const res = await API.get(`/api/blogs?filters[Slug][$eq]=${slug}&populate=*`);
@@ -39,6 +52,15 @@ export async function getStaticProps({ params }) {
     },
   };
 }
+catch(error){
+console.error("Error fetching post:", error);
+    return {
+      notFound: true,
+    };
+}
+}
+
+
 
 
 
@@ -119,7 +141,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.6, delay: 0.6, ease: "backOut" }}
         viewport={{ once: true }}
       >
-        <ChatBox  postID={slugData.documentId} replies={replies}  slug={slug}  />
+        <ChatBox postID={slugData.documentId} replies={replies} slug={slug} />
       </motion.div>
 
       <motion.div
