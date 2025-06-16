@@ -8,15 +8,30 @@ import Footer from "@/components/HeaderFooter/Footer";
 import { motion } from "framer-motion"; // Import Framer Motion
 import CountUp from "react-countup"; // Import CountUp for counter animation
 import { useEffect, useState } from "react";
+import { useAuthContext } from "@/context/AuthContext";
 import API from '../services/api';
 import NewsletterModal from "@/components/NewsLetter/NewsletterModal";
 import ConfirmModal from "@/components/NewsLetter/confirmModel";
 import FormattedDate from "@/components/NewsLetter/FormattedDate";
+import Login from "@/components/Login";
+import { useRouter } from 'next/router';
+
+function Modal({ isOpen, onClose, children }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="custom-model log ">
+      <div className="modal-overlay">
+        <div className="modal">{children}</div>
+      </div>
+    </div>
+  );
+}
+
 
 export const getServerSideProps = async () => {
 
   const blogsRes = await API.get('api/events?populate=Avatar');
-
   const events = blogsRes.data.data;
 
   return {
@@ -83,18 +98,7 @@ const joinData = [
   },
 ];
 
-const upcoming = [
-  {
-    heading: "Data Cloud Mastery",
-    para: "March 15, 2025 - 2:00 PM EST",
-    btn: "Save Seat",
-  },
-  {
-    heading: "Flow Automation Workshop",
-    para: "March 15, 2025 - 2:00 PM EST",
-    btn: "Save Seat",
-  },
-];
+
 
 const whyJoinData = {
   heading: "Why Join SalesforceHub?",
@@ -231,7 +235,20 @@ export default function Home({ events }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmMsg, setConfirmMsg] = useState("");
   const [confirmType, setConfirmType] = useState("info");
-  
+  const [todayDate, setTodayDate] = useState(new Date());
+  const { Authuser, isAuthenticated } = useAuthContext();
+  const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
+
+  const router = useRouter();
+
+  const refresh = () => {
+    router.replace(router.asPath);
+  };
+
+  const openModal = () => {
+    setIsModalLoginOpen(true);
+  }
+  const closeModal = () => setIsModalLoginOpen(false);
 
 
   useEffect(() => {
@@ -242,12 +259,19 @@ export default function Home({ events }) {
 
 
 
-  const lowestSeatEvent = events.reduce((min, curr) =>
-    curr.availableSeats < min.availableSeats ? curr : min);
+ const closestDateEvent = events
+  .reduce((earliest, curr) =>
+    todayDate < new Date(earliest.Date) ? curr : earliest
+  );
+
+
 
 
   const handleEventSeat = async (eventId) => {
-    const userId = 3; // Authuser.id
+
+     if (!isAuthenticated) return openModal();
+
+    const userId = Authuser.id; // Authuser.id
     const eventPayload = {
       data: {
         events: eventId,
@@ -264,25 +288,36 @@ export default function Home({ events }) {
       const hasRegister = alreadyReg.find((val) => val?.EventID === eventId);
 
       if (hasRegister) {
-        console.log("User already registered for this event.");
-        
+        setConfirmMsg("User already registered for this event!");
+        setConfirmType("success");
+        setConfirmOpen(true);
+
+
         return;
       }
-      const registerRes = await API.post('/api/participents', eventPayload);
-      console.log("Registration successful:", registerRes.data);
-
       const eventRes = await API.get(`/api/events/${eventId}`);
       const currentSeats = eventRes?.data?.data?.availableSeats;
 
       if (currentSeats > 0) {
+        const registerRes = await API.post('/api/participents', eventPayload);
+
+        setConfirmMsg("Registration successful");
+        setConfirmType("success");
+        setConfirmOpen(true);
+        refresh();
+
+
+
         await API.put(`/api/events/${eventId}`, {
           data: {
             availableSeats: currentSeats - 1,
           },
         });
-        
+
       } else {
-        console.log("No available seats left.");
+        setConfirmMsg("No available seats left");
+        setConfirmType("success");
+        setConfirmOpen(true);
       }
 
     } catch (error) {
@@ -522,11 +557,11 @@ export default function Home({ events }) {
               <div className="nex-live">
                 <div className="next-flex">
                   <p>Next Live Event</p>
-                  <span>Only {lowestSeatEvent.availableSeats} spots left</span>
+                  <span>Only {closestDateEvent.availableSeats} spots left</span>
                 </div>
-                <h4>{lowestSeatEvent.Title}</h4>
+                <h4>{closestDateEvent.Title}</h4>
                 {/* <p>
-                  {new Date(lowestSeatEvent.Date).toLocaleString("en-US", {
+                  {new Date(closestDateEvent.Date).toLocaleString("en-US", {
                     month: "long",
                     day: "numeric",
                     year: "numeric",
@@ -535,18 +570,18 @@ export default function Home({ events }) {
 
                   })}
                 </p> */}
-                <p><FormattedDate date={lowestSeatEvent.Date} /></p>
+                <p><FormattedDate date={closestDateEvent.Date} /></p>
                 <div className="next-only">
                   <figure>
-                    <img src={`${process.env.NEXT_PUBLIC_API_URL}${lowestSeatEvent.Avatar?.url}`} alt={lowestSeatEvent.Title} />
+                    <img src={`${process.env.NEXT_PUBLIC_API_URL}${closestDateEvent.Avatar?.url}`} alt={closestDateEvent.Title} />
                   </figure>
                   <p>
-                    <span>{lowestSeatEvent.name}</span>
-                    <span>{lowestSeatEvent.role}</span>
+                    <span>{closestDateEvent.name}</span>
+                    <span>{closestDateEvent.role}</span>
                   </p>
                 </div>
                 <motion.a
-                  onClick={() => handleEventSeat(lowestSeatEvent.documentId)}
+                  onClick={() => handleEventSeat(closestDateEvent.documentId)}
                   className="primary-btn"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -558,7 +593,8 @@ export default function Home({ events }) {
                 <div className="item">
                   <div className="upcoming">
                     <h3>Upcoming Sessions</h3>
-                    {event.map((session) => (
+                    {event.
+                    map((session) => (
                       <motion.div
                         className="upcoming-flex"
                         key={session.documentId}
@@ -566,16 +602,6 @@ export default function Home({ events }) {
                       >
                         <div className="upcoming-box">
                           <h4>{session.Title}</h4>
-                          {/* <p>
-                            {new Date(session.Date).toLocaleString("en-US", {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                              hour: "numeric",
-                              minute: "2-digit",
-
-                            })}
-                          </p> */}
                           <p><FormattedDate date={session.Date} /></p>
                         </div>
                         <div className="upcoming-btn">
@@ -835,6 +861,19 @@ export default function Home({ events }) {
           </div>
         </div>
       </motion.section>
+
+      < Modal isOpen={isModalLoginOpen} onClose={closeModal} >
+        <div className="subscribe-modal">
+          <h2>Log in to join the discussion</h2>
+          <p>Choose a login method to add your comment.</p>
+          <div className="subscribe-links">
+            <Login cutbox={closeModal} />
+          </div>
+        </div>
+        <button onClick={() => setIsModalLoginOpen(false)} className="cancil-btn">
+          <img src="../images/cross.svg" alt="cross.svg" />
+        </button>
+      </Modal >
 
     </>
   );
