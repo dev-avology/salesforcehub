@@ -25,6 +25,9 @@
     },
     "EventID": {
       "type": "string"
+    },
+    "gmail": {
+      "type": "string"
     }
   }
 }

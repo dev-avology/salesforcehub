@@ -536,6 +536,7 @@ export interface ApiParticipentParticipent extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     EventID: Schema.Attribute.String;
     events: Schema.Attribute.Relation<'manyToMany', 'api::event.event'>;
+    gmail: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
