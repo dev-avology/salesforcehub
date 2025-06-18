@@ -259,10 +259,17 @@ export default function Home({ events }) {
 
 
 
- const closestDateEvent = events
-  .reduce((earliest, curr) =>
-    todayDate < new Date(earliest.Date) ? curr : earliest
-  );
+
+  const today = new Date();
+
+const closestDateEvent = events
+  .filter(event => new Date(event.Date) >= today)
+  .reduce((closest, curr) => {
+    const currDate = new Date(curr.Date);
+    const closestDate = new Date(closest.Date);
+    return currDate < closestDate ? curr : closest;
+  });
+
 
 
 
@@ -282,7 +289,7 @@ export default function Home({ events }) {
 
     try {
       const checkRes = await API.get(
-        `/api/participents?filter[user][$eq]=3`
+        `/api/participents?filter[user][$eq]=${userId}`
       );
       const alreadyReg = checkRes.data?.data;
       const hasRegister = alreadyReg.find((val) => val?.EventID === eventId);
