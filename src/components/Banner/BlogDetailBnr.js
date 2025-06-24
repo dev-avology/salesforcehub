@@ -50,7 +50,7 @@ function BlogDetailBnr({ detail, detailBanner }) {
                   <a href="/blog">
                     <img alt="Date icon" src="/images/circle-bnr.png" />
                     <span
-                      dangerouslySetInnerHTML={{ __html: detail.author }}
+                      dangerouslySetInnerHTML={{ __html: detail.authorName?.username }}
                     />
                   </a>
                   <span

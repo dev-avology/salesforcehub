@@ -37,7 +37,7 @@ function Bnrblogs({ posts }) {
                     <li>
                       <Link href="">
                         <img src={`${process.env.NEXT_PUBLIC_API_URL}${blogs.author_logo?.url}`} alt="Date icon" />
-                        <span>{blogs.author}</span>
+                        <span>{blogs.authorName?.username}</span>
                       </Link>
                       <span>{new Date(blogs.Date).toLocaleDateString('en-US', {
                         year: 'numeric',

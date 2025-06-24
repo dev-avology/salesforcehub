@@ -40,7 +40,7 @@ function Tabs({ tabs }) {
           <li>
             <a href="/blog">
             <img src={`${process.env.NEXT_PUBLIC_API_URL}${post.author_logo?.url}`} alt="Date icon" />
-              <span>{post.author}</span>
+              <span>{post.authorName?.username}</span>
             </a>
             <span>{new Date(post.Date).toLocaleDateString('en-US', {
               year: 'numeric',

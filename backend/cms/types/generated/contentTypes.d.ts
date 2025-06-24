@@ -381,9 +381,12 @@ export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    author: Schema.Attribute.String;
     author_logo: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
+    >;
+    authorName: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
     >;
     badge: Schema.Attribute.String;
     category: Schema.Attribute.Enumeration<
@@ -1105,6 +1108,7 @@ export interface PluginUsersPermissionsUser
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    blogs: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'>;
     comments: Schema.Attribute.Relation<'oneToMany', 'api::reply.reply'>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;

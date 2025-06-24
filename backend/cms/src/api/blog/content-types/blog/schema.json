@@ -54,9 +54,6 @@
     "badge": {
       "type": "string"
     },
-    "author": {
-      "type": "string"
-    },
     "isFeatured": {
       "type": "boolean",
       "default": false
@@ -74,6 +71,12 @@
     },
     "MainContent": {
       "type": "richtext"
+    },
+    "authorName": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "blogs"
     }
   }
 }
