@@ -36,7 +36,7 @@ function Bnrblogs({ posts }) {
                   <ul className="custom-flex">
                     <li>
                       <Link href="">
-                        <img src={`${process.env.NEXT_PUBLIC_API_URL}${blogs.author_logo?.url}`} alt="Date icon" />
+                        <img src={`${process.env.NEXT_PUBLIC_API_URL}${blogs?.authorName?.authorLogo?.url}`} alt="Date icon" />
                         <span>{blogs.authorName?.username}</span>
                       </Link>
                       <span>{new Date(blogs.Date).toLocaleDateString('en-US', {

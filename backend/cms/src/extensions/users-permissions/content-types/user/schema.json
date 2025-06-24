@@ -99,6 +99,17 @@
       "relation": "oneToMany",
       "target": "api::blog.blog",
       "mappedBy": "authorName"
+    },
+    "authorLogo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

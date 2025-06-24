@@ -41,7 +41,7 @@ const joinData = {
 
 export const getServerSideProps = async () => {
 
-  const blogsRes = await API.get('/api/blogs?populate=*');
+  const blogsRes = await API.get('api/blogs?populate[authorName][populate]=authorLogo&populate[Image][populate]&populate[comments][populate]');
 
   const posts = blogsRes.data.data;
 
