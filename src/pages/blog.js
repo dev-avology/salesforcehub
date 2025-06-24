@@ -60,6 +60,7 @@ function blog({ posts }) {
     const [confirmMsg, setConfirmMsg] = useState("");
     const [confirmType, setConfirmType] = useState("info");
 
+
   const handleUserData = async (e) => {
     e.preventDefault();
 
@@ -155,6 +156,7 @@ function blog({ posts }) {
     "all",
     ...new Set(allPosts.map((post) => post.category).filter(Boolean)),
   ];
+  
 
   const tabs = categories.map((category) => ({
     label: category === "all" ? "All" : category,

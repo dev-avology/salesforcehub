@@ -1,12 +1,17 @@
-
+import { useRouter } from 'next/router';
 
 export default function Login({cutbox}) {
+       const router = useRouter();
 
     const handleGoogleLogin = () => {
+        const currentPath = router.asPath;
+        localStorage.setItem('currentPath', currentPath);
         window.location.href =  `${process.env.NEXT_PUBLIC_API_URL}/api/connect/google`;
+        
     };
     const handleDisqusLogin = () => {
-
+        const currentPath = router.asPath;
+        localStorage.setItem('currentPath', currentPath);
         window.location.href =  `${process.env.NEXT_PUBLIC_API_URL}/api/connect/github`;
     };
 

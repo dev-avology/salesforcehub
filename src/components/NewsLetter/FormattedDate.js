@@ -11,6 +11,7 @@ export default function FormattedDate({ date, formatOptions }) {
       inputDate.setHours(0, 0, 0, 0);
       today.setHours(0, 0, 0, 0);
 
+
       if (inputDate >= today) {
         const result = new Date(date).toLocaleString('en-US', formatOptions || {
           month: 'long',
@@ -21,7 +22,7 @@ export default function FormattedDate({ date, formatOptions }) {
         });
         setFormatted(result);
       } else {
-        setFormatted(''); // Do not show past dates
+        setFormatted(''); 
       }
     }
   }, [date, formatOptions]);

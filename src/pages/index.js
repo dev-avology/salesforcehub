@@ -14,6 +14,7 @@ import NewsletterModal from "@/components/NewsLetter/NewsletterModal";
 import ConfirmModal from "@/components/NewsLetter/confirmModel";
 import FormattedDate from "@/components/NewsLetter/FormattedDate";
 import Login from "@/components/Login";
+import { isUpcoming } from '../components/NewsLetter/IsUpcoming';
 
 
 function Modal({ isOpen, onClose, children }) {
@@ -245,6 +246,9 @@ export default function Home({ events }) {
   const [fetchSeats, setFetchSeats] = useState(false);
   const [eventID, setEventID] = useState('');
   const [availableSeats, setAvailableSeats] = useState(0);
+  const [isAlreadyOpen, setIsAlreadyOpen] = useState(false);
+  const [isnewRegistration, setNewRegistration] = useState(false);
+  const [isSeatLeft, setIsSeatLeft] = useState(false);
 
 
 
@@ -253,6 +257,11 @@ export default function Home({ events }) {
     setIsModalLoginOpen(true);
   }
   const closeModal = () => setIsModalLoginOpen(false);
+
+  const today = new Date();
+
+
+
 
 
   useEffect(() => {
@@ -295,8 +304,6 @@ export default function Home({ events }) {
 
 
 
-  const today = new Date();
-
 
   const closestDateEvent = events
     .filter(event => new Date(event.Date) >= today)
@@ -326,289 +333,280 @@ export default function Home({ events }) {
       );
       const alreadyReg = checkRes.data?.data || [];
 
+
       const hasRegister = alreadyReg.find((val) => val?.EventID === eventId);
 
       if (hasRegister) {
-        setConfirmMsg("User already registered for this event!");
-        setConfirmType("success");
-        setConfirmOpen(true);
-      
-       
-      }
-      else {
-        const eventRes = await API.get(`/api/events/${eventId}`);
-        console.log(eventRes);
-        const currentSeats = eventRes?.data?.data?.availableSeats;
-        console.log(currentSeats);
-
-        if (currentSeats > 0) {
-          const registerRes = await API.post('/api/participents', eventPayload);
-
-          setConfirmMsg("Registration successful");
-          setConfirmType("success");
-          setConfirmOpen(true);
-
-
-          const newSeats = currentSeats - 1;
-
-          await API.put(`/api/events/${eventId}`, {
-            data: {
-              availableSeats: newSeats,
-            },
-          });
-
-          setAvailableSeats(newSeats);
-          setFetchSeats((prev) => !prev);
-
-
-        } else {
-          setConfirmMsg("No available seats left");
-          setConfirmType("success");
-          setConfirmOpen(true);
-        }
+        setIsAlreadyOpen(true);
+        return;
       }
 
-      } catch (error) {
-        console.error("Error booking seat:", error.response?.data || error.message);
-      }
-    };
+      const eventRes = await API.get(`/api/events/${eventId}`);
+      const currentSeats = eventRes?.data?.data?.availableSeats;
 
 
-
-    const handleUserData = async (e) => {
-      e.preventDefault();
-
-      try {
-        const existingSubscribers = await API.get('/api/subscribers');
-        const subscribers = existingSubscribers?.data?.data;
-
-        const emailExists = subscribers.some(
-          (subscriber) => subscriber.email.toLowerCase() === email.toLowerCase()
-        );
-
-        if (emailExists) {
-          setConfirmMsg("This email is already subscribed.");
-          setConfirmType("error");
-          setConfirmOpen(true);
-          setEmail('');
-          setName('');
-          return;
-        }
-
-        await API.post('/api/subscribers', {
+      if (currentSeats > 0) {
+        const registerRes = await API.post('/api/participents', eventPayload);
+        setNewRegistration(true);
+        const newSeats = currentSeats - 1;
+        await API.put(`/api/events/${eventId}`, {
           data: {
-            name,
-            email,
+            availableSeats: newSeats,
           },
         });
-        setIsModalOpen(false);
-        setConfirmMsg("Successfully subscribed to the newsletter!");
-        setConfirmType("success");
+
+        setAvailableSeats(newSeats);
+        setFetchSeats((prev) => !prev);
+      } else {
+        setIsSeatLeft(true);
+
+      }
+
+    } catch (error) {
+      console.error("Error booking seat:", error.response?.data || error.message);
+    }
+  };
+
+
+
+  const handleUserData = async (e) => {
+    e.preventDefault();
+
+    try {
+      const existingSubscribers = await API.get('/api/subscribers');
+      const subscribers = existingSubscribers?.data?.data;
+
+      const emailExists = subscribers.some(
+        (subscriber) => subscriber.email.toLowerCase() === email.toLowerCase()
+      );
+
+      if (emailExists) {
+        setConfirmMsg("This email is already subscribed.");
+        setConfirmType("error");
         setConfirmOpen(true);
-        setIsModalOpen(false);
         setEmail('');
         setName('');
-      } catch (error) {
-        console.error("Subscription error:", error);
-        alert("Something went wrong. Please try again later.");
+        return;
       }
-    };
 
-    return (
-      <>
-        <Banner
-          heading="SalesforceHUB"
-          colorHeading="Connect, Learn, Grow"
-          para="Join the first AI-powered community for Salesforce professionals. Get instant answers, expert insights, and career growth opportunities."
-          btn="Join SalesforceHub Now – It's Free"
-          heroLayer="/images/hero-layer.png"
-          heroLayerphone="/images/hero-layer2.png"
-          heroImg="/images/gif-bnr.gif"
-        />
-        {/* Bottom Banner Section */}
-        <motion.section
-          className="bootom-bnr"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <div className="bottom-layer">
-            <img src="images/bottom-layer.png" alt="bnr-img" />
-          </div>
-          <div className="container">
-            <div className="grid grid-cols-2 gap">
-              <motion.div className="item" variants={fadeInUp}>
-                <div className="slider-type">
-                  <div className="slider-flex">
-                    <div className="slidr-img">
-                      <img src="images/professional.png" alt="professional" />
-                    </div>
-                    <div className="slidr-text">
-                      <img src="images/quotation.png" alt="bnr-img" />
-                      <p>
-                        "The community has been invaluable for staying ahead of
-                        Salesforce AI developments. The real-time support is
-                        amazing!"
-                      </p>
-                      <span>
-                        <span>Sarah Johnson </span>Salesforce Architect @
-                        Microsoft
-                      </span>
-                    </div>
+      await API.post('/api/subscribers', {
+        data: {
+          name,
+          email,
+        },
+      });
+      setIsModalOpen(false);
+      setConfirmMsg("Successfully subscribed to the newsletter!");
+      setConfirmType("success");
+      setConfirmOpen(true);
+      setIsModalOpen(false);
+      setEmail('');
+      setName('');
+    } catch (error) {
+      console.error("Subscription error:", error);
+      alert("Something went wrong. Please try again later.");
+    }
+  };
+
+  return (
+    <>
+      <Banner
+        heading="SalesforceHUB"
+        colorHeading="Connect, Learn, Grow"
+        para="Join the first AI-powered community for Salesforce professionals. Get instant answers, expert insights, and career growth opportunities."
+        btn="Join SalesforceHub Now – It's Free"
+        heroLayer="/images/hero-layer.png"
+        heroLayerphone="/images/hero-layer2.png"
+        heroImg="/images/gif-bnr.gif"
+      />
+      {/* Bottom Banner Section */}
+      <motion.section
+        className="bootom-bnr"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <div className="bottom-layer">
+          <img src="images/bottom-layer.png" alt="bnr-img" />
+        </div>
+        <div className="container">
+          <div className="grid grid-cols-2 gap">
+            <motion.div className="item" variants={fadeInUp}>
+              <div className="slider-type">
+                <div className="slider-flex">
+                  <div className="slidr-img">
+                    <img src="images/professional.png" alt="professional" />
+                  </div>
+                  <div className="slidr-text">
+                    <img src="images/quotation.png" alt="bnr-img" />
+                    <p>
+                      "The community has been invaluable for staying ahead of
+                      Salesforce AI developments. The real-time support is
+                      amazing!"
+                    </p>
+                    <span>
+                      <span>Sarah Johnson </span>Salesforce Architect @
+                      Microsoft
+                    </span>
                   </div>
                 </div>
-              </motion.div>
-              <motion.div className="item" variants={fadeInUp}>
-                <div className="questions">
-                  {boxbar.map((boxes, index) => {
-                    // Parse the number for counting (remove non-numeric characters like "+" or "/")
-                    const numericValue = parseInt(boxes.number.replace(/[^0-9]/g, ""));
-                    const displayText = boxes.number; // Keep the original text for display (e.g., "100+", "24/7")
+              </div>
+            </motion.div>
+            <motion.div className="item" variants={fadeInUp}>
+              <div className="questions">
+                {boxbar.map((boxes, index) => {
+                  // Parse the number for counting (remove non-numeric characters like "+" or "/")
+                  const match = boxes.number.match(/^(\d+)/);
+                  const numericValue = match ? parseInt(match[1], 10) : null;
+                  const displayText = boxes.number; // Keep the original text for display (e.g., "100+", "24/7")
 
-                    return (
-                      <motion.div
-                        className="box"
-                        key={index}
-                        variants={fadeInUp}
-                      // Removed whileHover to disable hover effect on counters
-                      >
-                        <h3>
-                          {numericValue ? (
-                            <CountUp
-                              start={0}
-                              end={numericValue}
-                              duration={2.5}
-                              suffix={displayText.replace(numericValue.toString(), "")} // Add back "+", "/" etc.
-                            />
-                          ) : (
-                            displayText // For "24/7", display as is
-                          )}
-                        </h3>
-                        <p>{boxes.para}</p>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </motion.div>
+
+                  return (
+                    <motion.div
+                      className="box"
+                      key={index}
+                      variants={fadeInUp}
+                    // Removed whileHover to disable hover effect on counters
+                    >
+                      <h3>
+                        {numericValue !== null && displayText.length > match[1].length ? (
+                          <CountUp
+                            start={0}
+                            end={numericValue}
+                            duration={2.5}
+                            suffix={displayText.replace(numericValue.toString(), "")} // Add back "+", "/" etc.
+                          />
+                        ) : (
+                          displayText // For "24/7", display as is
+                        )}
+                      </h3>
+                      <p>{boxes.para}</p>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Join Section */}
+      <motion.section
+        className="join"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <div className="container">
+          <motion.div className="grid" variants={fadeInUp}>
+            <div className="item">
+              <div className="heading-item">
+                <h2 className="site-heading">{whyJoinData.heading}</h2>
+                <p>{whyJoinData.paragraph}</p>
+              </div>
             </div>
-          </div>
-        </motion.section>
-
-        {/* Join Section */}
-        <motion.section
-          className="join"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <div className="container">
-            <motion.div className="grid" variants={fadeInUp}>
-              <div className="item">
-                <div className="heading-item">
-                  <h2 className="site-heading">{whyJoinData.heading}</h2>
-                  <p>{whyJoinData.paragraph}</p>
-                </div>
-              </div>
-            </motion.div>
-            <motion.div className="grid grid-cols-3 gap" variants={staggerContainer}>
-              {joinData.map((item, index) => (
-                <motion.div
-                  className="item"
-                  key={index}
-                  variants={fadeInUp}
-                  whileHover={hoverEffect}
-                >
-                  <div className="join-box">
-                    <div className="join-img">
-                      <img src={item.img} alt="professional" />
-                    </div>
-                    <div className="join-text">
-                      <a href={item.link}>{item.linkText}</a>
-                      <h3>{item.heading}</h3>
-                      {item.paragraphs?.map((para, i) => (
-                        <p
-                          key={i}
-                          className={i === 1 ? "join-secon-para" : undefined}
-                          dangerouslySetInnerHTML={{ __html: para }}
-                        />
-                      ))}
-                      {item.list && (
-                        <ul>
-                          {item.list.map((li, liIndex) => (
-                            <li
-                              key={liIndex}
-                              dangerouslySetInnerHTML={{ __html: li }}
-                            />
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-            <motion.div className="join-botton" variants={fadeInUp}>
-              <motion.button
-                onClick={() => setIsModalOpen(true)}
-                className="primary-btn"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
+          </motion.div>
+          <motion.div className="grid grid-cols-3 gap" variants={staggerContainer}>
+            {joinData.map((item, index) => (
+              <motion.div
+                className="item"
+                key={index}
+                variants={fadeInUp}
+                whileHover={hoverEffect}
               >
-                Join SalesforceHub Today
-              </motion.button>
-            </motion.div>
-            <NewsletterModal
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-              name={name}
-              setName={setName}
-              email={email}
-              setEmail={setEmail}
-              handleUserData={handleUserData}
-            />
-            <ConfirmModal
-              isOpen={confirmOpen}
-              onClose={() => setConfirmOpen(false)}
-              message={confirmMsg}
-              type={confirmType}
-            />
-          </div>
-        </motion.section>
-
-        <section className="join-layer">
-          <img src="images/join-layer.png" alt="bnr-img" />
-        </section>
-
-        {/* Live Section */}
-        <motion.section
-          className="live"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <div className="container">
-            <motion.div className="grid" variants={fadeInUp}>
-              <div className="item">
-                <div className="heading-item">
-                  <h2 className="site-heading">{liveSectionData.heading}</h2>
-                  {liveSectionData.paragraphs.map((para, index) => (
-                    <p key={index} dangerouslySetInnerHTML={{ __html: para }} />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-            <motion.div className="grid grid-cols-2 gap" variants={staggerContainer}>
-              <motion.div className="item" variants={fadeInUp}>
-                <div className="nex-live">
-                  <div className="next-flex">
-                    <p>Next Live Event</p>
-                    <span>Only {availableSeats} spots left</span>
+                <div className="join-box">
+                  <div className="join-img">
+                    <img src={item.img} alt="professional" />
                   </div>
-                  <h4>{closestDateEvent.Title}</h4>
-                  {/* <p>
+                  <div className="join-text">
+                    <a href={item.link}>{item.linkText}</a>
+                    <h3>{item.heading}</h3>
+                    {item.paragraphs?.map((para, i) => (
+                      <p
+                        key={i}
+                        className={i === 1 ? "join-secon-para" : undefined}
+                        dangerouslySetInnerHTML={{ __html: para }}
+                      />
+                    ))}
+                    {item.list && (
+                      <ul>
+                        {item.list.map((li, liIndex) => (
+                          <li
+                            key={liIndex}
+                            dangerouslySetInnerHTML={{ __html: li }}
+                          />
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+          <motion.div className="join-botton" variants={fadeInUp}>
+            <motion.button
+              onClick={() => setIsModalOpen(true)}
+              className="primary-btn"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Join SalesforceHub Today
+            </motion.button>
+          </motion.div>
+          <NewsletterModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            name={name}
+            setName={setName}
+            email={email}
+            setEmail={setEmail}
+            handleUserData={handleUserData}
+          />
+          <ConfirmModal
+            isOpen={confirmOpen}
+            onClose={() => setConfirmOpen(false)}
+            message={confirmMsg}
+            type={confirmType}
+          />
+
+
+        </div>
+      </motion.section>
+
+      <section className="join-layer">
+        <img src="images/join-layer.png" alt="bnr-img" />
+      </section>
+
+      {/* Live Section */}
+      <motion.section
+        className="live"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <div className="container">
+          <motion.div className="grid" variants={fadeInUp}>
+            <div className="item">
+              <div className="heading-item">
+                <h2 className="site-heading">{liveSectionData.heading}</h2>
+                {liveSectionData.paragraphs.map((para, index) => (
+                  <p key={index} dangerouslySetInnerHTML={{ __html: para }} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+          <motion.div className="grid grid-cols-2 gap" variants={staggerContainer}>
+            <motion.div className="item" variants={fadeInUp}>
+              <div className="nex-live">
+                <div className="next-flex">
+                  <p>Next Live Event</p>
+                  <span>Only {availableSeats} spots left</span>
+                </div>
+                <h4>{closestDateEvent.Title}</h4>
+                {/* <p>
                   {new Date(closestDateEvent.Date).toLocaleString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -618,316 +616,372 @@ export default function Home({ events }) {
 
                   })}
                 </p> */}
-                  <p><FormattedDate date={closestDateEvent.Date} /></p>
-                  <div className="next-only">
-                    <figure>
-                      <img src={`${process.env.NEXT_PUBLIC_API_URL}${closestDateEvent.Avatar?.url}`} alt={closestDateEvent.Title} />
-                    </figure>
-                    <p>
-                      <span>{closestDateEvent.name}</span>
-                      <span>{closestDateEvent.role}</span>
-                    </p>
-                  </div>
-                  {closestDateEvent?.documentId && (
-                    <motion.button
-                      onClick={() => handleEventSeat(closestDateEvent.documentId)}
-                      className="primary-btn"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Register Now
-                    </motion.button>
-                  )}
+                <p><FormattedDate date={closestDateEvent.Date} /></p>
+                <div className="next-only">
+                  <figure>
+                    <img src={`${process.env.NEXT_PUBLIC_API_URL}${closestDateEvent.Avatar?.url}`} alt={closestDateEvent.Title} />
+                  </figure>
+                  <p>
+                    <span>{closestDateEvent.name}</span>
+                    <span>{closestDateEvent.role}</span>
+                  </p>
                 </div>
-                <div className="grid">
-                  <div className="item">
-                    <div className="upcoming">
-                      <h3>Upcoming Sessions</h3>
-                      {event.
-                        map((session) => (
-                          <motion.div
-                            className="upcoming-flex"
-                            key={session.documentId}
-                            variants={fadeInUp}
-                          >
-                            <div className="upcoming-box">
-                              <h4>{session.Title}</h4>
-                              <p><FormattedDate date={session.Date} /></p>
-                            </div>
-                            <div className="upcoming-btn">
-                              {session?.documentId && (
-                                <motion.button
-                                  onClick={() => handleEventSeat(session.documentId)}
-                                  className="primary-btn"
-                                  whileHover={{ scale: 1.1 }}
-                                  whileTap={{ scale: 0.95 }}
-                                >
-                                  Save Seat
-                                </motion.button>
-                              )}
-
-                            </div>
-                          </motion.div>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-              <motion.div className="item" variants={fadeInUp}>
-                <div className="live-picture">
-                  <img src="images/picture.png" alt="picture" />
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* Community Section */}
-        <motion.section
-          className="community"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <div className="container">
-            <motion.div className="grid" variants={fadeInUp}>
-              <div className="item">
-                <div className="heading-item">
-                  <h2 className="site-heading">{communityData.heading}</h2>
-                  {communityData.paragraphs.map((para, index) => (
-                    <p key={index} dangerouslySetInnerHTML={{ __html: para }} />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-            <motion.div className="grid grid-cols-2 gap" variants={staggerContainer}>
-              <motion.div className="item" variants={fadeInUp}>
-                <div className="communityleft">
-                  <div className="certification-flex">
-                    <div className="certification-left">
-                      <span>#certification-tips</span>
-                      <span>#ask-an-expert</span>
-                    </div>
-                    <div className="certification-right">
-                      <figure>
-                        <img alt="sarah" src="images/participants.svg" />
-                        <img alt="sarah" src="images/participants1.svg" />
-                        <img alt="sarah" src="images/participants2.svg" />
-                      </figure>
-                      <p>15 participants</p>
-                    </div>
-                  </div>
-                  <div className="michelle">
-                    <figure>
-                      <img alt="sarah" src="images/ai1.svg" />
-                    </figure>
-                    <div className="michelle-box">
-                      <h3>Michelle Anderson</h3>
-                      <p>
-                        Anyone here implemented Einstein AI for case routing?
-                        Looking for best practices.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="michelle">
-                    <figure>
-                      <img alt="sarah" src="images/ai2.svg" />
-                    </figure>
-                    <div className="michelle-box">
-                      <h3>AI Assistant</h3>
-                      <p>Here are some relevant resources from the community:</p>
-                      <ul>
-                        <li>
-                          <img alt="sarah" src="images/video1.svg" />
-                          Einstein Case Routing Guide
-                        </li>
-                        <li>
-                          <img alt="sarah" src="images/video3.svg" />
-                          Implementation Workshop Recording
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-              <motion.div className="item" variants={fadeInUp}>
-                <div className="community-right">
-                  <h3>Trending Topics</h3>
-                  {trendingData.map((item, index) => (
-                    <motion.div
-                      className="trending-box"
-                      key={index}
-                      variants={fadeInUp}
-                      whileHover={hoverEffect}
-                    >
-                      <h4>{item.title}</h4>
-                      <p>
-                        {item.responses} responses • {item.status}
-                      </p>
-                    </motion.div>
-                  ))}
-                  <motion.a
-                    href="#"
+                {closestDateEvent?.documentId && (
+                  <motion.button
+                    onClick={() => handleEventSeat(closestDateEvent.documentId)}
                     className="primary-btn"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    Join the Conversation
-                  </motion.a>
+                    Register Now
+                  </motion.button>
+                )}
+              </div>
+              <div className="grid">
+                <div className="item">
+                  <div className="upcoming">
+                    <h3>Upcoming Sessions</h3>
+                    {[...event]
+                      .filter((filterEvent) => {
+                        return isUpcoming(filterEvent.Date)
+                      })
 
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </motion.section>
+                      .sort((a, b) => new Date(a.Date) - new Date(b.Date))
+                      .map((session) => (
+                        <motion.div
+                          className="upcoming-flex"
+                          key={session.documentId}
+                          variants={fadeInUp}
+                        >
+                          <div className="upcoming-box">
+                            <h4>{session.Title}</h4>
+                            <p><FormattedDate date={session.Date} /></p>
+                          </div>
+                          <div className="upcoming-btn">
+                            {session?.documentId && (
+                              <motion.button
+                                onClick={() => handleEventSeat(session.documentId)}
+                                className="primary-btn"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                Save Seat
+                              </motion.button>
+                            )}
 
-        {/* Build Section */}
-        <motion.section
-          className="build"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <div className="container">
-            <motion.div className="grid" variants={fadeInUp}>
-              <div className="item">
-                <div className="heading-item">
-                  <h2 className="site-heading">{build.heading}</h2>
-                  {build.paragraphs.map((para, index) => (
-                    <p key={index} dangerouslySetInnerHTML={{ __html: para }} />
-                  ))}
+                          </div>
+                        </motion.div>
+                      ))}
+                  </div>
                 </div>
               </div>
             </motion.div>
-            <motion.div className="slider-build" variants={staggerContainer}>
-              {teamData.map((member, index) => (
-                <motion.div
-                  className="build-box"
-                  key={index}
-                  variants={fadeInUp}
-                  whileHover={hoverEffect}
-                >
-                  <div className="build-flex">
-                    <figure>
-                      <img src={member.image} alt={member.name} />
-                    </figure>
-                    <div className="build-box-content">
-                      <h3>{member.name}</h3>
-                      <p>{member.role}</p>
-                      <span>{member.channel}</span>
-                    </div>
-                  </div>
-                  <p className="quote">{member.description}</p>
-                </motion.div>
-              ))}
+            <motion.div className="item" variants={fadeInUp}>
+              <div className="live-picture">
+                <img src="images/picture.png" alt="picture" />
+              </div>
             </motion.div>
-            <motion.a
-              onClick={() => setIsModalOpen(true)}
-              className="primary-btn"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Join Our Community
-            </motion.a>
-          </div>
-          <div className="build-layer">
-            <img src="images/build-layer.png" alt="build-layer.png" />
-          </div>
-        </motion.section>
+          </motion.div>
+        </div>
+      </motion.section>
 
-        {/* Exclusive Section */}
-        <motion.section
-          className="exclusive"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <div className="container">
-            <motion.div className="grid" variants={fadeInUp}>
-              <div className="item">
-                <div className="heading-item">
-                  <h2 className="site-heading">{exclusiveData.heading}</h2>
-                  {exclusiveData.paragraphs.map((para, index) => (
-                    <p key={index} dangerouslySetInnerHTML={{ __html: para }} />
-                  ))}
+      {/* Community Section */}
+      <motion.section
+        className="community"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <div className="container">
+          <motion.div className="grid" variants={fadeInUp}>
+            <div className="item">
+              <div className="heading-item">
+                <h2 className="site-heading">{communityData.heading}</h2>
+                {communityData.paragraphs.map((para, index) => (
+                  <p key={index} dangerouslySetInnerHTML={{ __html: para }} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+          <motion.div className="grid grid-cols-2 gap" variants={staggerContainer}>
+            <motion.div className="item" variants={fadeInUp}>
+              <div className="communityleft">
+                <div className="certification-flex">
+                  <div className="certification-left">
+                    <span>#certification-tips</span>
+                    <span>#ask-an-expert</span>
+                  </div>
+                  <div className="certification-right">
+                    <figure>
+                      <img alt="sarah" src="images/participants.svg" />
+                      <img alt="sarah" src="images/participants1.svg" />
+                      <img alt="sarah" src="images/participants2.svg" />
+                    </figure>
+                    <p>15 participants</p>
+                  </div>
+                </div>
+                <div className="michelle">
+                  <figure>
+                    <img alt="sarah" src="images/ai1.svg" />
+                  </figure>
+                  <div className="michelle-box">
+                    <h3>Michelle Anderson</h3>
+                    <p>
+                      Anyone here implemented Einstein AI for case routing?
+                      Looking for best practices.
+                    </p>
+                  </div>
+                </div>
+                <div className="michelle">
+                  <figure>
+                    <img alt="sarah" src="images/ai2.svg" />
+                  </figure>
+                  <div className="michelle-box">
+                    <h3>AI Assistant</h3>
+                    <p>Here are some relevant resources from the community:</p>
+                    <ul>
+                      <li>
+                        <img alt="sarah" src="images/video1.svg" />
+                        Einstein Case Routing Guide
+                      </li>
+                      <li>
+                        <img alt="sarah" src="images/video3.svg" />
+                        Implementation Workshop Recording
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </motion.div>
-            <motion.div className="grid grid-cols-4 gap" variants={staggerContainer}>
-              {cardData.map((item, index) => (
-                <motion.div
-                  className="item"
-                  key={index}
-                  variants={fadeInUp}
-                  whileHover={hoverEffect}
-                >
-                  <div className="card">
-                    <figure>
-                      <img
-                        src={item.imgSrc}
-                        alt="Guide Image"
-                        className="card-img"
-                      />
-                    </figure>
-                    <div className="card-content">
-                      <span className="badge">{item.badge}</span>
-                      <h3 className="title">{item.title}</h3>
-                      <p className="description">{item.description}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* Fun Banner Section */}
-        <motion.section
-          className="fun-bnr"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeInUp}
-        >
-          <div className="container">
-            <div className="grid">
-              <motion.div className="item" variants={fadeInUp}>
-                <h3>A Community Built for Learning & Fun</h3>
-                <p>
-                  Yes, we talk Salesforce, but we also have a #banter channel for
-                  fun conversations, Salesforce memes, and casual networking.
-                  Because learning is better when it doesn't feel like work.
-                </p>
+            <motion.div className="item" variants={fadeInUp}>
+              <div className="community-right">
+                <h3>Trending Topics</h3>
+                {trendingData.map((item, index) => (
+                  <motion.div
+                    className="trending-box"
+                    key={index}
+                    variants={fadeInUp}
+                    whileHover={hoverEffect}
+                  >
+                    <h4>{item.title}</h4>
+                    <p>
+                      {item.responses} responses • {item.status}
+                    </p>
+                  </motion.div>
+                ))}
                 <motion.a
                   href="#"
                   className="primary-btn"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <img src="/images/joinvector.svg" alt="joinvector" /> Join the
-                  SalesforceHub Slack Now!
+                  Join the Conversation
                 </motion.a>
+
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Build Section */}
+      <motion.section
+        className="build"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <div className="container">
+          <motion.div className="grid" variants={fadeInUp}>
+            <div className="item">
+              <div className="heading-item">
+                <h2 className="site-heading">{build.heading}</h2>
+                {build.paragraphs.map((para, index) => (
+                  <p key={index} dangerouslySetInnerHTML={{ __html: para }} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+          <motion.div className="slider-build" variants={staggerContainer}>
+            {teamData.map((member, index) => (
+              <motion.div
+                className="build-box"
+                key={index}
+                variants={fadeInUp}
+                whileHover={hoverEffect}
+              >
+                <div className="build-flex">
+                  <figure>
+                    <img src={member.image} alt={member.name} />
+                  </figure>
+                  <div className="build-box-content">
+                    <h3>{member.name}</h3>
+                    <p>{member.role}</p>
+                    <span>{member.channel}</span>
+                  </div>
+                </div>
+                <p className="quote">{member.description}</p>
               </motion.div>
+            ))}
+          </motion.div>
+          <motion.a
+            onClick={() => setIsModalOpen(true)}
+            className="primary-btn"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Join Our Community
+          </motion.a>
+        </div>
+        <div className="build-layer">
+          <img src="images/build-layer.png" alt="build-layer.png" />
+        </div>
+      </motion.section>
+
+      {/* Exclusive Section */}
+      <motion.section
+        className="exclusive"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <div className="container">
+          <motion.div className="grid" variants={fadeInUp}>
+            <div className="item">
+              <div className="heading-item">
+                <h2 className="site-heading">{exclusiveData.heading}</h2>
+                {exclusiveData.paragraphs.map((para, index) => (
+                  <p key={index} dangerouslySetInnerHTML={{ __html: para }} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+          <motion.div className="grid grid-cols-4 gap" variants={staggerContainer}>
+            {cardData.map((item, index) => (
+              <motion.div
+                className="item"
+                key={index}
+                variants={fadeInUp}
+                whileHover={hoverEffect}
+              >
+                <div className="card">
+                  <figure>
+                    <img
+                      src={item.imgSrc}
+                      alt="Guide Image"
+                      className="card-img"
+                    />
+                  </figure>
+                  <div className="card-content">
+                    <span className="badge">{item.badge}</span>
+                    <h3 className="title">{item.title}</h3>
+                    <p className="description">{item.description}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Fun Banner Section */}
+      <motion.section
+        className="fun-bnr"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeInUp}
+      >
+        <div className="container">
+          <div className="grid">
+            <motion.div className="item" variants={fadeInUp}>
+              <h3>A Community Built for Learning & Fun</h3>
+              <p>
+                Yes, we talk Salesforce, but we also have a #banter channel for
+                fun conversations, Salesforce memes, and casual networking.
+                Because learning is better when it doesn't feel like work.
+              </p>
+              <motion.a
+                href="#"
+                className="primary-btn"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <img src="/images/joinvector.svg" alt="joinvector" /> Join the
+                SalesforceHub Slack Now!
+              </motion.a>
+            </motion.div>
+          </div>
+        </div>
+      </motion.section>
+
+      < Modal isOpen={isModalLoginOpen} onClose={closeModal} >
+        <div className="subscribe-modal">
+          <h2>Log in to join the discussion</h2>
+          <p>Choose a login method to add your comment.</p>
+          <div className="subscribe-links">
+            <Login cutbox={closeModal} />
+          </div>
+        </div>
+        <button onClick={() => setIsModalLoginOpen(false)} className="cancil-btn">
+          <img src="../images/cross.svg" alt="cross.svg" />
+        </button>
+      </Modal >
+
+      {isAlreadyOpen && (
+        <div className={`custom-model custom-model-last confirm-modal success`}>
+          <div className="modal-overlay" onClick={() => setIsAlreadyOpen(false)}>
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <p>User already registered for this event!</p>
+              <button className="cancil-btn" onClick={() => setIsAlreadyOpen(false)}>
+                <img alt="cross" src="../images/cross.svg" />
+              </button>
+            </div>
+            <div className="birdss">
+              <img src="../images/justfory.png" alt="just for you" />
+              <img src="../images/tmpas.png" alt="tmpas" />
             </div>
           </div>
-        </motion.section>
-
-        < Modal isOpen={isModalLoginOpen} onClose={closeModal} >
-          <div className="subscribe-modal">
-            <h2>Log in to join the discussion</h2>
-            <p>Choose a login method to add your comment.</p>
-            <div className="subscribe-links">
-              <Login cutbox={closeModal} />
+        </div>
+      )}
+      {isnewRegistration && (
+        <div className={`custom-model custom-model-last confirm-modal success`}>
+          <div className="modal-overlay" onClick={() => setNewRegistration(false)}>
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <p>Registration successful</p>
+              <button className="cancil-btn" onClick={() => setNewRegistration(false)}>
+                <img alt="cross" src="../images/cross.svg" />
+              </button>
+            </div>
+            <div className="birdss">
+              <img src="../images/justfory.png" alt="just for you" />
+              <img src="../images/tmpas.png" alt="tmpas" />
             </div>
           </div>
-          <button onClick={() => setIsModalLoginOpen(false)} className="cancil-btn">
-            <img src="../images/cross.svg" alt="cross.svg" />
-          </button>
-        </Modal >
+        </div>
+      )}
+      {isSeatLeft && (
+        <div className={`custom-model custom-model-last confirm-modal success`}>
+          <div className="modal-overlay" onClick={() => setIsSeatLeft(false)}>
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <p>No Seat left</p>
+              <button className="cancil-btn" onClick={() => setIsSeatLeft(false)}>
+                <img alt="cross" src="../images/cross.svg" />
+              </button>
+            </div>
+            <div className="birdss">
+              <img src="../images/justfory.png" alt="just for you" />
+              <img src="../images/tmpas.png" alt="tmpas" />
+            </div>
+          </div>
+        </div>
+      )}
 
-      </>
-    );
-  }
+
+    </>
+  );
+}
+

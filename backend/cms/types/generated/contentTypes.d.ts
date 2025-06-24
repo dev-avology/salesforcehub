@@ -387,7 +387,7 @@ export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
     >;
     badge: Schema.Attribute.String;
     category: Schema.Attribute.Enumeration<
-      ['DataArch', 'Integration', 'DevOps', 'Governance']
+      ['DataArch', 'Integration', 'DevOps', 'Governance', 'Testing']
     >;
     comments: Schema.Attribute.Relation<'oneToMany', 'api::comment.comment'>;
     Content: Schema.Attribute.Blocks;
