@@ -3,6 +3,7 @@ import Link from "next/link";
 
 
 function Bnrblogs({ posts }) {
+
   return (
     <>
       <section className="second-bnr">

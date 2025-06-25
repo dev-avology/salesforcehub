@@ -11,6 +11,7 @@ function Tabs({ tabs }) {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 4;
 
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
     setCurrentPage(1);

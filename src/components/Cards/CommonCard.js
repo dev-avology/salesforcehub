@@ -31,7 +31,7 @@ function CommonCard({ posts }) {
                       <li>
                         <a href="/blog">
                         <img src={`${process.env.NEXT_PUBLIC_API_URL}${post?.authorName?.authorLogo?.url}`} alt="Date icon" />
-                          <span>{post.authorName?.username}</span>
+                          <span>{post?.authorName?.username}</span>
                         </a>
                         <span>
                           {new Date(post.Date).toLocaleDateString("en-US", {

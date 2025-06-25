@@ -1107,9 +1107,11 @@ export interface PluginUsersPermissionsUser
     draftAndPublish: false;
   };
   attributes: {
+    authorDescription: Schema.Attribute.Text;
     authorLogo: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;
+    authorTitle: Schema.Attribute.String;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     blogs: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'>;
     comments: Schema.Attribute.Relation<'oneToMany', 'api::reply.reply'>;

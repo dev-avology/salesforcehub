@@ -40,8 +40,7 @@ const joinData = {
 };
 
 export const getServerSideProps = async () => {
-
-  const blogsRes = await API.get('api/blogs?populate[authorName][populate]=authorLogo&populate[Image][populate]&populate[comments][populate]');
+   const blogsRes = await API.get('api/blogs?populate[authorName][populate]=authorLogo&populate[Image][populate]&populate[comments][populate]');
 
   const posts = blogsRes.data.data;
 
@@ -59,7 +58,6 @@ function blog({ posts }) {
    const [confirmOpen, setConfirmOpen] = useState(false);
     const [confirmMsg, setConfirmMsg] = useState("");
     const [confirmType, setConfirmType] = useState("info");
-
 
   const handleUserData = async (e) => {
     e.preventDefault();

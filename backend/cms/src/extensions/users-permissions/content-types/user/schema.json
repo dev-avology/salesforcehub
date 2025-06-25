@@ -110,6 +110,12 @@
         "videos",
         "audios"
       ]
+    },
+    "authorTitle": {
+      "type": "string"
+    },
+    "authorDescription": {
+      "type": "text"
     }
   }
 }

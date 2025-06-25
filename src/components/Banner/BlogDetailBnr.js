@@ -20,7 +20,6 @@ const shareLinks = [
 ];
 
 function BlogDetailBnr({ detail, detailBanner }) {
-  
   return (
     <section className="blogs-detail-bnr">
       <div className="detail-layer">
@@ -48,7 +47,7 @@ function BlogDetailBnr({ detail, detailBanner }) {
               <ul className="custom-flex">
                 <li>
                   <a href="/blog">
-                    <img alt="Date icon" src="/images/circle-bnr.png" />
+                     <img src={`${process.env.NEXT_PUBLIC_API_URL}${detail?.authorName?.authorLogo?.url}`} alt="Date icon" />
                     <span
                       dangerouslySetInnerHTML={{ __html: detail.authorName?.username }}
                     />

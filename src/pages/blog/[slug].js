@@ -39,7 +39,8 @@ export async function getStaticProps({ params }) {
   try{
   const { slug } = params;
 
-  const res = await API.get(`/api/blogs?filters[Slug][$eq]=${slug}&populate=*`);
+  // const res = await API.get(`/api/blogs?filters[Slug][$eq]=${slug}&populate=*`);
+  const res = await API.get(`api/blogs?filters[Slug][$eq]=${slug}&populate[authorName][populate]=authorLogo&populate[Image][populate]&populate[comments][populate]`);
   const slugData = res.data.data[0];
 
   if (!slugData) {
@@ -72,7 +73,6 @@ function blogDetail({ slugData }) {
 
   const router = useRouter();
   const { slug } = router.query;
-  console.log("jj",slugData);
 
 
 
@@ -134,7 +134,7 @@ function blogDetail({ slugData }) {
         transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
         viewport={{ once: true }}
       >
-        <Explore />
+        <Explore  postData={slugData}/>
       </motion.div>
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}

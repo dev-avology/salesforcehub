@@ -55,7 +55,8 @@ const sliderData = [
   },
 ];
 
-function Explore() {
+function Explore({postData}) {
+
   <Swiper
     modules={[Navigation, Pagination, Autoplay]}
     spaceBetween={10}
@@ -102,14 +103,15 @@ function Explore() {
                   <div className="slider-container">
                     <div className="slider-flexbar">
                       <div className="slider-image">
-                        <img src={item.image} alt="professional" />
+                        {/* <img src={postData.image} alt="professional" /> */}
+                        <img src={`${process.env.NEXT_PUBLIC_API_URL}${postData?.authorName?.authorLogo?.url}`} alt="professional" />
                       </div>
                       <div className="slider-content">
-                        <h3 className="slider-name">{item.name}</h3>
-                        <span className="slider-position">{item.position}</span>
+                        <h3 className="slider-name">{postData?.authorName?.username}</h3>
+                        <span className="slider-position">{postData?.authorName?.authorTitle}</span>
                       </div>
                     </div>
-                    <p>{item.description}</p>
+                    <p>{postData?.authorName?.authorDescription}</p>
                     <Link href={item.link}>
                       More Articles by Jay <img src={item.arrow} alt="arrow" />
                     </Link>
@@ -118,7 +120,7 @@ function Explore() {
                     </div>
                   </div>
                 </SwiperSlide>
-              ))}
+                ))} 
             </Swiper>
           </div>
         </div>

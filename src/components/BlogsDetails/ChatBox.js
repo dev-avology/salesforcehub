@@ -32,7 +32,7 @@ useEffect(() => {
     const fetchComments = async () => {
       try {
        
-        const res = await API.get(`/api/comments?filters[blog][documentId][$eq]=${postID}&populate[user]=true&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user]=true&populate[replies][populate][likes]=true`); 
+        const res = await API.get(`/api/comments?filters[blog][documentId][$eq]=${postID}&populate[user][populate]=authorLogo&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user][populate]=authorLogo&populate[replies][populate][likes]=true`); 
         setComments(res.data.data);
       } catch (error) {
         console.error('Error fetching comments:', error);
@@ -60,7 +60,7 @@ useEffect(() => {
   const [inputKey, setInputKey] = useState(Date.now());
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
-
+  
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -520,7 +520,7 @@ useEffect(() => {
                     <div className="doe-flex doe-flex-common" key={comment.documentId}>
                       <div className="doe-left"  >
                         <figure>
-                          <img src="../images/doe.png" alt="messgee.svg" />
+                           <img src={`${process.env.NEXT_PUBLIC_API_URL}${comment?.user?.authorLogo?.url}`} alt="Date icon" />
                         </figure>
                       </div>
                       <div className="doe-right">
@@ -560,7 +560,7 @@ useEffect(() => {
                               <div className="doe-flex doe-flex-common" key={r.documentId}>
                                 <div className="doe-left">
                                   <figure>
-                                    <img src="../images/doe.png" alt="messgee.svg" />
+                                   <img src={`${process.env.NEXT_PUBLIC_API_URL}${r?.user?.authorLogo?.url}`} alt="Date icon" />
                                   </figure>
                                 </div>
                                 < div className="doe-right" >
