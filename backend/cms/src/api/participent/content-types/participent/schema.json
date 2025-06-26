@@ -21,9 +21,12 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "likes"
+      "inversedBy": "participents"
     },
     "EventID": {
+      "type": "string"
+    },
+    "gmail": {
       "type": "string"
     }
   }

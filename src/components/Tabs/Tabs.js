@@ -11,6 +11,7 @@ function Tabs({ tabs }) {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 4;
 
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
     setCurrentPage(1);
@@ -39,8 +40,8 @@ function Tabs({ tabs }) {
         <ul className="custom-flex">
           <li>
             <a href="/blog">
-            <img src={`${process.env.NEXT_PUBLIC_API_URL}${post.author_logo?.url}`} alt="Date icon" />
-              <span>{post.author}</span>
+            <img src={`${process.env.NEXT_PUBLIC_API_URL}${post?.authorName?.authorLogo?.url}`} alt="Date icon" />
+              <span>{post.authorName?.username}</span>
             </a>
             <span>{new Date(post.Date).toLocaleDateString('en-US', {
               year: 'numeric',

@@ -47,13 +47,11 @@
         "DataArch",
         "Integration",
         "DevOps",
-        "Governance"
+        "Governance",
+        "Testing"
       ]
     },
     "badge": {
-      "type": "string"
-    },
-    "author": {
       "type": "string"
     },
     "isFeatured": {
@@ -73,6 +71,12 @@
     },
     "MainContent": {
       "type": "richtext"
+    },
+    "authorName": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "blogs"
     }
   }
 }

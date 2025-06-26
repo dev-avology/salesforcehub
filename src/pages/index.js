@@ -8,14 +8,32 @@ import Footer from "@/components/HeaderFooter/Footer";
 import { motion } from "framer-motion"; // Import Framer Motion
 import CountUp from "react-countup"; // Import CountUp for counter animation
 import { useEffect, useState } from "react";
+import { useAuthContext } from "@/context/AuthContext";
 import API from '../services/api';
 import NewsletterModal from "@/components/NewsLetter/NewsletterModal";
 import ConfirmModal from "@/components/NewsLetter/confirmModel";
+import FormattedDate from "@/components/NewsLetter/FormattedDate";
+import Login from "@/components/Login";
+import { isUpcoming } from '../components/NewsLetter/IsUpcoming';
+
+
+function Modal({ isOpen, onClose, children }) {
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="custom-model log ">
+      <div className="modal-overlay">
+        <div className="modal">{children}</div>
+      </div>
+    </div>
+  );
+}
+
 
 export const getServerSideProps = async () => {
 
   const blogsRes = await API.get('api/events?populate=Avatar');
-
   const events = blogsRes.data.data;
 
   return {
@@ -82,18 +100,7 @@ const joinData = [
   },
 ];
 
-const upcoming = [
-  {
-    heading: "Data Cloud Mastery",
-    para: "March 15, 2025 - 2:00 PM EST",
-    btn: "Save Seat",
-  },
-  {
-    heading: "Flow Automation Workshop",
-    para: "March 15, 2025 - 2:00 PM EST",
-    btn: "Save Seat",
-  },
-];
+
 
 const whyJoinData = {
   heading: "Why Join SalesforceHub?",
@@ -223,6 +230,9 @@ const hoverEffect = {
 };
 
 export default function Home({ events }) {
+
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -230,32 +240,86 @@ export default function Home({ events }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmMsg, setConfirmMsg] = useState("");
   const [confirmType, setConfirmType] = useState("info");
+  const [todayDate, setTodayDate] = useState(new Date());
+  const { Authuser, isAuthenticated } = useAuthContext();
+  const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
+  const [fetchSeats, setFetchSeats] = useState(false);
+  const [eventID, setEventID] = useState('');
+  const [availableSeats, setAvailableSeats] = useState(0);
+  const [isAlreadyOpen, setIsAlreadyOpen] = useState(false);
+  const [isnewRegistration, setNewRegistration] = useState(false);
+  const [isSeatLeft, setIsSeatLeft] = useState(false);
+
+
+
+
+  const openModal = () => {
+    setIsModalLoginOpen(true);
+  }
+  const closeModal = () => setIsModalLoginOpen(false);
+
+  const today = new Date();
+
+
+
 
 
   useEffect(() => {
     if (events && events.length > 0) {
       setEvent(events);
+
+      const upcomingEvents = events.filter(event => new Date(event.Date) >= today);
+
+      if (upcomingEvents.length > 0) {
+        const closestDateEvent = upcomingEvents.reduce((closest, curr) => {
+          const currDate = new Date(curr.Date);
+          const closestDate = new Date(closest.Date);
+          return currDate < closestDate ? curr : closest;
+        }, upcomingEvents[0]);
+
+        if (closestDateEvent) {
+          setEventID(closestDateEvent.documentId);
+          setAvailableSeats(closestDateEvent.availableSeats);
+        }
+      }
     }
-  }, [events]);
+  }, [events, fetchSeats]);
+
+  useEffect(() => {
+    const fetcheventsSeats = async () => {
+      if (!eventID) return;
+      try {
+        const seats = await API.get(`/api/events/${eventID}?populate=*`);
+        const eventss = seats?.data?.data?.availableSeats;
+        setAvailableSeats(eventss);
+
+      } catch (error) {
+        console.error("Error fetching event seat data:", error);
+      }
+    };
+
+    fetcheventsSeats();
+  }, [eventID, fetchSeats]);
 
 
 
-  const lowestSeatEvent = events.reduce((min, curr) =>
-    curr.availableSeats < min.availableSeats ? curr : min);
 
-  const formattedDate = new Date(lowestSeatEvent.Date).toLocaleString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
 
-  });
+  const closestDateEvent = events
+    .filter(event => new Date(event.Date) >= today)
+    .reduce((closest, curr) => {
+
+      const currDate = new Date(curr.Date);
+      const closestDate = new Date(closest.Date);
+      return currDate < closestDate ? curr : closest;
+    });
 
 
 
   const handleEventSeat = async (eventId) => {
-    const userId = 3; // Authuser.id
+
+    if (!isAuthenticated) return openModal();
+    const userId = Authuser.id; 
     const eventPayload = {
       data: {
         events: eventId,
@@ -263,33 +327,39 @@ export default function Home({ events }) {
         user: userId,
       },
     };
-
     try {
       const checkRes = await API.get(
-        `/api/participents?filter[user][$eq]=3`
+        `/api/participents?filters[user][$eq]=${userId}`
       );
-      const alreadyReg = checkRes.data?.data;
+      const alreadyReg = checkRes.data?.data || [];
+
+
       const hasRegister = alreadyReg.find((val) => val?.EventID === eventId);
 
       if (hasRegister) {
-        console.log("User already registered for this event.");
+        setIsAlreadyOpen(true);
         return;
       }
-      const registerRes = await API.post('/api/participents', eventPayload);
-      console.log("Registration successful:", registerRes.data);
 
       const eventRes = await API.get(`/api/events/${eventId}`);
       const currentSeats = eventRes?.data?.data?.availableSeats;
 
+
       if (currentSeats > 0) {
+        const registerRes = await API.post('/api/participents', eventPayload);
+        setNewRegistration(true);
+        const newSeats = currentSeats - 1;
         await API.put(`/api/events/${eventId}`, {
           data: {
-            availableSeats: currentSeats - 1,
+            availableSeats: newSeats,
           },
         });
-        console.log("Available seats updated.");
+
+        setAvailableSeats(newSeats);
+        setFetchSeats((prev) => !prev);
       } else {
-        console.log("No available seats left.");
+        setIsSeatLeft(true);
+
       }
 
     } catch (error) {
@@ -387,8 +457,10 @@ export default function Home({ events }) {
               <div className="questions">
                 {boxbar.map((boxes, index) => {
                   // Parse the number for counting (remove non-numeric characters like "+" or "/")
-                  const numericValue = parseInt(boxes.number.replace(/[^0-9]/g, ""));
+                  const match = boxes.number.match(/^(\d+)/);
+                  const numericValue = match ? parseInt(match[1], 10) : null;
                   const displayText = boxes.number; // Keep the original text for display (e.g., "100+", "24/7")
+
 
                   return (
                     <motion.div
@@ -398,7 +470,7 @@ export default function Home({ events }) {
                     // Removed whileHover to disable hover effect on counters
                     >
                       <h3>
-                        {numericValue ? (
+                        {numericValue !== null && displayText.length > match[1].length ? (
                           <CountUp
                             start={0}
                             end={numericValue}
@@ -498,6 +570,8 @@ export default function Home({ events }) {
             message={confirmMsg}
             type={confirmType}
           />
+
+
         </div>
       </motion.section>
 
@@ -529,63 +603,75 @@ export default function Home({ events }) {
               <div className="nex-live">
                 <div className="next-flex">
                   <p>Next Live Event</p>
-                  <span>Only {lowestSeatEvent.availableSeats} spots left</span>
+                  <span>Only {availableSeats} spots left</span>
                 </div>
-                <h4>{lowestSeatEvent.Title}</h4>
-                <p>{formattedDate}</p>
+                <h4>{closestDateEvent.Title}</h4>
+                {/* <p>
+                  {new Date(closestDateEvent.Date).toLocaleString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+
+                  })}
+                </p> */}
+                <p><FormattedDate date={closestDateEvent.Date} /></p>
                 <div className="next-only">
                   <figure>
-                    <img src={`${process.env.NEXT_PUBLIC_API_URL}${lowestSeatEvent.Avatar?.url}`} alt={lowestSeatEvent.Title} />
+                    <img src={`${process.env.NEXT_PUBLIC_API_URL}${closestDateEvent.Avatar?.url}`} alt={closestDateEvent.Title} />
                   </figure>
                   <p>
-                    <span>{lowestSeatEvent.name}</span>
-                    <span>{lowestSeatEvent.role}</span>
+                    <span>{closestDateEvent.name}</span>
+                    <span>{closestDateEvent.role}</span>
                   </p>
                 </div>
-                <motion.a
-                  onClick={() => handleEventSeat(lowestSeatEvent.documentId)}
-                  className="primary-btn"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Register Now
-                </motion.a>
+                {closestDateEvent?.documentId && (
+                  <motion.button
+                    onClick={() => handleEventSeat(closestDateEvent.documentId)}
+                    className="primary-btn"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Register Now
+                  </motion.button>
+                )}
               </div>
               <div className="grid">
                 <div className="item">
                   <div className="upcoming">
                     <h3>Upcoming Sessions</h3>
-                    {events && events.length > 0 && event.map((session) => (
-                      <motion.div
-                        className="upcoming-flex"
-                        key={session.documentId}
-                        variants={fadeInUp}
-                      >
-                        <div className="upcoming-box">
-                          <h4>{session.Title}</h4>
-                          <p>
-                            {new Date(session.Date).toLocaleString("en-US", {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                              hour: "numeric",
-                              minute: "2-digit",
+                    {[...event]
+                      .filter((filterEvent) => {
+                        return isUpcoming(filterEvent.Date)
+                      })
 
-                            })}
-                          </p>
-                        </div>
-                        <div className="upcoming-btn">
-                          <motion.a
-                            onClick={() => handleEventSeat(session.documentId)}
-                            className="primary-btn"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            Save Seat
-                          </motion.a>
-                        </div>
-                      </motion.div>
-                    ))}
+                      .sort((a, b) => new Date(a.Date) - new Date(b.Date))
+                      .map((session) => (
+                        <motion.div
+                          className="upcoming-flex"
+                          key={session.documentId}
+                          variants={fadeInUp}
+                        >
+                          <div className="upcoming-box">
+                            <h4>{session.Title}</h4>
+                            <p><FormattedDate date={session.Date} /></p>
+                          </div>
+                          <div className="upcoming-btn">
+                            {session?.documentId && (
+                              <motion.button
+                                onClick={() => handleEventSeat(session.documentId)}
+                                className="primary-btn"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                Save Seat
+                              </motion.button>
+                            )}
+
+                          </div>
+                        </motion.div>
+                      ))}
                   </div>
                 </div>
               </div>
@@ -819,7 +905,7 @@ export default function Home({ events }) {
                 Because learning is better when it doesn't feel like work.
               </p>
               <motion.a
-                onClick={() => setIsModalOpen(true)}
+                href="#"
                 className="primary-btn"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -832,6 +918,70 @@ export default function Home({ events }) {
         </div>
       </motion.section>
 
+      < Modal isOpen={isModalLoginOpen} onClose={closeModal} >
+        <div className="subscribe-modal">
+          <h2>Log in to join the discussion</h2>
+          <p>Choose a login method to add your comment.</p>
+          <div className="subscribe-links">
+            <Login cutbox={closeModal} />
+          </div>
+        </div>
+        <button onClick={() => setIsModalLoginOpen(false)} className="cancil-btn">
+          <img src="../images/cross.svg" alt="cross.svg" />
+        </button>
+      </Modal >
+
+      {isAlreadyOpen && (
+        <div className={`custom-model custom-model-last confirm-modal success`}>
+          <div className="modal-overlay" onClick={() => setIsAlreadyOpen(false)}>
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <p>User already registered for this event!</p>
+              <button className="cancil-btn" onClick={() => setIsAlreadyOpen(false)}>
+                <img alt="cross" src="../images/cross.svg" />
+              </button>
+            </div>
+            <div className="birdss">
+              <img src="../images/justfory.png" alt="just for you" />
+              <img src="../images/tmpas.png" alt="tmpas" />
+            </div>
+          </div>
+        </div>
+      )}
+      {isnewRegistration && (
+        <div className={`custom-model custom-model-last confirm-modal success`}>
+          <div className="modal-overlay" onClick={() => setNewRegistration(false)}>
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <p>Registration successful</p>
+              <button className="cancil-btn" onClick={() => setNewRegistration(false)}>
+                <img alt="cross" src="../images/cross.svg" />
+              </button>
+            </div>
+            <div className="birdss">
+              <img src="../images/justfory.png" alt="just for you" />
+              <img src="../images/tmpas.png" alt="tmpas" />
+            </div>
+          </div>
+        </div>
+      )}
+      {isSeatLeft && (
+        <div className={`custom-model custom-model-last confirm-modal success`}>
+          <div className="modal-overlay" onClick={() => setIsSeatLeft(false)}>
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <p>No Seat left</p>
+              <button className="cancil-btn" onClick={() => setIsSeatLeft(false)}>
+                <img alt="cross" src="../images/cross.svg" />
+              </button>
+            </div>
+            <div className="birdss">
+              <img src="../images/justfory.png" alt="just for you" />
+              <img src="../images/tmpas.png" alt="tmpas" />
+            </div>
+          </div>
+        </div>
+      )}
+
+
     </>
   );
 }
+

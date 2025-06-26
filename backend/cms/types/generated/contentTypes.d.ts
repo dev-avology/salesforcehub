@@ -381,13 +381,16 @@ export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    author: Schema.Attribute.String;
     author_logo: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;
+    authorName: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     badge: Schema.Attribute.String;
     category: Schema.Attribute.Enumeration<
-      ['DataArch', 'Integration', 'DevOps', 'Governance']
+      ['DataArch', 'Integration', 'DevOps', 'Governance', 'Testing']
     >;
     comments: Schema.Attribute.Relation<'oneToMany', 'api::comment.comment'>;
     Content: Schema.Attribute.Blocks;
@@ -536,6 +539,7 @@ export interface ApiParticipentParticipent extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     EventID: Schema.Attribute.String;
     events: Schema.Attribute.Relation<'manyToMany', 'api::event.event'>;
+    gmail: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1103,7 +1107,13 @@ export interface PluginUsersPermissionsUser
     draftAndPublish: false;
   };
   attributes: {
+    authorDescription: Schema.Attribute.Text;
+    authorLogo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    authorTitle: Schema.Attribute.String;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    blogs: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'>;
     comments: Schema.Attribute.Relation<'oneToMany', 'api::reply.reply'>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;

@@ -20,19 +20,19 @@ function Modal({ isOpen, onClose, children }) {
   );
 }
 
-function ChatBox({ postID , slug}) {
-  const [comments,setComments]=useState([])
+function ChatBox({ postID, slug }) {
+  const [comments, setComments] = useState([])
   const [commentsRefresh, setCommentsRefresh] = useState(false);
 
-   const handleRefresh = () => {
+  const handleRefresh = () => {
     setCommentsRefresh(prevState => !prevState);
   };
 
-useEffect(() => {
+  useEffect(() => {
     const fetchComments = async () => {
       try {
-       
-        const res = await API.get(`/api/comments?filters[blog][documentId][$eq]=${postID}&populate[user]=true&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user]=true&populate[replies][populate][likes]=true`); 
+
+        const res = await API.get(`/api/comments?filters[blog][documentId][$eq]=${postID}&populate[user][populate]=authorLogo&populate[likes]=true&populate[CommentImage]=true&populate[replies][populate][Rimg]=true&populate[replies][populate][user][populate]=authorLogo&populate[replies][populate][likes]=true`);
         setComments(res.data.data);
       } catch (error) {
         console.error('Error fetching comments:', error);
@@ -41,7 +41,7 @@ useEffect(() => {
     if (postID) {
       fetchComments();
     }
-  }, [postID,commentsRefresh]);
+  }, [postID, commentsRefresh]);
 
 
   const { Authuser, isAuthenticated } = useAuthContext();
@@ -79,37 +79,37 @@ useEffect(() => {
     if (!isAuthenticated) return openModal();
 
     try {
-    const response = await API.get(
-      `/api/likes?filters[user][$eq]=${Authuser.id}&populate[comment]=true`
-    );
-
-    const likes = response.data?.data;
-
-    const hasLiked = likes.find((val) => val.comment?.documentId === commentId);
-
-
-    if (hasLiked) {
-      const response = await API.delete(
-        `/api/likes/${hasLiked.documentId}`
+      const response = await API.get(
+        `/api/likes?filters[user][$eq]=${Authuser.id}&populate[comment]=true`
       );
-      handleRefresh();
 
-    } else {
-      const likePayload = {
-        data: {
-          comment: commentId,
-          user: Authuser.id,
-        },
-      };
+      const likes = response.data?.data;
 
-      await API.post('/api/likes', likePayload, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      handleRefresh();
-      console.log('Like added');
-    }
+      const hasLiked = likes.find((val) => val.comment?.documentId === commentId);
+
+
+      if (hasLiked) {
+        const response = await API.delete(
+          `/api/likes/${hasLiked.documentId}`
+        );
+        handleRefresh();
+
+      } else {
+        const likePayload = {
+          data: {
+            comment: commentId,
+            user: Authuser.id,
+          },
+        };
+
+        await API.post('/api/likes', likePayload, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        handleRefresh();
+        console.log('Like added');
+      }
     } catch (error) {
       console.error('Error handling like:', error);
     }
@@ -140,37 +140,37 @@ useEffect(() => {
     if (!isAuthenticated) return openModal();
 
     try {
-    const response = await API.get(
-      `/api/likes?filters[user][$eq]=${Authuser.id}&populate[reply]=true`
-    );
-
-    const likes = response.data?.data;
-
-    const hasLiked = likes.find((val) => val.reply?.documentId === commentId);
-
-    if (hasLiked) {
-
-      const response = await API.delete(
-        `/api/likes/${hasLiked.documentId}`
+      const response = await API.get(
+        `/api/likes?filters[user][$eq]=${Authuser.id}&populate[reply]=true`
       );
 
-      handleRefresh();
-    } else {
-      const likePayload = {
-        data: {
-          reply: commentId,
-          user: Authuser.id,
-        },
-      };
+      const likes = response.data?.data;
 
-      await API.post('/api/likes', likePayload, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      handleRefresh();
-      console.log('Like added');
-    }
+      const hasLiked = likes.find((val) => val.reply?.documentId === commentId);
+
+      if (hasLiked) {
+
+        const response = await API.delete(
+          `/api/likes/${hasLiked.documentId}`
+        );
+
+        handleRefresh();
+      } else {
+        const likePayload = {
+          data: {
+            reply: commentId,
+            user: Authuser.id,
+          },
+        };
+
+        await API.post('/api/likes', likePayload, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        handleRefresh();
+        console.log('Like added');
+      }
     } catch (error) {
       console.error('Error handling like:', error);
     }
@@ -520,7 +520,14 @@ useEffect(() => {
                     <div className="doe-flex doe-flex-common" key={comment.documentId}>
                       <div className="doe-left"  >
                         <figure>
-                          <img src="../images/doe.png" alt="messgee.svg" />
+                          <img
+                            src={
+                              comment?.user?.authorLogo?.url
+                                ? `${process.env.NEXT_PUBLIC_API_URL}${comment.user.authorLogo.url}`
+                                : '../images/profilebar.png'
+                            }
+                          />
+
                         </figure>
                       </div>
                       <div className="doe-right">
@@ -560,7 +567,13 @@ useEffect(() => {
                               <div className="doe-flex doe-flex-common" key={r.documentId}>
                                 <div className="doe-left">
                                   <figure>
-                                    <img src="../images/doe.png" alt="messgee.svg" />
+                                    <img
+                                      src={
+                                        r?.user?.authorLogo?.url
+                                          ? `${process.env.NEXT_PUBLIC_API_URL}${r.user.authorLogo.url}`
+                                          : '../images/profilebar.png'
+                                      }
+                                    />
                                   </figure>
                                 </div>
                                 < div className="doe-right" >

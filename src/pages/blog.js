@@ -40,8 +40,7 @@ const joinData = {
 };
 
 export const getServerSideProps = async () => {
-
-  const blogsRes = await API.get('/api/blogs?populate=*');
+   const blogsRes = await API.get('api/blogs?populate[authorName][populate]=authorLogo&populate[Image][populate]&populate[comments][populate]');
 
   const posts = blogsRes.data.data;
 
@@ -87,7 +86,7 @@ function blog({ posts }) {
         },
       });
       setIsModalOpen(false);
-     setConfirmMsg("Successfully subscribed to the newsletter!");
+      setConfirmMsg("Thanks, you're subscribed!");
       setConfirmType("success");
       setConfirmOpen(true);
       setIsModalOpen(false);
@@ -155,6 +154,7 @@ function blog({ posts }) {
     "all",
     ...new Set(allPosts.map((post) => post.category).filter(Boolean)),
   ];
+  
 
   const tabs = categories.map((category) => ({
     label: category === "all" ? "All" : category,
